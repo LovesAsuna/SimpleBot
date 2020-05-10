@@ -1,0 +1,4 @@
+name: Bot
+author: LovesAsuna
+main: me.lovesasuna.bot.Main
+version: "1.0.0"
