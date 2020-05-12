@@ -19,7 +19,6 @@ class Bilibili : Listener {
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
 
-        val groupID = (event as GroupMessageEvent).group.id
         var av: String?
         var bv: String?
         var reader: BufferedReader?
