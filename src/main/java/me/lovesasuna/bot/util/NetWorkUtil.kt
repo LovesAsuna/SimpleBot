@@ -26,7 +26,6 @@ object NetWorkUtil {
             }
             val inputStream = conn.inputStream
             val length = conn.contentLength
-            conn.disconnect()
             Pair(inputStream, length)
         } catch (e: IOException) {
             e.printStackTrace()
