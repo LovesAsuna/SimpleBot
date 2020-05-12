@@ -16,9 +16,6 @@ class RepeatDetect : Listener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val groupID = (event as GroupMessageEvent).group.id
-        if (groupID == 558529644L) {
-            return false
-        }
         maps.putIfAbsent(groupID, ArrayList())
         val messageList = maps[groupID]!!
 
