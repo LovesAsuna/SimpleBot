@@ -30,7 +30,7 @@ object BasicUtil {
     fun getFileMD5(file: File): String? {
         return try {
             val bytes = ByteArray(8192)
-            var len = 0
+            var len: Int
             val inputStream = FileInputStream(file)
             val messageDigest = MessageDigest.getInstance("MD5")
             while (inputStream.read(bytes).also { len = it } != -1) {
