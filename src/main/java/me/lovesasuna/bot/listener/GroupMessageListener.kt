@@ -12,7 +12,7 @@ class GroupMessageListener {
 
     init {
         val listenersClass = arrayOf<Class<*>>(
-                ShowDoc::class.java, McQuery::class.java,
+                Misc::class.java, McQuery::class.java,
                 Bilibili::class.java, Hitokoto::class.java,
                 DeBug::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java
