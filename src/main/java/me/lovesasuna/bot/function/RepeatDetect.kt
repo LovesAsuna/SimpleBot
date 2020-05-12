@@ -5,7 +5,6 @@ import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChain
 import java.util.*
 
@@ -37,8 +36,7 @@ class RepeatDetect : Listener {
             val builder = StringBuilder()
             val stringList = listOf("你", "群", "天", "天", "复", "读")
             val random = Random()
-            val i = random.nextInt(3)
-            when (i ) {
+            when (random.nextInt(3)) {
                 0 -> {
                     Collections.shuffle(stringList)
                     stringList.forEach { str: String? -> builder.append(str) }

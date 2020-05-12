@@ -9,7 +9,7 @@ object SRVConvert {
     @Throws(TextParseException::class)
     fun convert(host: String): String? {
         var host = host
-        var port = 0
+        var port : Int
         val records = Lookup("_minecraft._tcp.$host", Type.SRV).run()
         return if (records != null && records.size > 0) {
             val result = records[0] as SRVRecord
