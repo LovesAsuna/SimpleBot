@@ -135,10 +135,19 @@ class RainbowSix : Listener {
         val size = statOperator.size()
         val operators: MutableList<String> = ArrayList()
         for (i in 0 until size) {
-            operators.add(statOperator[i]["name"].asText().toLowerCase())
+            var opName = statOperator[i]["name"].asText().toLowerCase()
+            opName.apply {
+                when {
+                    contains("盲") ->  opName = "jager"
+                    contains("茫") -> opName = "capitao"
+                    contains("脴") -> opName = "nokk"
+                }
+            }
+
+            operators.add(opName)
         }
-        val strings = operators.parallelStream().filter { s: String -> s.toLowerCase().startsWith(operatorName) }.toArray { arrayOfNulls<String>(size) }
         val builder = StringBuilder()
+        val strings = operators.parallelStream().filter { s: String -> s.toLowerCase().startsWith(operatorName) }.toArray { arrayOfNulls<String>(size) }
 
         val level = root["Basicstat"][0]["level"].asText()
         for (i in strings.indices) {
@@ -151,15 +160,6 @@ class RainbowSix : Listener {
             val operatorDeaths = operator["deaths"].asText()
             val operatorWon = operator["won"].asText()
             val operatorLost = operator["lost"].asText()
-            if (strings[i] != null) {
-                if (strings[i]?.contains("盲")!!) {
-                    strings[i] = "jager"
-                } else if (strings[i]?.contains("茫")!!) {
-                    strings[i] = "capitao"
-                } else if (strings[i]?.contains("脴")!!) {
-                    strings[i] = "nokk"
-                }
-            }
             builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n")
             builder.append("-------------------------------------------\n")
             builder.append("干员: ").append(strings[i]).append(" ").append("击杀: ").append(operatorKills).append(" ").append("死亡: ").append(operatorDeaths)
