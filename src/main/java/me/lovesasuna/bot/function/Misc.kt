@@ -36,6 +36,7 @@ class Misc : Listener {
                 path.append(Main.instance.dataFolder.path).append(File.separator).append("image").append(File.separator).append("how.jpg")
                 event.reply(event.uploadImage(File(path.toString())))
             }
+            message.contains("啊这") -> event.reply("这啊")
         }
         return true
     }
