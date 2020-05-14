@@ -15,7 +15,8 @@ class GroupMessageListener {
                 Misc::class.java, McQuery::class.java,
                 Bilibili::class.java, Hitokoto::class.java,
                 DeBug::class.java, DownloadImage::class.java,
-                RainbowSix::class.java, RepeatDetect::class.java
+                RainbowSix::class.java, RepeatDetect::class.java,
+                PictureSearch::class.java
         )
 
         listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as Listener) }

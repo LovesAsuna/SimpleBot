@@ -22,7 +22,11 @@ object NetWorkUtil {
                 for (header in headers) {
                     setRequestProperty(header[0], header[1])
                 }
-                connect()
+                try {
+                    connect()
+                } catch (e : IOException) {
+                    return null
+                }
             }
             val inputStream = conn.inputStream
             val length = conn.contentLength

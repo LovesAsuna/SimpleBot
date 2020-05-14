@@ -5,7 +5,7 @@ import org.xbill.DNS.SRVRecord
 import org.xbill.DNS.TextParseException
 import org.xbill.DNS.Type
 
-object SRVConvert {
+object SRVConvertUtil {
     @Throws(TextParseException::class)
     fun convert(host: String): String? {
         var host = host

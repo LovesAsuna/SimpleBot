@@ -84,6 +84,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 dependences.add(Dependence("jackson-databind-2.10.3.jar", DependenceData.JACKSON_DATABIND_URL, DependenceData.JACKSON_DATABIND_MD5))
                 dependences.add(Dependence("jackson-core-2.10.3.jar", DependenceData.JACKSON_CORE_URL, DependenceData.JACKSON_CORE_MD5))
                 dependences.add(Dependence("jackson-annotations-2.10.3.jar", DependenceData.JACKSON_ANNOTATIONS_URL, DependenceData.JACKSON_ANNOTATIONS_MD5))
+                dependences.add(Dependence("ZXING-Core-3.4.0.jar", DependenceData.ZXING_URL, DependenceData.ZXING_MD5))
 
                 for (dependence in dependences) {
                     download(dependence)

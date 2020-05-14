@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.Mcquery
-import me.lovesasuna.bot.util.SRVConvert
+import me.lovesasuna.bot.util.SRVConvertUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -26,7 +26,7 @@ class McQuery : Listener {
                     query = true
                 } else {
                     event.reply("正在尝试SRV解析")
-                    NewipAndport = SRVConvert.convert(ipAndport)
+                    NewipAndport = SRVConvertUtil.convert(ipAndport)
                     query = if (NewipAndport == null) {
                         false
                     } else {

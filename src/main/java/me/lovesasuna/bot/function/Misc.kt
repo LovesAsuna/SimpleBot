@@ -37,6 +37,7 @@ class Misc : Listener {
                 event.reply(event.uploadImage(File(path.toString())))
             }
             message.contains("啊这") -> event.reply("这啊")
+            message.contains("问题") -> event.reply("解决不了问题就解决提出问题的人")
         }
         return true
     }
