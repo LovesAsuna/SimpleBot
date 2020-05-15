@@ -16,13 +16,16 @@ object PictureSearchUtil {
             if (result != null) {
                 val similarity = result["header"]["similarity"].asInt()
                 val thumbnail = result["header"]["thumbnail"].asText()
-                val extUrls = result["data"]["ext_urls"][0].asText()
-                resultList.add(Result(similarity, thumbnail, extUrls))
+                val extUrlsList = ArrayList<String>()
+                repeat(result["data"]["ext_urls"].size()) {
+                    extUrlsList.add(result["data"]["ext_urls"][it].asText())
+                }
+                resultList.add(Result(similarity, thumbnail, extUrlsList))
             }
         }
 
         return resultList
     }
 
-    data class Result(val similarity: Int, val thumbnail: String, val extUrls: String)
+    data class Result(val similarity: Int, val thumbnail: String, val extUrls: List<String>)
 }

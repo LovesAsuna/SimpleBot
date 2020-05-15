@@ -6,6 +6,7 @@ import me.lovesasuna.bot.util.PictureSearchUtil
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
+import java.lang.StringBuilder
 
 class PictureSearch : Listener{
     private val map = HashMap<Long, Boolean>()
@@ -21,7 +22,11 @@ class PictureSearch : Listener{
             event.reply(At(event.sender as Member) + "查找中!")
             val results = PictureSearchUtil.search(image.queryUrl())
             results.forEach {
-                event.reply(event.uploadImage(NetWorkUtil.fetch(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n相关链接: ${it.extUrls}"))
+                val builder = StringBuilder()
+                it.extUrls.forEach {
+                    builder.append(it).append("\n")
+                }
+                event.reply(event.uploadImage(NetWorkUtil.fetch(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
             }
             map.remove(senderID)
         }
