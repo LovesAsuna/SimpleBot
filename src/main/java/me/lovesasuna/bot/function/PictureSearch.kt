@@ -21,6 +21,10 @@ class PictureSearch : Listener{
         if (map[senderID] != null && image != null) {
             event.reply(At(event.sender as Member) + "查找中!")
             val results = PictureSearchUtil.search(image.queryUrl())
+            if (results.size == 0) {
+                event.reply("未查找到结果!")
+                return true
+            }
             results.forEach {
                 val builder = StringBuilder()
                 it.extUrls.forEach {
