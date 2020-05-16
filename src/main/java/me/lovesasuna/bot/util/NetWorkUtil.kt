@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.util
 
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -24,16 +25,34 @@ object NetWorkUtil {
                 }
                 try {
                     connect()
-                } catch (e : IOException) {
+                } catch (e: IOException) {
                     return null
                 }
             }
-            val inputStream = conn.inputStream
+            val responseCore = conn.responseCode
+            val inputStream = if (responseCore == 200) conn.inputStream else conn.errorStream
             val length = conn.contentLength
             Pair(inputStream, length)
         } catch (e: IOException) {
             e.printStackTrace()
             null
         }
+    }
+
+    fun inputStreamClone(inputStream: InputStream): ByteArrayOutputStream? {
+        try {
+            var baos = ByteArrayOutputStream()
+            var buffer = ByteArray(1024)
+            var len: Int
+            while (inputStream.read(buffer).also { len = it } > -1) {
+                baos.write(buffer, 0, len)
+            }
+            baos.flush()
+            return baos
+        } catch (e : IOException) {
+            e.printStackTrace();
+            return null
+        }
+
     }
 }
