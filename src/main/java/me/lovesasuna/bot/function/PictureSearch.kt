@@ -23,6 +23,7 @@ class PictureSearch : Listener{
             val results = PictureSearchUtil.search(image.queryUrl())
             if (results.size == 0) {
                 event.reply("未查找到结果!")
+                map.remove(senderID)
                 return true
             }
             results.forEach {
