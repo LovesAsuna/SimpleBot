@@ -15,9 +15,10 @@ class PixivCat : Listener {
             message.startsWith("/pixiv work ") -> {
                 val ID = BasicUtil.ExtraceInt(message.split(" ")[2])
                 val orignInputStream = NetWorkUtil.fetch("https://pixiv.cat/$ID.jpg")!!.first
+                event.reply("获取中,请稍后..")
                 val byteArrayOutputStream = NetWorkUtil.inputStreamClone(orignInputStream)
                 try {
-                    event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray()))
+                    event.reply(event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray())))
                 } catch (e: Exception) {
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
                     val matcher = Pattern.compile("這個作品ID中有 \\d 張圖片").matcher(string)
