@@ -1,5 +1,8 @@
 package me.lovesasuna.bot.listener
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.util.Listener
@@ -16,7 +19,8 @@ class GroupMessageListener {
                 Bilibili::class.java, Hitokoto::class.java,
                 DeBug::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
-                PictureSearch::class.java, PixivCat::class.java
+                PictureSearch::class.java, PixivCat::class.java,
+                Notice::class.java
         )
 
         listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as Listener) }
@@ -28,7 +32,11 @@ class GroupMessageListener {
         fun onMessage() {
             Main.instance.subscribeGroupMessages {
                 always {
-                    listener.listeners.forEach { listener -> listener.execute(this, this.message.contentToString(), this.message[Image], this.message[Face]) }
+                    listener.listeners.forEach {
+                        GlobalScope.async {
+                            it.execute(this@always, this@always.message.contentToString(), this@always.message[Image], this@always.message[Face])
+                        }
+                    }
                 }
             }
         }

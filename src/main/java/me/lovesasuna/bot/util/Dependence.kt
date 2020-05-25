@@ -107,7 +107,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                     addURL.invoke(Main::class.java.classLoader, dependence.fileURL)
                 }
 
-                Main.mapper = ObjectMapper()
+                BotData.objectMapper = ObjectMapper()
                 Main.initListener()
             }
 

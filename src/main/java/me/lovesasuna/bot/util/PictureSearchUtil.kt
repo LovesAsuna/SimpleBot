@@ -2,8 +2,6 @@ package me.lovesasuna.bot.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.file.Config
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 object PictureSearchUtil {
     private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&numres=16&api_key=${Config.config.getString("PictureSearchAPI")}&url="
@@ -15,6 +13,7 @@ object PictureSearchUtil {
         val resultList = ArrayList<Result>()
         for (i in 0..results.size()) {
             val result = results[i]
+            println(result)
             if (result != null) {
                 val similarity = result["header"]["similarity"].asInt()
                 if (similarity < 57.5) continue
@@ -24,12 +23,13 @@ object PictureSearchUtil {
                 }
                 if (!extUrlsList.parallelStream().anyMatch { it.contains("pixiv") }) continue
                 val thumbnail = result["header"]["thumbnail"].asText()
-                resultList.add(Result(similarity, thumbnail, extUrlsList))
+                val memberName = result["data"]["member_name"].asText()
+                resultList.add(Result(similarity, thumbnail, extUrlsList, memberName))
             }
         }
 
         return resultList
     }
 
-    data class Result(val similarity: Int, val thumbnail: String, val extUrls: List<String>)
+    data class Result(val similarity: Int, val thumbnail: String, val extUrls: List<String>, val memberName: String)
 }

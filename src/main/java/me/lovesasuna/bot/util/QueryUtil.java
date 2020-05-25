@@ -3,7 +3,7 @@ package me.lovesasuna.bot.util;
 import java.io.*;
 import java.net.Socket;
 
-public class Mcquery {
+public class QueryUtil {
     public static String query(String host, int port) throws IOException{
         Socket socket = new Socket(host, port);
         socket.setSoTimeout(10 * 1000);

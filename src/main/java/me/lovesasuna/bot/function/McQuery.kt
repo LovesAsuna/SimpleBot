@@ -3,7 +3,7 @@ package me.lovesasuna.bot.function
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.Listener
-import me.lovesasuna.bot.util.Mcquery
+import me.lovesasuna.bot.util.QueryUtil
 import me.lovesasuna.bot.util.SRVConvertUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
@@ -17,35 +17,20 @@ class McQuery : Listener {
         if (message.startsWith("/mcquery ")) {
             val strings = message.split(" ").toTypedArray()
             val ipAndport = strings[1]
-            var query : Boolean
-            var NewipAndport: String? = ""
+            var status: Boolean
 
             /*如果不含:则默认为srv记录*/
             if (!ipAndport.contains(":")) {
-                if (qeuery(event as GroupMessageEvent, "$ipAndport:25565", false)) {
-                    query = true
-                } else {
+                status = query(event, "$ipAndport:25565", false)
+                if (!status) {
                     event.reply("正在尝试SRV解析")
-                    NewipAndport = SRVConvertUtil.convert(ipAndport)
-                    query = if (NewipAndport == null) {
-                        false
-                    } else {
-                        qeuery(event, NewipAndport, true)
-                    }
+                    status = query(event, ipAndport, true)
                 }
             } else {
-                query = qeuery(event as GroupMessageEvent, ipAndport, false)
+                status = query(event, ipAndport, false)
             }
-            if (!query) {
-                if (NewipAndport != ipAndport && !NewipAndport!!.isEmpty()) {
-                    event.reply("""
-     无法获取Motd!
-     SRV结果为:
-     $NewipAndport
-     """.trimIndent())
-                } else {
-                    event.reply("ip地址不正确!")
-                }
+            if (!status) {
+                event.reply("ip地址不正确或无法直接获取结果!")
             }
             return true
         }
@@ -81,12 +66,20 @@ class McQuery : Listener {
     }
 
     @Throws(IOException::class)
-    private suspend fun qeuery(event: GroupMessageEvent, ipAndport: String, SRV: Boolean): Boolean {
-        val host = ipAndport.split(":").toTypedArray()[0]
-        val port = ipAndport.split(":").toTypedArray()[1].toInt()
+    private suspend fun query(event: MessageEvent, ipAndport: String, SRV: Boolean): Boolean {
+        var host: String
+        var port: Int
+        if (SRV) {
+            val NewipAndport = SRVConvertUtil.convert(ipAndport)
+            host = NewipAndport ?: ipAndport.split(":").toTypedArray()[0]
+            port = (NewipAndport ?: ipAndport).split(":").toTypedArray()[1].toInt()
+        } else {
+            host = ipAndport.split(":").toTypedArray()[0]
+            port = ipAndport.split(":").toTypedArray()[1].toInt()
+        }
         var json: String?
         json = try {
-            Mcquery.query(host, port)
+            QueryUtil.query(host, port)
         } catch (e: IOException) {
             return false
         }

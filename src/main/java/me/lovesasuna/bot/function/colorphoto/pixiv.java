@@ -3,6 +3,7 @@ package me.lovesasuna.bot.function.colorphoto;
 import com.fasterxml.jackson.databind.JsonNode;
 import kotlin.Pair;
 import me.lovesasuna.bot.Main;
+import me.lovesasuna.bot.data.BotData;
 import me.lovesasuna.bot.util.NetWorkUtil;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class pixiv implements Source{
         Pair<InputStream,Integer> result = NetWorkUtil.fetch(source);
         try {
             InputStream inputStream = result.getFirst();
-            JsonNode root = Main.Companion.getMapper().readTree(inputStream);
+            JsonNode root = BotData.INSTANCE.getObjectMapper().readTree(inputStream);
             return root.get("data").get(0).get("url").asText() + "|" + root.get("quota").asText();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();

@@ -21,7 +21,7 @@ class PictureSearch : Listener{
         if (map[senderID] != null && image != null) {
             event.reply(At(event.sender as Member) + "查找中!")
             val results = PictureSearchUtil.search(image.queryUrl())
-            if (results.size == 0) {
+            if (results.isEmpty()) {
                 event.reply("未查找到结果!")
                 map.remove(senderID)
                 return true
@@ -31,7 +31,7 @@ class PictureSearch : Listener{
                 it.extUrls.forEach {
                     builder.append(it).append("\n")
                 }
-                event.reply(event.uploadImage(NetWorkUtil.fetch(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                event.reply(event.uploadImage(NetWorkUtil.fetch(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
             }
             map.remove(senderID)
         }

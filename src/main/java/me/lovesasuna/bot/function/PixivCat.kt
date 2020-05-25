@@ -19,6 +19,7 @@ class PixivCat : Listener {
                 val byteArrayOutputStream = NetWorkUtil.inputStreamClone(orignInputStream)
                 try {
                     event.reply(event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray())))
+                    event.reply("获取完成!")
                 } catch (e: Exception) {
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
                     val matcher = Pattern.compile("這個作品ID中有 \\d 張圖片").matcher(string)
@@ -29,6 +30,8 @@ class PixivCat : Listener {
                             val inputStream = NetWorkUtil.fetch("https://pixiv.cat/$ID-${it + 1}.jpg")!!.first
                             event.reply(event.uploadImage(inputStream))
                         }
+                    } else {
+                        event.reply("该作品不存在或已被删除!")
                     }
                 }
 
