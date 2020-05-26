@@ -5,6 +5,7 @@ import me.lovesasuna.bot.util.Listener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.PlainText
 import java.io.File
 
 
@@ -34,7 +35,7 @@ class Misc : Listener {
             message.contains("怎么") -> event.reply(event.uploadImage(File(imagePath("how.jpg"))))
             message.contains("啊这") -> event.reply("这啊")
             message.contains("问题") -> event.reply("解决不了问题就解决提出问题的人")
-            message == "/donate" -> event.reply("我的肚子已经菠萝菠萝哒\n" + event.uploadImage(File(imagePath("pay.jpg"))))
+            message == "/donate" -> event.reply(PlainText("\"我的肚子已经菠萝菠萝哒\\n\"") + event.uploadImage(File(imagePath("pay.jpg"))))
         }
         return true
     }
