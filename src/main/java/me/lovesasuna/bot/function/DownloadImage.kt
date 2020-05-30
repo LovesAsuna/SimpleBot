@@ -49,12 +49,9 @@ class DownloadImage : Listener {
         val imageURL = image?.queryUrl()
         GlobalScope.async {
             if (imageURL != null) {
-                val result = NetWorkUtil.fetch(imageURL)
-                if (result == null) {
-                    return@async
-                }
+                val result = NetWorkUtil.fetch(imageURL) ?: return@async
                 val size = result.second
-                if (size < 65000) {
+                if (size < 650000) {
                     return@async
                 }
                 val file = File(path)
