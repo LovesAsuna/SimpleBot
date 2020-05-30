@@ -39,11 +39,11 @@ class Sort : Listener {
         if (sender == 625924077L) {
             when {
                 message == "/photoinit" -> {
+                    DownloadImage.init()
                     event.reply("捕捉器重启成功! 索引: " + DownloadImage.max)
                     return true
                 }
                 message == "/getcount" -> {
-                    DownloadImage.init()
                     event.reply(DownloadImage.max.toString())
                     return true
                 }
