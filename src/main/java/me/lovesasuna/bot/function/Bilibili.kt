@@ -11,6 +11,7 @@ import net.mamoe.mirai.message.data.Image
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
@@ -48,6 +49,7 @@ class Bilibili : Listener {
         val mapper = ObjectMapper()
         val jsonNode = mapper.readTree(line)
         val dataObject = jsonNode["data"]
+        val pic = dataObject["pic"].asText();
         val title = dataObject["title"].asText()
         val UP = dataObject["owner"]["name"].asText()
         val uplink = dataObject["owner"]["mid"].asText()
@@ -61,7 +63,7 @@ class Bilibili : Listener {
         val share = statObject["share"].asText()
         val like = statObject["like"].asText()
         val desc = dataObject["desc"].asText()
-        val builder = StringBuilder(title)
+        val builder = StringBuilder("\n" + title)
         builder.append("\nUP: ")
                 .append(UP)
                 .append("(https://space.bilibili.com/")
@@ -84,7 +86,7 @@ class Bilibili : Listener {
                 .append(like)
                 .append("\n")
                 .append(desc)
-        event.reply(builder.toString())
+        event.reply(event.uploadImage(URL(pic)) + builder.toString())
         return true
     }
 
