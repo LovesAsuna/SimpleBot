@@ -13,7 +13,6 @@ object PictureSearchUtil {
         val resultList = ArrayList<Result>()
         for (i in 0..results.size()) {
             val result = results[i]
-            println(result)
             if (result != null) {
                 val similarity = result["header"]["similarity"].asInt()
                 if (similarity < 57.5) continue

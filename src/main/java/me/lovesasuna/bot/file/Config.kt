@@ -17,9 +17,8 @@ class Config {
 
         @OptIn(ToBeRemoved::class)
         private fun writeDefault() {
-            config.setIfAbsent("Account", 0)
-            config.setIfAbsent("PassWord", "password")
             config.setIfAbsent("PictureSearchAPI", "")
+            config.setIfAbsent("BilibiliCookie", "")
             config.save()
         }
 
