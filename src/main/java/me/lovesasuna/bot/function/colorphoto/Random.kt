@@ -1,30 +1,23 @@
-package me.lovesasuna.bot.function.colorphoto;
+package me.lovesasuna.bot.function.colorphoto
 
-import com.fasterxml.jackson.databind.JsonNode;
-import kotlin.Pair;
-import me.lovesasuna.bot.data.BotData;
-import me.lovesasuna.bot.util.NetWorkUtil;
-
-import java.io.IOException;
-import java.io.InputStream;
+import me.lovesasuna.bot.data.BotData.objectMapper
+import me.lovesasuna.bot.util.NetWorkUtil.fetch
+import java.io.IOException
 
 /**
  * @author LovesAsuna
  * @date 2020/4/19 14:06
  */
-
-public class random implements Source{
-
-    @Override
-    public String fetchData() {
-        String source = "http://api.mtyqx.cn/api/random.php?return=json";
-        Pair<InputStream,Integer> result = NetWorkUtil.fetch(source);
-        try {
-            JsonNode root = BotData.INSTANCE.getObjectMapper().readTree(result.getFirst());
-            return root.get("imgurl").asText();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+class Random : Source {
+    override fun fetchData(): String? {
+        val source = "http://api.mtyqx.cn/api/random.php?return=json"
+        val result = fetch(source)
+        return try {
+            val root = objectMapper!!.readTree(result!!.first)
+            root["imgurl"].asText()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
         }
     }
 }

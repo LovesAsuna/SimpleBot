@@ -10,10 +10,10 @@ import java.io.IOException
  */
 interface Listener {
     /**
-     * @param builder 群消息事件
-     * @param fromGroup 来自群
-     * @param fromQQ 来自QQ
-     * @param msg 来自消息
+     * @param event 群消息事件
+     * @param message 群消息
+     * @param image 图片
+     * @param face QQ表情
      * @return 是否调用成功
      */
     @Throws(IOException::class)
