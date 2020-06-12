@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.file.Config
 
 object PictureSearchUtil {
-    private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&numres=16&api_key=${Config.config.getString("PictureSearchAPI")}&url="
+    private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&numres=16&url="
     private val mapper = ObjectMapper()
 
     fun search(url: String): List<Result> {

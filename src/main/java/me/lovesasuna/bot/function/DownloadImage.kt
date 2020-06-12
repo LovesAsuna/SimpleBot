@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.NetWorkUtil
+import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -20,7 +21,7 @@ import java.nio.file.Paths
 class DownloadImage : Listener {
     companion object {
         var max = 0
-        const val path = "C:/Users/Administrator/Desktop/image"
+        val path = "C:/Users/${System.getenv()["USERNAME"]}/Desktop/image"
 
         fun init() {
             Sort.sort("png")

@@ -10,7 +10,7 @@ import java.io.IOException
  */
 class Pixiv : Source {
     override fun fetchData(): String? {
-        // 备用129623655edf12bf9e9fc5
+        // 备用976835505edf70ff564238
         val source = "https://api.lolicon.app/setu/?apikey=560424975e992113ed5977"
         val result = fetch(source)
         return try {
