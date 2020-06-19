@@ -30,8 +30,8 @@ class Main : PluginBase() {
     }
 
     override fun onDisable() {
-        BotData.objectMapper!!.writeValue(File(dataFolder.toString() + File.separator + "notice.json"), Notice.Companion::class.java)
-        ObjectOutputStream(FileOutputStream(File(dataFolder.toString() + File.separator + "dynamic.json"))).writeObject(Dynamic.data)
+        ObjectOutputStream(FileOutputStream(File(dataFolder.toString() + File.separator + "notice.dat"))).writeObject(Notice.data)
+        ObjectOutputStream(FileOutputStream(File(dataFolder.toString() + File.separator + "dynamic.dat"))).writeObject(Dynamic.data)
     }
 
     companion object {

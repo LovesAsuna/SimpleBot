@@ -8,8 +8,8 @@ import java.io.FileInputStream
 import java.io.ObjectInputStream
 
 object FileManager {
-    private val noticeFile = File(Main.instance.dataFolder.toString() + File.separator + "notice.json")
-    private val dynamicFile = File(Main.instance.dataFolder.toString() + File.separator + "dynamic.json")
+    private val noticeFile = File(Main.instance.dataFolder.toString() + File.separator + "notice.dat")
+    private val dynamicFile = File(Main.instance.dataFolder.toString() + File.separator + "dynamic.dat")
 
     fun readValue() {
         if (noticeFile.exists()) {
