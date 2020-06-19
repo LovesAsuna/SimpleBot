@@ -19,7 +19,7 @@ public class QueryUtil {
         /*握手数据包id*/
         handshake.writeByte(0x00);
         /*协议版本*/
-        writeVarInt(handshake, 4);
+        writeVarInt(handshake, 578);
         /*主机地址长度*/
         writeVarInt(handshake, host.length());
         /*主机地址*/
