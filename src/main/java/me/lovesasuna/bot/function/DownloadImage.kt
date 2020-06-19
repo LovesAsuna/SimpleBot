@@ -25,6 +25,11 @@ class DownloadImage : Listener {
 
         fun init() {
             Sort.sort("png")
+            File(path).apply {
+                if (!this.exists()) {
+                    Files.createDirectories(this.toPath())
+                }
+            }
             try {
                 max = 0
                 Files.list(Paths.get(path)).use { pathStream ->
