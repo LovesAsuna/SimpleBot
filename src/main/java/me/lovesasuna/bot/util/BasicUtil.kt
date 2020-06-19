@@ -1,11 +1,15 @@
 package me.lovesasuna.bot.util
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import me.lovesasuna.bot.Main
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 /**
@@ -46,4 +50,16 @@ object BasicUtil {
             null
         }
     }
+
+    /**
+     * @param command 任务
+     * @param delay 延迟(单位:秒)
+     */
+    fun scheduleWithFixedDelay(command: Runnable, initialDelay: Long, delay: Long, unit: TimeUnit) {
+        runBlocking {
+            delay(unit.toMillis(initialDelay))
+            Main.instance.scheduler!!.repeat(command, unit.toMillis(delay))
+        }
+    }
+
 }
