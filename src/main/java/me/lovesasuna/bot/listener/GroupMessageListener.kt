@@ -1,8 +1,6 @@
 package me.lovesasuna.bot.listener
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.function.Danmu.Danmu
@@ -13,7 +11,7 @@ import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 
 class GroupMessageListener {
-    private val listeners: MutableList<Listener> = ArrayList()
+    val listeners = ArrayList<Listener>()
 
     init {
         val listenersClass = arrayOf<Class<*>>(
@@ -22,7 +20,9 @@ class GroupMessageListener {
                 DeBug::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
-                Notice::class.java, Danmu::class.java, ColorPhoto::class.java
+                Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
+                Dynamic::class.java
+
         )
 
         listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as Listener) }
@@ -35,7 +35,7 @@ class GroupMessageListener {
             Main.instance.subscribeGroupMessages {
                 always {
                     listener.listeners.forEach {
-                        GlobalScope.async {
+                        Main.instance.scheduler!!.async {
                             it.execute(this@always, this@always.message.contentToString(), this@always.message[Image], this@always.message[Face])
                         }
                     }
