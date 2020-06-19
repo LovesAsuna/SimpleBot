@@ -37,7 +37,7 @@ tasks.withType(JavaCompile) {
 
 task copyFile(type: Copy, dependsOn: shadowJar) {
     from('build/libs/')
-    into('E:\\Mirai\\plugins')
+    into('E:\\work\\Mirai\\plugins')
     include('Mirai*.jar')
     rename {
         "Bot.jar"
