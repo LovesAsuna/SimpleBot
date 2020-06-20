@@ -1,18 +1,13 @@
 package me.lovesasuna.bot
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.function.Dynamic
-import me.lovesasuna.bot.function.Notice
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.Dependence.Companion.init
 import net.mamoe.mirai.console.plugins.PluginBase
-import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
 
 /**
  * @author LovesAsuna
@@ -22,16 +17,19 @@ class Main : PluginBase() {
     override fun onEnable() {
         instance = this
         Config.init(this)
-        println("[Bot] 机器人插件启用成功！")
+        logger.info("正在加载插件依赖！")
         runBlocking {
             init()
+        }
+        logger.info("插件依赖加载完成！")
+        scheduler!!.async {
             FileManager.readValue()
         }
+        logger.info("机器人插件启用成功！")
     }
 
     override fun onDisable() {
-        ObjectOutputStream(FileOutputStream(File(dataFolder.toString() + File.separator + "notice.dat"))).writeObject(Notice.data)
-        ObjectOutputStream(FileOutputStream(File(dataFolder.toString() + File.separator + "dynamic.dat"))).writeObject(Dynamic.data)
+        FileManager.writeValue()
     }
 
     companion object {

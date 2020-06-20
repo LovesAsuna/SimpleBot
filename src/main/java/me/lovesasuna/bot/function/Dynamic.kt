@@ -3,6 +3,8 @@ package me.lovesasuna.bot.function
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
@@ -44,6 +46,11 @@ class Dynamic : Listener {
                     data.subscribeMap[upID]?.remove(event.group.id)
                     event.reply("up动态取消订阅成功!")
                 }
+                "test" -> {
+                    val upID = message.split(" ")[2].toInt()
+                    val num = message.split(" ")[3].toInt()
+                    read(upID, num)
+                }
             }
         }
         return true
@@ -53,21 +60,39 @@ class Dynamic : Listener {
 
     companion object {
         var data = Data(hashSetOf(), hashMapOf(), hashMapOf())
+        var intercept = false
 
         init {
-            BasicUtil.scheduleWithFixedDelay(Runnable {
-                data.upSet.forEach {
-                    Main.instance.scheduler!!.async {
-                        read(it, 0)
+            Main.instance.scheduler!!.async {
+                BasicUtil.scheduleWithFixedDelay(Runnable {
+                    data.upSet.forEach {
+                        runBlocking {
+                            read(it, 0)
+                            delay(30 * 1000)
+                        }
                     }
-                }
-            }, 0, 1, TimeUnit.MINUTES)
+                }, 1, 1, TimeUnit.MINUTES)
+            }
         }
 
 
         private suspend fun read(uid: Int, num: Int) {
             val reader = NetWorkUtil.fetch("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.first.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
+            if (root.toString().contains("拦截")) {
+                if (!intercept) {
+                    Main.instance.logger.error("B站动态api请求被拦截")
+                    data.subscribeMap[uid]?.forEach {
+                        Main.instance.scheduler!!.async {
+                            val group = Bot.botInstances[0].getGroup(it)
+                            group.sendMessage("B站动态api请求被拦截，请联系管理员!")
+                        }
+                    }
+                }
+                intercept = true
+                return
+            }
+            intercept = false
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
 

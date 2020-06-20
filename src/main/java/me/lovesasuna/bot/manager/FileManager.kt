@@ -3,9 +3,7 @@ package me.lovesasuna.bot.manager
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.function.Dynamic
 import me.lovesasuna.bot.function.Notice
-import java.io.File
-import java.io.FileInputStream
-import java.io.ObjectInputStream
+import java.io.*
 
 object FileManager {
     private val noticeFile = File(Main.instance.dataFolder.toString() + File.separator + "notice.dat")
@@ -21,7 +19,10 @@ object FileManager {
             val data = ObjectInputStream(FileInputStream(dynamicFile)).readObject() as Dynamic.Data
             Dynamic.data = data
         }
+    }
 
-
+    fun writeValue() {
+        ObjectOutputStream(FileOutputStream(File(Main.instance.dataFolder.toString() + File.separator + "notice.dat"))).writeObject(Notice.data)
+        ObjectOutputStream(FileOutputStream(File(Main.instance.dataFolder.toString() + File.separator + "dynamic.dat"))).writeObject(Dynamic.data)
     }
 }

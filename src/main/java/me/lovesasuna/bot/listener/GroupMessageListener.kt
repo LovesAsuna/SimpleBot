@@ -9,6 +9,7 @@ import me.lovesasuna.bot.util.Listener
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
+import kotlin.system.measureTimeMillis
 
 class GroupMessageListener {
     val listeners = ArrayList<Listener>()
@@ -22,10 +23,8 @@ class GroupMessageListener {
                 PictureSearch::class.java, PixivCat::class.java,
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
                 Dynamic::class.java
-
         )
-
-        listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as Listener) }
+        listenersClass.forEach { listeners.add(it.getConstructor().newInstance() as Listener) }
     }
 
 

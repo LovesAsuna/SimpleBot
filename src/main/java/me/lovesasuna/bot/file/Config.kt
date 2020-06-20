@@ -15,10 +15,9 @@ class Config {
             writeDefault()
         }
 
-        @OptIn(ToBeRemoved::class)
         private fun writeDefault() {
-            config.setIfAbsent("PictureSearchAPI", "")
-            config.setIfAbsent("BilibiliCookie", "")
+            config["PictureSearchAPI"] = ""
+            config["BilibiliCookie"] = ""
             config.save()
         }
 
