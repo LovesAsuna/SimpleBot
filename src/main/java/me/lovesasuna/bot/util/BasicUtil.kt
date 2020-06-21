@@ -62,4 +62,15 @@ object BasicUtil {
         }
     }
 
+    fun debug(message: String): String {
+        val reader = NetWorkUtil.post("https://paste.ubuntu.com/", "poster=Bot&syntax=text&expiration=day&content=$message".toByteArray(Charsets.UTF_8), arrayOf("Content-Type", "application/x-www-form-urlencoded"), arrayOf("host", "paste.ubuntu.com"))!!.first.bufferedReader()
+        val builder = StringBuilder()
+        reader.lines().skip(25).parallel().forEach {
+            builder.append(it)
+        }
+        val s = Regex("<a class=\"pturl\" href=\"/p/([0-9]|[a-z]|[A-Z])+/plain/\">Download as text</a>").find(builder.toString())!!.value
+        return "https://paste.ubuntu.com" + s.substringAfter("href=\"").substringBefore("/plain")
+    }
+
+
 }
