@@ -47,7 +47,7 @@ git clone https://github.com/LovesAsuna/Mirai.git
 
 ### 直接下载
 1. 到项目的 releases 页面下载最新版本的 jar
-2. 使用 cmd 启动 Bot, 然后去 config.json 下面填写账号密码
+2. 使用 cmd 启动 Bot, 然后去 config.json修改api
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
 ## 📜 协议 
