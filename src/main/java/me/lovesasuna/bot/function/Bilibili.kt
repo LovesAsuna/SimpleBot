@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.NetWorkUtil
-import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -26,7 +25,7 @@ class Bilibili : Listener {
         var inputStream: InputStream?
         if (message.toLowerCase().contains("av")) {
             av = BasicUtil.ExtraceInt(message).toString()
-            inputStream = NetWorkUtil.fetch("https://api.bilibili.com/x/web-interface/view?aid=$av")?.first
+            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?aid=$av")?.first
         } else if (message.contains("BV")) {
             val matcher = pattern.matcher(message)
             bv = if (matcher.find()) {
@@ -34,7 +33,7 @@ class Bilibili : Listener {
             } else {
                 return false
             }
-            inputStream = NetWorkUtil.fetch("https://api.bilibili.com/x/web-interface/view?bvid=$bv")?.first
+            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?bvid=$bv")?.first
         } else {
             return false
         }

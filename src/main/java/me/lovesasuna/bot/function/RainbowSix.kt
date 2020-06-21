@@ -40,7 +40,7 @@ class RainbowSix : Listener {
 
     private suspend fun normalCheck(event: GroupMessageEvent, username: String) {
         val start = System.currentTimeMillis()
-        val result = NetWorkUtil.fetch("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
+        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
         if (result == null) {
             event.reply("连接超时！")
             return
@@ -120,7 +120,7 @@ class RainbowSix : Listener {
 
     private suspend fun operatorCheck(event: GroupMessageEvent, username: String, operatorName: String) {
         val start = System.currentTimeMillis()
-        val result = NetWorkUtil.fetch("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
+        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
         if (result == null) {
             event.reply("连接超时！")
             return

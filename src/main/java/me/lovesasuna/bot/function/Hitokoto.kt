@@ -20,7 +20,7 @@ class Hitokoto : Listener {
             val mapper = ObjectMapper()
             /*如果不带参数,默认全部获取*/
             if (strings.size == 1) {
-                val inputStream = NetWorkUtil.fetch("https://v1.hitokoto.cn/")?.first
+                val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/")?.first
                 if (inputStream == null) {
                     return false
                 }
@@ -50,7 +50,7 @@ class Hitokoto : Listener {
      不填 - 随机
      """.trimIndent())
                 } else {
-                    val inputStream = NetWorkUtil.fetch("https://v1.hitokoto.cn/?c=" + strings[1])?.first
+                    val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/?c=" + strings[1])?.first
                     if (inputStream == null) {
                         return false
                     }

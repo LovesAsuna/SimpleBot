@@ -8,6 +8,7 @@ import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.Dependence.Companion.init
 import net.mamoe.mirai.console.plugins.PluginBase
+import kotlin.math.log
 
 /**
  * @author LovesAsuna
@@ -21,6 +22,7 @@ class Main : PluginBase() {
         runBlocking {
             init()
         }
+        logger.toString()
         logger.info("插件依赖加载完成！")
         scheduler!!.async {
             FileManager.readValue()

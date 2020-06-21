@@ -3,10 +3,8 @@ package me.lovesasuna.bot.function
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.NetWorkUtil
-import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -55,7 +53,7 @@ class DownloadImage : Listener {
         val imageURL = image?.queryUrl()
         GlobalScope.async {
             if (imageURL != null) {
-                val result = NetWorkUtil.fetch(imageURL) ?: return@async
+                val result = NetWorkUtil.get(imageURL) ?: return@async
                 val size = result.second
                 if (size < 650000) {
                     return@async

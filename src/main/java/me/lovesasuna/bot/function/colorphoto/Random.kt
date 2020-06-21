@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
 import me.lovesasuna.bot.data.BotData.objectMapper
-import me.lovesasuna.bot.util.NetWorkUtil.fetch
+import me.lovesasuna.bot.util.NetWorkUtil.get
 import java.io.IOException
 
 /**
@@ -11,7 +11,7 @@ import java.io.IOException
 class Random : Source {
     override fun fetchData(): String? {
         val source = "http://api.mtyqx.cn/api/random.php?return=json"
-        val result = fetch(source)
+        val result = get(source)
         return try {
             val root = objectMapper!!.readTree(result!!.first)
             root["imgurl"].asText()

@@ -32,7 +32,7 @@ class PictureSearch : Listener{
                 it.extUrls.forEach {
                     builder.append(it).append("\n")
                 }
-                event.reply(event.uploadImage(NetWorkUtil.fetch(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                event.reply(event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
             }
         }
 

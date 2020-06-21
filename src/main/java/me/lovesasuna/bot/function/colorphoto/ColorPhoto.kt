@@ -23,7 +23,7 @@ class ColorPhoto : Listener {
                         val data = source.fetchData()
                         val url = data?.split("|")?.get(0)
                         val quota = data?.split("|")?.get(1)
-                        event.reply(event.uploadImage(NetWorkUtil.fetch(url)!!.first) + PlainText("\n剩余次数: $quota"))
+                        event.reply(event.uploadImage(NetWorkUtil.get(url)!!.first) + PlainText("\n剩余次数: $quota"))
                     } else {
                         bannotice.invoke()
                     }
@@ -32,7 +32,7 @@ class ColorPhoto : Listener {
                 "random" -> {
                     if (random) {
                         source = Random()
-                        event.reply(event.uploadImage(NetWorkUtil.fetch(source.fetchData())!!.first))
+                        event.reply(event.uploadImage(NetWorkUtil.get(source.fetchData())!!.first))
                     } else {
                         bannotice.invoke()
                     }
