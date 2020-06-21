@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.charsets.Charset
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
@@ -18,7 +19,10 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.uploadAsImage
 import java.io.Serializable
 import java.net.URL
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 class Dynamic : Listener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
@@ -51,16 +55,34 @@ class Dynamic : Listener {
                     val num = message.split(" ")[3].toInt()
                     read(upID, num)
                 }
+                "debug" -> {
+                    if (event.sender.id == 625924077L) {
+                        event.reply("开始收集信息...")
+                        val builder = StringBuilder()
+                        builder.append("最后查询时间: ${data.time}\n\n")
+                        builder.append("是否被拦截: ${data.intercept}\n\n")
+                        builder.append("订阅的UP集合: ${data.upSet}\n\n")
+                        builder.append("up与群的对应关系: \n")
+                        data.subscribeMap.entries.forEach {
+                            builder.append("UP=${it.key}: 群聊=${it.value}\n")
+                        }
+                        builder.append("\n")
+                        builder.append("UP消息摘要: \n")
+                        data.dynamicMap.entries.forEach {
+                            builder.append("UP=${it.key}: 摘要=${it.value}\n")
+                        }
+                        event.reply("debug信息: ${BasicUtil.debug(builder.toString())}")
+                    }
+                }
             }
         }
         return true
     }
 
-    data class Data(var upSet: HashSet<Int>, var subscribeMap: HashMap<Int, HashSet<Long>>, var dynamicMap: HashMap<Int, String>) : Serializable
+    data class Data(var upSet: HashSet<Int>, var subscribeMap: HashMap<Int, HashSet<Long>>, var dynamicMap: HashMap<Int, String>, var time : String, var intercept : Boolean) : Serializable
 
     companion object {
-        var data = Data(hashSetOf(), hashMapOf(), hashMapOf())
-        var intercept = false
+        var data = Data(hashSetOf(), hashMapOf(), hashMapOf(), "", false)
 
         init {
             Main.instance.scheduler!!.async {
@@ -68,7 +90,8 @@ class Dynamic : Listener {
                     data.upSet.forEach {
                         runBlocking {
                             read(it, 0)
-                            delay(30 * 1000)
+                            data.time = "${Calendar.getInstance().time}"
+                            delay(15 * 1000)
                         }
                     }
                 }, 1, 1, TimeUnit.MINUTES)
@@ -77,10 +100,10 @@ class Dynamic : Listener {
 
 
         private suspend fun read(uid: Int, num: Int) {
-            val reader = NetWorkUtil.fetch("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.first.bufferedReader()
+            val reader = NetWorkUtil.get("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.first.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
-                if (!intercept) {
+                if (!data.intercept) {
                     Main.instance.logger.error("B站动态api请求被拦截")
                     data.subscribeMap[uid]?.forEach {
                         Main.instance.scheduler!!.async {
@@ -89,15 +112,15 @@ class Dynamic : Listener {
                         }
                     }
                 }
-                intercept = true
+                data.intercept = true
                 return
             }
-            intercept = false
+            data.intercept = false
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
 
-            if (data.dynamicMap[uid] != card["item"]["rp_id"].toString()) {
-                data.dynamicMap[uid] = card["item"]["rp_id"].toString()
+            if (data.dynamicMap[uid] != card.toString().substring(50..100)) {
+                data.dynamicMap[uid] = card.toString().substring(50..100)
                 data.subscribeMap[uid]?.forEach {
                     Main.instance.scheduler!!.async {
                         val group = Bot.botInstances[0].getGroup(it)
