@@ -6,7 +6,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0e2b2a8885684d4892274f2c9298c649)](https://www.codacy.com/manual/LovesAsuna/Mirai?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LovesAsuna/Mirai&amp;utm_campaign=Badge_Grade)
 [![Java CI with Gradle](https://github.com/LovesAsuna/Mirai/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai/actions)
 [![LICENSE](https://img.shields.io/github/license/LovesAsuna/Mirai.svg?style=popout)](https://github.com/LovesAsuna/Mirai/blob/master/LICENSE)
-[![Issues](https://img.shields.io/github/issues/StarWishsama/Nameless-Bot.svg?style=popout)](https://github.com/StarWishsama/Nameless-Bot/issues)
+[![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai.svg?style=popout)](https://github.com/SLovesAsuna/Mirai/issues)
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai?include_prereleases)](https://github.com/LovesAsuna/Mirai/releases)
 
 ## 🎉 它能干什么?
