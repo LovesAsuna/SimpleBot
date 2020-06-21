@@ -74,6 +74,19 @@ class Dynamic : Listener {
                         event.reply("debug信息: ${BasicUtil.debug(builder.toString())}")
                     }
                 }
+                "push" -> {
+                    event.reply("开始往订阅群推送消息！")
+                    Main.instance.scheduler!!.async {
+                        data.upSet.forEach {
+                            runBlocking {
+                                read(it, 0, true)
+                                data.time = "${Calendar.getInstance().time}"
+                                delay(15 * 1000)
+                            }
+                        }
+                        event.reply("推送完成")
+                    }
+                }
             }
         }
         return true
@@ -99,7 +112,7 @@ class Dynamic : Listener {
         }
 
 
-        private suspend fun read(uid: Int, num: Int) {
+        private suspend fun read(uid: Int, num: Int, push: Boolean = false) {
             val reader = NetWorkUtil.get("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.first.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
@@ -119,12 +132,12 @@ class Dynamic : Listener {
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
 
-            if (data.dynamicMap[uid] != card.toString().substring(50..100)) {
+            if (push || data.dynamicMap[uid] != card.toString().substring(50..100)) {
                 data.dynamicMap[uid] = card.toString().substring(50..100)
                 data.subscribeMap[uid]?.forEach {
                     Main.instance.scheduler!!.async {
                         val group = Bot.botInstances[0].getGroup(it)
-                        group.sendMessage(PlainText("${card["user"]["uname"].asText()}发布了以下动态!"))
+                        group.sendMessage(PlainText("${card["user"]["name"].asText()}发布了以下动态!"))
                         parse(group, card)
                     }
                 }
