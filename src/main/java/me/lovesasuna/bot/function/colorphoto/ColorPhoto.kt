@@ -2,6 +2,7 @@ package me.lovesasuna.bot.function.colorphoto
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
@@ -49,7 +50,7 @@ class ColorPhoto : Listener {
     }
 
     private fun changeBanStatus(event: MessageEvent, message: String) {
-        if (event.sender.id == 625924077L) {
+        if (event.sender.id == Config.config.getLong("Admin")) {
             GlobalScope.async {
                 when (message.split(" ")[2]) {
                     "pixiv" -> {

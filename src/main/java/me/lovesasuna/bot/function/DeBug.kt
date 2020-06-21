@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.function
 
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.Listener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
@@ -16,7 +17,7 @@ class DeBug : Listener {
         event as GroupMessageEvent
         val senderID = event.sender.id
         // val groupID = event.group.id
-        if (senderID == 625924077L) {
+        if (senderID == Config.config.getLong("Admin")) {
             if (message.startsWith("/debug")) {
 
             }

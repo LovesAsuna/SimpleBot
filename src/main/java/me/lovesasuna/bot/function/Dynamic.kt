@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.charsets.Charset
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.Listener
 import me.lovesasuna.bot.util.NetWorkUtil
@@ -21,8 +21,6 @@ import java.io.Serializable
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 
 class Dynamic : Listener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
@@ -56,7 +54,7 @@ class Dynamic : Listener {
                     read(upID, num)
                 }
                 "debug" -> {
-                    if (event.sender.id == 625924077L) {
+                    if (event.sender.id == Config.config.getLong("Admin")) {
                         event.reply("开始收集信息...")
                         val builder = StringBuilder()
                         builder.append("最后查询时间: ${data.time}\n\n")

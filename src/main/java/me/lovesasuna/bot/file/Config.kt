@@ -16,8 +16,9 @@ class Config {
         }
 
         private fun writeDefault() {
-            config["PictureSearchAPI"] = ""
-            config["BilibiliCookie"] = ""
+            config.setIfAbsent("PictureSearchAPI", "")
+            config.setIfAbsent("BilibiliCookie", "")
+            config.setIfAbsent("Admin", "")
             config.save()
         }
 

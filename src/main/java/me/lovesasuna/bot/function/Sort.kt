@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.function
 
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.Listener
 import net.mamoe.mirai.message.FriendMessageEvent
 import net.mamoe.mirai.message.MessageEvent
@@ -36,7 +37,7 @@ class Sort : Listener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val sender = event.sender.id
         event as FriendMessageEvent
-        if (sender == 625924077L) {
+        if (sender == Config.config.getLong("Admin")) {
             when {
                 message == "/photoinit" -> {
                     DownloadImage.init()
