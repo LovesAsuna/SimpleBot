@@ -3,11 +3,11 @@
 一个基于 [Mirai-Console](https://github.com/mamoe/mirai-console) 开发的机器人
 
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0e2b2a8885684d4892274f2c9298c649)](https://www.codacy.com/manual/LovesAsuna/Mirai?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LovesAsuna/Mirai&amp;utm_campaign=Badge_Grade)
-[![Java CI with Gradle](https://github.com/LovesAsuna/Mirai/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai/actions)
-[![LICENSE](https://img.shields.io/github/license/LovesAsuna/Mirai.svg?style=popout)](https://github.com/LovesAsuna/Mirai/blob/master/LICENSE)
-[![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai.svg?style=popout)](https://github.com/SLovesAsuna/Mirai/issues)
-[![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai?include_prereleases)](https://github.com/LovesAsuna/Mirai/releases)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0e2b2a8885684d4892274f2c9298c649)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LovesAsuna/Mirai-Bot&amp;utm_campaign=Badge_Grade)
+[![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
+[![LICENSE](https://img.shields.io/github/license/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/SLovesAsuna/Mirai-Bot/issues)
+[![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai-Bot?include_prereleases)](https://github.com/LovesAsuna/Mirai-Bot/releases)
 
 ## 🎉 它能干什么?
 * 以图搜图
@@ -25,7 +25,7 @@
 * 还在开发中...
 
 ## ☑ To-Do 列表
-详见 [项目页面](https://github.com/LovesAsuna/Mirai/projects/1)
+详见 [项目页面](https://github.com/LovesAsuna/Mirai-Bot/projects/1)
 
 ## 💽 如何使用
 
@@ -36,7 +36,7 @@
 1.1. Clone 或者下载这个项目.
 
 ```bash
-git clone https://github.com/LovesAsuna/Mirai.git
+git clone https://github.com/LovesAsuna/Mirai-Bot.git
 ```
 
 1.2. 编译
@@ -50,4 +50,4 @@ git clone https://github.com/LovesAsuna/Mirai.git
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
 ## 📜 协议 
-[LGPL v3.0](https://github.com/LovesAsuna/Mirai/blob/master/LICENSE)
+[LGPL v3.0](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
