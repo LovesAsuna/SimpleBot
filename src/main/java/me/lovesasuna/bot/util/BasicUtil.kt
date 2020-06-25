@@ -1,8 +1,7 @@
 package me.lovesasuna.bot.util
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import me.lovesasuna.bot.Main
+import kotlinx.coroutines.*
+import net.mamoe.mirai.console.scheduler.PluginScheduler
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -55,11 +54,18 @@ object BasicUtil {
      * @param command 任务
      * @param delay 延迟(单位:秒)
      */
-    fun scheduleWithFixedDelay(command: Runnable, initialDelay: Long, delay: Long, unit: TimeUnit) {
-        runBlocking {
+    fun scheduleWithFixedDelay(command: Runnable, initialDelay: Long, delay: Long, unit: TimeUnit): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
+        val receipt = PluginScheduler.RepeatTaskReceipt()
+        val job = GlobalScope.launch {
             delay(unit.toMillis(initialDelay))
-            Main.instance.scheduler!!.repeat(command, unit.toMillis(delay))
+            while (!receipt.cancelled && this.isActive) {
+                withContext(Dispatchers.IO) {
+                    command.run()
+                }
+                delay(unit.toMillis(delay))
+            }
         }
+        return Pair(job, receipt)
     }
 
     fun debug(message: String): String {

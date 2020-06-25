@@ -8,7 +8,6 @@ import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.Dependence.Companion.init
 import net.mamoe.mirai.console.plugins.PluginBase
-import kotlin.math.log
 
 /**
  * @author LovesAsuna
