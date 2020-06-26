@@ -186,7 +186,7 @@ class Dynamic : Listener {
                 }
                 node["aid"] != null -> videoParse(node)
                 node["category"] != null -> articleParse(node)
-                else -> PlainText("")
+                else -> PlainText("未解析的消息类型")
             }
         }
 
