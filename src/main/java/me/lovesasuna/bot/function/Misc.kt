@@ -39,6 +39,7 @@ class Misc : Listener {
             message.contains("怎么") -> event.reply(event.uploadImage(File(imagePath("how.jpg"))))
             message.contains("啊这") -> event.reply("这啊")
             message.contains("问题") -> event.reply("解决不了问题就解决提出问题的人")
+            message.contains("考试") -> event.reply(event.uploadImage(File(imagePath("exam.jpg"))))
             message == "/donate" -> event.reply(PlainText("我很可爱,请给我钱\n") + event.uploadImage(File(imagePath("pay.jpg"))))
             message == "开车" -> event.reply(event.uploadImage(File(imagePath(("car.jpg")))))
         }
