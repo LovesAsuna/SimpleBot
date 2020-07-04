@@ -1,6 +1,6 @@
 ## Bot
 
-一个基于 [Mirai-Console](https://github.com/mamoe/mirai-console) 开发的机器人
+一个基于 [Mirai](https://github.com/mamoe/mirai) 开发的机器人
 
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0364d226b78149979387cb47f44b365c)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&utm_medium=referral&utm_content=LovesAsuna/Mirai-Bot&utm_campaign=Badge_Grade_Dashboard)
