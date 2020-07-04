@@ -1,11 +1,12 @@
 package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
-import net.mamoe.mirai.console.scheduler.PluginScheduler
+import me.lovesasuna.bot.Main
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.math.BigInteger
+import java.nio.file.Paths
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
@@ -78,5 +79,11 @@ object BasicUtil {
         return "https://paste.ubuntu.com" + s.substringAfter("href=\"").substringBefore("/plain")
     }
 
+    fun getLocation(c: Class<*>): File {
+        return Paths.get(c.protectionDomain.codeSource.location.path.replaceFirst("/", "")).parent.toFile()
+    }
 
+    fun getLocation(fileName : String): File {
+        return File("${getLocation(Main::class.java).path}${File.separator}$fileName")
+    }
 }

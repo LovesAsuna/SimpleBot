@@ -21,10 +21,10 @@ class FriendMessageListener {
     companion object {
         val listener = FriendMessageListener()
         fun onMessage() {
-            Main.instance.subscribeFriendMessages {
+            Main.bot.subscribeFriendMessages {
                 always {
                     val senderID = sender.id
-                    if (senderID != Config.config.getLong("Admin")) {
+                    if (senderID != Config.data.admin) {
                         return@always
                     }
                     val message = message.contentToString()

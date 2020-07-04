@@ -1,6 +1,9 @@
 package me.lovesasuna.bot.util
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
@@ -31,6 +34,9 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         private var downloadDepen = false
         private var pool: ThreadPoolExecutor? = null
         private var depenDir: File? = null
+        private var totalSize = 0
+        private var downloadedSize = 0
+        val progressBar = ProgressBar()
         fun download(dependence: Dependence) {
             pool!!.submit {
                 if (!depenDir!!.exists()) {
@@ -48,7 +54,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-                val dependenceFile = File(Main.instance.dataFolder.path + File.separator + "Dependencies" + File.separator + dependence.fileName)
+                val dependenceFile = File(Main.dataFolder.path + File.separator + "Dependencies" + File.separator + dependence.fileName)
 
                 /*文件不存在*/
                 if (!dependenceFile.exists()) {
@@ -69,22 +75,27 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         private fun download(conn: AtomicReference<HttpURLConnection>, file: File) {
             try {
                 conn.get().connect()
-                DownloadUtil.download(conn.get(), file)
+                totalSize += conn.get().contentLength
+                DownloadUtil.download(conn.get(), file) { i ->
+                    downloadedSize += i
+                    progressBar.index = (downloadedSize.toDouble() / totalSize) * 50
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
 
         fun init() {
-            if (downloadDepen) {
-                return
+            Logger.log(Logger.Messages.DOWNLOAD_DEPEN, Logger.LogLevel.CONSOLE)
+            runBlocking {
+                progressBar.printProgress(500)
             }
-            downloadDepen = true
-            BotData.scheduledpool.execute {
+            GlobalScope.launch {
                 val dependences: MutableList<Dependence> = ArrayList()
-                dependences.add(Dependence("jackson-databind-2.10.3.jar", DependenceData.JACKSON_DATABIND_URL, DependenceData.JACKSON_DATABIND_MD5))
-                dependences.add(Dependence("jackson-core-2.10.3.jar", DependenceData.JACKSON_CORE_URL, DependenceData.JACKSON_CORE_MD5))
-                dependences.add(Dependence("jackson-annotations-2.10.3.jar", DependenceData.JACKSON_ANNOTATIONS_URL, DependenceData.JACKSON_ANNOTATIONS_MD5))
+                dependences.add(Dependence("jackson-databind-2.11.1.jar", DependenceData.JACKSON_DATABIND_URL, DependenceData.JACKSON_DATABIND_MD5))
+                dependences.add(Dependence("jackson-core-2.11.1.jar", DependenceData.JACKSON_CORE_URL, DependenceData.JACKSON_CORE_MD5))
+                dependences.add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.JACKSON_ANNOTATIONS_URL, DependenceData.JACKSON_ANNOTATIONS_MD5))
+                dependences.add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.JACKSON_MODULE_URL, DependenceData.JACKSON_MODULE_MD5))
                 // dependences.add(Dependence("ZXING-Core-3.4.0.jar", DependenceData.ZXING_URL, DependenceData.ZXING_MD5))
 
                 for (dependence in dependences) {
@@ -108,15 +119,15 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                     addURL.invoke(Main::class.java.classLoader, dependence.fileURL)
                 }
 
-                BotData.objectMapper = ObjectMapper()
-                Main.initListener()
+                BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
+                progressBar.index = 101.0
             }
 
         }
 
         init {
             pool = ThreadPoolExecutor(5, 5, 1, TimeUnit.MINUTES, ArrayBlockingQueue(5))
-            depenDir = File(Main.instance.dataFolder.path + File.separator + "Dependencies")
+            depenDir = File(Main.dataFolder.path + File.separator + "Dependencies")
         }
     }
 

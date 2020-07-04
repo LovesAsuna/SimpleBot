@@ -17,7 +17,7 @@ class DeBug : Listener {
         event as GroupMessageEvent
         val senderID = event.sender.id
         // val groupID = event.group.id
-        if (senderID == Config.config.getLong("Admin")) {
+        if (senderID == Config.data.admin) {
             if (message.startsWith("/debug")) {
 
             }

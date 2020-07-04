@@ -31,16 +31,17 @@ object DownloadUtil {
 
     @Throws(IOException::class)
     fun download(conn: HttpURLConnection, fileName: String, savePath: String) {
-        download(conn, File(savePath + File.separator + fileName))
+        download(conn, File(savePath + File.separator + fileName)) {}
     }
 
     @Throws(IOException::class)
-    fun download(conn: HttpURLConnection, file: File) {
+    fun download(conn: HttpURLConnection, file: File, consumer: (Int) -> Unit) {
         val inputStream = conn.inputStream
         var length: Int
         val bytes = ByteArray(2048)
         val fileOutputStream = FileOutputStream(file)
         while (inputStream.read(bytes).also { length = it } != -1) {
+            consumer.invoke(length)
             fileOutputStream.write(bytes, 0, length)
         }
         fileOutputStream.close()

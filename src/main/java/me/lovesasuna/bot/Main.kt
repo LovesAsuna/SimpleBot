@@ -1,45 +1,56 @@
 package me.lovesasuna.bot
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.GlobalScope
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.manager.FileManager
-import me.lovesasuna.bot.util.Dependence.Companion.init
-import net.mamoe.mirai.console.plugins.PluginBase
+import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.Dependence
+import me.lovesasuna.bot.util.Logger
+import me.lovesasuna.bot.util.PluginScheduler
+import net.mamoe.mirai.Bot
+import net.mamoe.mirai.join
+import net.mamoe.mirai.utils.BotConfiguration
+import net.mamoe.mirai.utils.MiraiLogger
+import java.io.File
 
 /**
  * @author LovesAsuna
- * @date 2020/5/6 21:54
+ * @date 2020/7/3 21:54
  */
-class Main : PluginBase() {
-    override fun onEnable() {
-        instance = this
-        Config.init(this)
-        logger.info("正在加载插件依赖！")
-        runBlocking {
-            init()
-        }
-        logger.toString()
-        logger.info("插件依赖加载完成！")
-        scheduler!!.async {
-            FileManager.readValue()
-        }
-        logger.info("机器人插件启用成功！")
+suspend fun main() {
+    /*初始化机器人依赖*/
+    Dependence.init()
+
+    FileManager.readValue()
+    Main.bot = Bot(Config.data.account,
+            Config.data.password,
+            BotConfiguration.Default.also {
+                it.randomDeviceInfo()
+            }
+    ).also {
+        it.login()
+        Main.logger = it.logger
     }
 
-    override fun onDisable() {
+    Main.initListener()
+
+    Runtime.getRuntime().addShutdownHook(Thread {
+        Logger.log("正在关闭 机器人...", Logger.LogLevel.CONSOLE)
         FileManager.writeValue()
-    }
+    })
+    Main.bot.join()
+}
 
-    companion object {
-        lateinit var instance: Main
-            private set
+object Main {
+    lateinit var bot: Bot
+    var logger: MiraiLogger? = null
+    val scheduler = PluginScheduler(GlobalScope.coroutineContext)
+    val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
 
-        fun initListener() {
-            GroupMessageListener.onMessage()
-            FriendMessageListener.onMessage()
-        }
+    fun initListener() {
+        GroupMessageListener.onMessage()
+        FriendMessageListener.onMessage()
     }
 }

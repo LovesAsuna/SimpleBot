@@ -31,10 +31,10 @@ class GroupMessageListener {
     companion object {
         val listener = GroupMessageListener()
         fun onMessage() {
-            Main.instance.subscribeGroupMessages {
+            Main.bot.subscribeGroupMessages {
                 always {
                     listener.listeners.forEach {
-                        Main.instance.scheduler!!.async {
+                        Main.scheduler.async {
                             it.execute(this@always, this@always.message.contentToString(), this@always.message[Image], this@always.message[Face])
                         }
                     }

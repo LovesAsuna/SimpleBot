@@ -50,7 +50,7 @@ class ColorPhoto : Listener {
     }
 
     private fun changeBanStatus(event: MessageEvent, message: String) {
-        if (event.sender.id == Config.config.getLong("Admin")) {
+        if (event.sender.id == Config.data.admin) {
             GlobalScope.async {
                 when (message.split(" ")[2]) {
                     "pixiv" -> {

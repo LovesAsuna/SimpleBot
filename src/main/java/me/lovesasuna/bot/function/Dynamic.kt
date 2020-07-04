@@ -53,7 +53,7 @@ class Dynamic : Listener {
                     read(upID, num)
                 }
                 "debug" -> {
-                    if (event.sender.id == Config.config.getLong("Admin")) {
+                    if (event.sender.id == Config.data.admin) {
                         event.reply("开始收集信息...")
                         val builder = StringBuilder()
                         builder.append("Task状态: \n")
@@ -77,7 +77,7 @@ class Dynamic : Listener {
                 }
                 "push" -> {
                     event.reply("开始往订阅群推送消息！")
-                    Main.instance.scheduler!!.async {
+                    Main.scheduler.async {
                         data.upSet.forEach {
                             runBlocking {
                                 read(it, 0, true)
@@ -125,7 +125,7 @@ class Dynamic : Listener {
 
                     }
                 }
-            }, 1, 1, TimeUnit.MINUTES).first
+            }, 0, 1, TimeUnit.MINUTES).first
         }
 
         private suspend fun read(uid: Int, num: Int, push: Boolean = false) {
@@ -133,9 +133,9 @@ class Dynamic : Listener {
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
                 if (!data.intercept) {
-                    Main.instance.logger.error("B站动态api请求被拦截")
+                    Main.logger!!.error("B站动态api请求被拦截")
                     data.subscribeMap[uid]?.forEach {
-                        Main.instance.scheduler!!.async {
+                        Main.scheduler.async {
                             val group = Bot.botInstances[0].getGroup(it)
                             group.sendMessage("B站动态api请求被拦截，请联系管理员!")
                         }
@@ -150,7 +150,7 @@ class Dynamic : Listener {
             if (push || data.dynamicMap[uid] != card.toString().substring(50..100)) {
                 data.dynamicMap[uid] = card.toString().substring(50..100)
                 data.subscribeMap[uid]?.forEach {
-                    Main.instance.scheduler!!.async {
+                    Main.scheduler.async {
                         val group = Bot.botInstances[0].getGroup(it)
                         group.sendMessage(PlainText("${card["user"]["name"].asText()}发布了以下动态!"))
                         parse(group, card)
