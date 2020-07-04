@@ -36,7 +36,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         private var depenDir: File? = null
         private var totalSize = 0
         private var downloadedSize = 0
-        val progressBar = ProgressBar()
+        val progressBar = ProgressBar(50)
         fun download(dependence: Dependence) {
             pool!!.submit {
                 if (!depenDir!!.exists()) {
@@ -78,7 +78,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 totalSize += conn.get().contentLength
                 DownloadUtil.download(conn.get(), file) { i ->
                     downloadedSize += i
-                    progressBar.index = (downloadedSize.toDouble() / totalSize) * 50
+                    progressBar.index = (progressBar.PROGRESS_SIZE * downloadedSize).toDouble() / totalSize
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -87,9 +87,6 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
 
         fun init() {
             Logger.log(Logger.Messages.DOWNLOAD_DEPEN, Logger.LogLevel.CONSOLE)
-            runBlocking {
-                progressBar.printProgress(500)
-            }
             GlobalScope.launch {
                 val dependences: MutableList<Dependence> = ArrayList()
                 dependences.add(Dependence("jackson-databind-2.11.1.jar", DependenceData.JACKSON_DATABIND_URL, DependenceData.JACKSON_DATABIND_MD5))
@@ -123,6 +120,9 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 progressBar.index = 101.0
             }
 
+            runBlocking {
+                progressBar.printProgress(500)
+            }
         }
 
         init {
