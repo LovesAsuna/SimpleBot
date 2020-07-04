@@ -17,11 +17,17 @@ class PixivCat : Listener {
                 val ID = BasicUtil.ExtraceInt(message.split(" ")[2])
                 val reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.first.bufferedReader()
                 val root = ObjectMapper().readTree(reader.readLine())
-                val tags = root["response"][0]["tags"].toString()
-                if (tags.contains(Regex("R-[1-9]+"))) {
-                    event.reply("图片含有R18内容,禁止显示！")
-                    return false
+                val status = root["status"].asText()
+                if (status == "failure") {
+                    event.reply("查询图片信息失败，跳过R级检测...")
+                } else {
+                    val tags = root["response"][0]["tags"].toString()
+                    if (tags.contains(Regex("R-[1-9]+"))) {
+                        event.reply("图片含有R18内容,禁止显示！")
+                        return false
+                    }
                 }
+
                 val orignInputStream = NetWorkUtil.get("https://pixiv.cat/$ID.jpg")!!.first
                 event.reply("获取中,请稍后..")
                 val byteArrayOutputStream = NetWorkUtil.inputStreamClone(orignInputStream)
