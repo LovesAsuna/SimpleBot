@@ -16,7 +16,7 @@ repositories {
     }
 }
 
-defaultTasks("copyFile")
+defaultTasks("shadowJar")
 
 shadowJar {
     manifest {
