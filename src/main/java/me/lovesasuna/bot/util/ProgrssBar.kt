@@ -29,7 +29,7 @@ class ProgressBar(val PROGRESS_SIZE: Int = 50) {
             delay(interval)
         }
         printTarget(1.0, getNChar(PROGRESS_SIZE, '█'), getNChar(0, '─')) {
-            print(getNChar(PROGRESS_SIZE + 2, '\b'))
+            print(getNChar(PROGRESS_SIZE + 10, '\b'))
         }
         println()
     }
