@@ -31,10 +31,10 @@ dependencies {
     compileOnly 'com.github.dnsjava:dnsjava:-SNAPSHOT'
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
     testImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
-    testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
+    compileOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
+    testCompileOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
 }
 
 tasks.withType(JavaCompile) {
