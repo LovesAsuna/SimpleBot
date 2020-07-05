@@ -15,7 +15,7 @@ object FileManager {
     @Throws(AccountNotFoundException::class)
     fun readValue() {
         Config.init()
-        if (Config.data.account == null || Config.data.admin == null) throw AccountNotFoundException()
+        if (Config.data.account == 0L || Config.data.password.isEmpty()) throw AccountNotFoundException()
 
             if (noticeFile.exists()) {
                 Notice.data = ObjectInputStream(FileInputStream(noticeFile)).readObject() as Notice.Data

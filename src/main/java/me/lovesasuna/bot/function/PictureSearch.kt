@@ -1,14 +1,14 @@
 package me.lovesasuna.bot.function
 
-import me.lovesasuna.bot.util.Listener
-import me.lovesasuna.bot.util.NetWorkUtil
+import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.network.NetWorkUtil
 import me.lovesasuna.bot.util.PictureSearchUtil
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
 import java.lang.StringBuilder
 
-class PictureSearch : Listener{
+class PictureSearch : Listener {
     private val map = HashMap<Long, Boolean>()
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {

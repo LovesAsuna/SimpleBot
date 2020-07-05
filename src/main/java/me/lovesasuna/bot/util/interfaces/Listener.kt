@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util
+package me.lovesasuna.bot.util.interfaces
 
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

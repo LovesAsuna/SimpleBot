@@ -2,8 +2,8 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.util.Listener
-import me.lovesasuna.bot.util.QueryUtil
+import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

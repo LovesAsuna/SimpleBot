@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util
+package me.lovesasuna.bot.util.plugin
 
 import kotlinx.coroutines.delay
 

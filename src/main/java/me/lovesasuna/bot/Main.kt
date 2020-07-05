@@ -7,8 +7,8 @@ import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.Dependence
-import me.lovesasuna.bot.util.Logger
-import me.lovesasuna.bot.util.PluginScheduler
+import me.lovesasuna.bot.util.plugin.Logger
+import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.join
 import net.mamoe.mirai.utils.BotConfiguration

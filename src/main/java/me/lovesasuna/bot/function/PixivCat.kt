@@ -2,8 +2,8 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.Listener
-import me.lovesasuna.bot.util.NetWorkUtil
+import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image

@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.Listener
+import me.lovesasuna.bot.util.interfaces.Listener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image

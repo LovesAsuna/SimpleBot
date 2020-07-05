@@ -1,7 +1,6 @@
-package me.lovesasuna.bot.util
+package me.lovesasuna.bot.util.plugin
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.function.Dynamic
 
 object Logger {
     fun log(message: String, level: LogLevel) {

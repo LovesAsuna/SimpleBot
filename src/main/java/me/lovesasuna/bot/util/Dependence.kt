@@ -8,6 +8,9 @@ import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
+import me.lovesasuna.bot.util.network.DownloadUtil
+import me.lovesasuna.bot.util.plugin.Logger
+import me.lovesasuna.bot.util.plugin.ProgressBar
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection

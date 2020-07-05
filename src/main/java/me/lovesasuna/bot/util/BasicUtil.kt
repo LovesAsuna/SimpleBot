@@ -2,6 +2,8 @@ package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.bot.util.plugin.PluginScheduler
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException

@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.Listener
+import me.lovesasuna.bot.util.interfaces.Listener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

@@ -5,11 +5,10 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.function.Danmu.Danmu
 import me.lovesasuna.bot.function.colorphoto.ColorPhoto
-import me.lovesasuna.bot.util.Listener
+import me.lovesasuna.bot.util.interfaces.Listener
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
-import kotlin.system.measureTimeMillis
 
 class GroupMessageListener {
     val listeners = ArrayList<Listener>()

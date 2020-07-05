@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
 import me.lovesasuna.bot.data.BotData.objectMapper
-import me.lovesasuna.bot.util.NetWorkUtil.get
+import me.lovesasuna.bot.util.network.NetWorkUtil.get
 import java.io.IOException
 
 /**

@@ -21,7 +21,7 @@ class Config {
             data = if (!file.exists()) {
                 Files.createFile(Paths.get(file.path))
                 val data = Data()
-                BotData.objectMapper!!.writeValue(BasicUtil.getLocation("config.json"), data)
+                BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(BasicUtil.getLocation("config.json"), data)
                 data
             } else {
                 BotData.objectMapper!!.readValue(BasicUtil.getLocation("config.json"), Data::class.java)

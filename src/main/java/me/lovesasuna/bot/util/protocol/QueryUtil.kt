@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util
+package me.lovesasuna.bot.util.protocol
 
 import java.io.*
 import java.net.Socket

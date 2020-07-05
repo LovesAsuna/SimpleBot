@@ -3,7 +3,7 @@ package me.lovesasuna.bot.listener
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.function.Sort
-import me.lovesasuna.bot.util.Listener
+import me.lovesasuna.bot.util.interfaces.Listener
 import net.mamoe.mirai.event.subscribeFriendMessages
 import net.mamoe.mirai.message.data.Image
 

@@ -7,8 +7,8 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.Listener
-import me.lovesasuna.bot.util.NetWorkUtil
+import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.GroupMessageEvent

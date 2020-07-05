@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.util.Listener
+import me.lovesasuna.bot.util.interfaces.Listener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -9,7 +9,6 @@ import net.mamoe.mirai.message.data.PlainText
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
 
 /**
