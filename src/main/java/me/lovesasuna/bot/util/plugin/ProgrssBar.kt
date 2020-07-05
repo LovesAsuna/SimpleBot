@@ -17,18 +17,18 @@ class ProgressBar(val PROGRESS_SIZE: Int = 50) {
 
     suspend fun printProgress(interval: Long) {
         print("Progress:")
-        finish = getNChar(0, '█')
+        finish = getNChar(0, '=')
         unFinish = getNChar(PROGRESS_SIZE, '─')
         printTarget(0.0) {}
         while (index < PROGRESS_SIZE) {
-            finish = getNChar(index.toInt(), '█')
-            unFinish = getNChar(PROGRESS_SIZE - index.toInt(), '─')
+            finish = getNChar(index.toInt(), '=')
+            unFinish = getNChar(PROGRESS_SIZE - index.toInt(), ' ')
             printTarget(index / PROGRESS_SIZE) {
                 print(getNChar(PROGRESS_SIZE + 10, '\b'))
             }
             delay(interval)
         }
-        printTarget(1.0, getNChar(PROGRESS_SIZE, '█'), getNChar(0, '─')) {
+        printTarget(1.0, getNChar(PROGRESS_SIZE, '='), getNChar(0, ' ')) {
             print(getNChar(PROGRESS_SIZE + 10, '\b'))
         }
         println()
