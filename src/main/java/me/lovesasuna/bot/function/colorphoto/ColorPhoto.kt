@@ -38,10 +38,7 @@ class ColorPhoto : Listener {
                         bannotice.invoke()
                     }
                 }
-                "ban" -> {
-                    changeBanStatus(event, message)
-                }
-                "unban" -> {
+                "switch" -> {
                     changeBanStatus(event, message)
                 }
             }
@@ -54,19 +51,11 @@ class ColorPhoto : Listener {
             GlobalScope.async {
                 when (message.split(" ")[2]) {
                     "pixiv" -> {
-                        if (pixiv) {
-                            event.reply("已禁用pixiv图源")
-                        } else {
-                            event.reply("已解禁pixiv图源")
-                        }
+                        event.reply("已${if (pixiv) "禁用" else "解禁"}pixiv图源")
                         pixiv = !pixiv
                     }
                     "random" -> {
-                        if (random) {
-                            event.reply("已禁用random图源")
-                        } else {
-                            event.reply("已解禁random图源")
-                        }
+                        event.reply("已${if (random) "禁用" else "解禁"}random图源")
                         random = !random
                     }
                 }
