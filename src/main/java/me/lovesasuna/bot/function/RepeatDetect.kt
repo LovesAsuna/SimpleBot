@@ -1,18 +1,19 @@
 package me.lovesasuna.bot.function
 
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.bot.util.photo.ImageUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.*
 import java.util.*
+import javax.imageio.ImageIO
 
 /**
  * @author LovesAsuna
  * @date 2020/4/22 23:50
  */
-class RepeatDetect : Listener {
+class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val groupID = (event as GroupMessageEvent).group.id
@@ -30,20 +31,37 @@ class RepeatDetect : Listener {
         }
 
         if (isRepeat(messageList)) {
-            val builder = StringBuilder()
-            val stringList = listOf("你", "群", "天", "天", "复", "读")
-            val random = Random()
-            when (random.nextInt(3)) {
-                0 -> {
-                    Collections.shuffle(stringList)
-                    stringList.forEach { str: String? -> builder.append(str) }
-                    event.reply(builder.toString())
-                }
-                1 -> event.reply("你群天天复读")
+            val messageChain = event.message
+            when (messageChain.size) {
                 2 -> {
-                    event.reply(messageList[2])
+                    when (messageChain[1]) {
+                        is PlainText -> {
+                            ArrayList<Char>().apply {
+                                message.forEach {
+                                    this.add(it)
+                                }
+                                this.shuffle()
+                                val builder = StringBuilder()
+                                this.forEach { builder.append(it) }
+                                event.reply(builder.toString())
+                            }
+                        }
+                        is Image -> {
+                            val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.first).let {
+                                when (Random().nextInt(2)) {
+                                    0 -> ImageUtil.rotateImage(it, 180)
+                                    1-> ImageUtil.reverseImage(it)
+                                    else -> it
+                                }
+                            }
+                            event.reply(event.uploadImage(bufferedImage))
+                        }
+                    }
                 }
+                else -> event.reply(messageList[2])
             }
+
+
             messageList.clear()
         }
         return true
