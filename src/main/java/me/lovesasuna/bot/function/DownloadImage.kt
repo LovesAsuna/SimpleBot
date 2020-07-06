@@ -2,8 +2,8 @@ package me.lovesasuna.bot.function
 
 
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import me.lovesasuna.bot.util.interfaces.Listener
+import kotlinx.coroutines.launch
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -12,11 +12,13 @@ import net.mamoe.mirai.message.data.queryUrl
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.net.SocketTimeoutException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class DownloadImage : Listener {
+class DownloadImage : FunctionListener {
     companion object {
         var max = 0
         val path = "C:/Users/${System.getenv()["USERNAME"]}/Desktop/image"
@@ -51,12 +53,16 @@ class DownloadImage : Listener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         /*如果图片不为空*/
         val imageURL = image?.queryUrl()
-        GlobalScope.async {
+        GlobalScope.launch {
             if (imageURL != null) {
-                val result = NetWorkUtil.get(imageURL) ?: return@async
-                val size = result.second
+                var result: Pair<InputStream, Int>? = null
+                try {
+                    result = NetWorkUtil.get(imageURL)
+                } catch (e: SocketTimeoutException) {
+                }
+                val size = result!!.second
                 if (size < 650000) {
-                    return@async
+                    return@launch
                 }
                 val file = File(path)
                 if (!file.exists()) {

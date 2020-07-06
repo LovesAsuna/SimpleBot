@@ -2,7 +2,7 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -14,7 +14,7 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
-class Bilibili : Listener {
+class Bilibili : FunctionListener {
     private val pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {

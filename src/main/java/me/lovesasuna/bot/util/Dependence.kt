@@ -10,7 +10,7 @@ import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
 import me.lovesasuna.bot.util.network.DownloadUtil
 import me.lovesasuna.bot.util.plugin.Logger
-import me.lovesasuna.bot.util.plugin.ProgressBar
+import me.lovesasuna.bot.util.plugin.display.ProgressBarImpl
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -39,17 +39,10 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         private var depenDir: File? = null
         private var totalSize = 0
         private var downloadedSize = 0
-        val progressBar = ProgressBar(50)
-        fun download(dependence: Dependence) {
+        private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
+        private fun download(dependence: Dependence) {
             pool!!.submit {
-                if (!depenDir!!.exists()) {
-                    try {
-                        Files.createDirectory(Paths.get(depenDir!!.path))
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                }
-                var url: URL?
+                val url: URL?
                 val conn = AtomicReference<HttpURLConnection>()
                 try {
                     url = URL(dependence.url)
@@ -123,14 +116,16 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 progressBar.index = 101.0
             }
 
-            runBlocking {
-                progressBar.printProgress(500)
-            }
+            progressBar.print()
         }
 
         init {
             pool = ThreadPoolExecutor(5, 5, 1, TimeUnit.MINUTES, ArrayBlockingQueue(5))
-            depenDir = File(Main.dataFolder.path + File.separator + "Dependencies")
+            depenDir = File("${Main.dataFolder.path}${File.separator}Dependencies").also {
+                if (!it.exists()) {
+                    Files.createDirectories(Paths.get(it.toURI()))
+                }
+            }
         }
     }
 

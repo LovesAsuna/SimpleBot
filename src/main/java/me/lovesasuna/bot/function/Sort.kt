@@ -1,14 +1,14 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.FriendMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.File
 
-class Sort : Listener {
+class Sort : FunctionListener {
     companion object {
         fun sort(suffix: String): String {
             var notExist = 1

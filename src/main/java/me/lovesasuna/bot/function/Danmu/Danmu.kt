@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import java.util.zip.Inflater
 import java.util.zip.InflaterInputStream
 
-class Danmu : Listener {
+class Danmu : FunctionListener {
     var closed: Boolean = false
     var roomID: Int = 0
     lateinit var conn: HttpURLConnection

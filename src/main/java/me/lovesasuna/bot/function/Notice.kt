@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.function
 
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
@@ -8,7 +8,7 @@ import java.io.Serializable
 import java.util.*
 import kotlin.streams.toList
 
-class Notice : Listener {
+class Notice : FunctionListener {
     private val calendar = Calendar.getInstance()
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {

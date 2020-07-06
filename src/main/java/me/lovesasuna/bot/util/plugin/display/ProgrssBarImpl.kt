@@ -1,9 +1,14 @@
-package me.lovesasuna.bot.util.plugin
+package me.lovesasuna.bot.util.plugin.display
 
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import me.lovesasuna.bot.util.interfaces.ProgressBar
 
-class ProgressBar(val PROGRESS_SIZE: Int = 50) {
+class ProgressBarImpl(val PROGRESS_SIZE: Int = 50) : ProgressBar {
     var index = 0.0
+    private var interval = 100L
     private var finish: String = ""
     private var unFinish: String = ""
 
@@ -15,7 +20,11 @@ class ProgressBar(val PROGRESS_SIZE: Int = 50) {
         return builder.toString()
     }
 
-    suspend fun printProgress(interval: Long) {
+    override fun setInterval(interval: Long) {
+        this.interval = interval
+    }
+
+    override suspend fun printWithInterval(interval: Long) {
         print("Progress:")
         finish = getNChar(0, '=')
         unFinish = getNChar(PROGRESS_SIZE, '─')
@@ -38,5 +47,11 @@ class ProgressBar(val PROGRESS_SIZE: Int = 50) {
         val target = String.format(" %5.2f %%├%s%s┤", progress * 100, finished, unFinished)
         clear.invoke()
         print(target)
+    }
+
+    override fun print() {
+        runBlocking {
+            printWithInterval(interval)
+        }
     }
 }

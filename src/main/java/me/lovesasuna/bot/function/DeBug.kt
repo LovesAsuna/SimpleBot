@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -9,7 +9,7 @@ import net.mamoe.mirai.message.data.Image
 import java.io.IOException
 import java.util.regex.Pattern
 
-class DeBug : Listener {
+class DeBug : FunctionListener {
     private val pattern = Pattern.compile("/debug @")
 
     @Throws(IOException::class)

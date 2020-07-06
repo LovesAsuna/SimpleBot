@@ -17,7 +17,8 @@ object Logger {
     }
 
     enum class Messages(val message: String) {
-        DOWNLOAD_DEPEN("正在获取依赖");
+        DOWNLOAD_DEPEN("正在获取依赖"),
+        BOT_SHUTDOWN("正在关闭 机器人...");
     }
 
     enum class LogLevel {

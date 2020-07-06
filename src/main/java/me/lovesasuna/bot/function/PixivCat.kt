@@ -2,7 +2,7 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -10,7 +10,7 @@ import net.mamoe.mirai.message.data.Image
 import java.io.ByteArrayInputStream
 import java.util.regex.Pattern
 
-class PixivCat : Listener {
+class PixivCat : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         when {
             message.startsWith("/pixiv work ") -> {

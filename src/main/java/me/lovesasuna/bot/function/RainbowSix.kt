@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
@@ -15,7 +15,7 @@ import java.util.*
  * @author LovesAsuna
  * @date 2020/4/19 20:17
  */
-class RainbowSix : Listener {
+class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val groupID = (event as GroupMessageEvent).group.id

@@ -7,7 +7,7 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
@@ -21,7 +21,7 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Dynamic : Listener {
+class Dynamic : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
         if (message.startsWith("/subscribe ")) {

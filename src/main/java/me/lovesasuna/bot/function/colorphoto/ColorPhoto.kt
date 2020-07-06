@@ -3,14 +3,14 @@ package me.lovesasuna.bot.function.colorphoto
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.PlainText
 
-class ColorPhoto : Listener {
+class ColorPhoto : FunctionListener {
     lateinit var source: Source
     var random = true
     var pixiv = true

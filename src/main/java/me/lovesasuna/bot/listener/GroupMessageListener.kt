@@ -5,13 +5,14 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.function.Danmu.Danmu
 import me.lovesasuna.bot.function.colorphoto.ColorPhoto
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.interfaces.MessageListener
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 
 class GroupMessageListener {
-    val listeners = ArrayList<Listener>()
+    val listeners = ArrayList<FunctionListener>()
 
     init {
         val listenersClass = arrayOf<Class<*>>(
@@ -23,13 +24,13 @@ class GroupMessageListener {
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
                 Dynamic::class.java
         )
-        listenersClass.forEach { listeners.add(it.getConstructor().newInstance() as Listener) }
+        listenersClass.forEach { listeners.add(it.getConstructor().newInstance() as FunctionListener) }
     }
 
 
-    companion object {
+    companion object : MessageListener {
         val listener = GroupMessageListener()
-        fun onMessage() {
+        override fun onMessage() {
             Main.bot.subscribeGroupMessages {
                 always {
                     listener.listeners.forEach {

@@ -3,24 +3,25 @@ package me.lovesasuna.bot.listener
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.function.Sort
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.interfaces.MessageListener
 import net.mamoe.mirai.event.subscribeFriendMessages
 import net.mamoe.mirai.message.data.Image
 
 class FriendMessageListener {
-    private val listeners: MutableList<Listener> = ArrayList()
+    private val listeners: MutableList<FunctionListener> = ArrayList()
 
     init {
         val listenersClass = arrayOf<Class<*>>(
-               Sort::class.java
+                Sort::class.java
         )
 
-        listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as Listener) }
+        listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as FunctionListener) }
     }
 
-    companion object {
+    companion object : MessageListener {
         val listener = FriendMessageListener()
-        fun onMessage() {
+        override fun onMessage() {
             Main.bot.subscribeFriendMessages {
                 always {
                     val senderID = sender.id

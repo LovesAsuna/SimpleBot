@@ -2,7 +2,7 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import net.mamoe.mirai.message.MessageEvent
@@ -10,7 +10,7 @@ import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.IOException
 
-class McQuery : Listener {
+class McQuery : FunctionListener {
     @Throws(IOException::class)
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         if (message.startsWith("/mcquery ")) {

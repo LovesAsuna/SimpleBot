@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -14,7 +14,7 @@ import java.nio.file.Paths
 /**
  * @author LovesAsuna
  */
-class Misc : Listener {
+class Misc : FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         when {

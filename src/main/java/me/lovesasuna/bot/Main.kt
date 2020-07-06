@@ -14,6 +14,8 @@ import net.mamoe.mirai.join
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.MiraiLogger
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * @author LovesAsuna
@@ -37,7 +39,7 @@ suspend fun main() {
     Main.initListener()
 
     Runtime.getRuntime().addShutdownHook(Thread {
-        Logger.log("正在关闭 机器人...", Logger.LogLevel.CONSOLE)
+        Logger.log(Logger.Messages.BOT_SHUTDOWN, Logger.LogLevel.CONSOLE)
         FileManager.writeValue()
     })
     Main.bot.join()
@@ -46,8 +48,9 @@ suspend fun main() {
 object Main {
     lateinit var bot: Bot
     var logger: MiraiLogger? = null
-    val scheduler = PluginScheduler(GlobalScope.coroutineContext)
+    val scheduler = PluginScheduler()
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
+            .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI()))}
 
     fun initListener() {
         GroupMessageListener.onMessage()

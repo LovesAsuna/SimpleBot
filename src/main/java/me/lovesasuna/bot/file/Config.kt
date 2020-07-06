@@ -1,35 +1,29 @@
 package me.lovesasuna.bot.file
 
-import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
+import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 
-class Config {
-    companion object {
-        private lateinit var instance: Main
-        lateinit var data: Data
+object Config : FileManipulate {
+    private val file = BasicUtil.getLocation("config.json")
+    lateinit var data: Data
 
-        fun init() {
-            writeDefault()
+    override fun writeDefault() {
+        val data = Data()
+        if (!file.exists()) {
+            BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
-
-        private fun writeDefault() {
-            val file = File("config.json")
-            data = if (!file.exists()) {
-                Files.createFile(Paths.get(file.path))
-                val data = Data()
-                BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(BasicUtil.getLocation("config.json"), data)
-                data
-            } else {
-                BotData.objectMapper!!.readValue(BasicUtil.getLocation("config.json"), Data::class.java)
-            }
-
-        }
-
+        this.data = data
     }
+
+    override fun writeValue() {
+        throw UnsupportedOperationException()
+    }
+
+    override fun readValue() {
+        data = BotData.objectMapper!!.readValue(BasicUtil.getLocation("config.json"), Data::class.java)
+    }
+
 }
 
 data class Data(var account: Long = 0,

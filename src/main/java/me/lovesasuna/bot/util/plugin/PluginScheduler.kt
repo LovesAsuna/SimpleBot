@@ -3,7 +3,7 @@ package me.lovesasuna.bot.util.plugin
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class PluginScheduler(override val coroutineContext: CoroutineContext) : CoroutineScope {
+class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalScope.coroutineContext) : CoroutineScope {
 
 
     class RepeatTaskReceipt(@Volatile var cancelled: Boolean = false)

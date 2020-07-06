@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.util.interfaces.Listener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -11,7 +11,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-class Hitokoto : Listener {
+class Hitokoto : FunctionListener {
     @Throws(IOException::class)
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         if (message.startsWith("/一言")) {
