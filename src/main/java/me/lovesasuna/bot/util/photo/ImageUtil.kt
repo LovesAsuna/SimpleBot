@@ -1,12 +1,8 @@
 package me.lovesasuna.bot.util.photo
 
 import java.awt.Dimension
-import java.awt.Image
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
-import java.io.File
-import java.net.URL
-import javax.imageio.ImageIO
 
 object ImageUtil {
     /**
@@ -70,7 +66,7 @@ object ImageUtil {
         return Rectangle(Dimension(des_width, des_height))
     }
 
-    fun reverseImage(bufferedImage: BufferedImage) : BufferedImage {
+    fun mirrorImage(bufferedImage: BufferedImage): BufferedImage {
         val width = bufferedImage.width
         val height = bufferedImage.height
         for (j in 0 until height) {
@@ -83,6 +79,42 @@ object ImageUtil {
                 bufferedImage.setRGB(r, j, pl)
                 l++
                 r--
+            }
+        }
+        return bufferedImage
+    }
+
+    /**
+     * @param bufferedImage 图像
+     * @param mode 1为水平反转,2为竖直反转
+     */
+    fun reverseImage(bufferedImage: BufferedImage, mode: Int): BufferedImage {
+        val width = bufferedImage.width
+        val height = bufferedImage.height
+        var before: Int
+        var after: Int
+        when (mode) {
+            1 -> {
+                val midWidth = width / 2
+                for (i in 0 until height) {
+                    for (j in 0 until midWidth) {
+                        before = bufferedImage.getRGB(j, i)
+                        after = bufferedImage.getRGB(j + midWidth, i)
+                        bufferedImage.setRGB(j, i, after)
+                        bufferedImage.setRGB(j + midWidth, i, before)
+                    }
+                }
+            }
+            2 -> {
+                val midHeight = height / 2
+                for (i in 0 until width) {
+                    for (j in 0 until midHeight) {
+                        before = bufferedImage.getRGB(i, j)
+                        after = bufferedImage.getRGB(i, j + midHeight)
+                        bufferedImage.setRGB(i, j, after)
+                        bufferedImage.setRGB(i, j + midHeight, before)
+                    }
+                }
             }
         }
         return bufferedImage
