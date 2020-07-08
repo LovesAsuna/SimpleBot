@@ -49,10 +49,10 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalSc
     /**
      * 异步执行一个任务, 没有返回
      */
-    fun async(runnable: Runnable) {
+    fun async(runnable: CoroutineScope) {
         this.launch {
             withContext(Dispatchers.IO) {
-                runnable.run()
+                runnable
             }
         }
     }
