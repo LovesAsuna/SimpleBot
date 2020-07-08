@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.function
 
+import kotlinx.coroutines.coroutineScope
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
@@ -31,38 +33,45 @@ class RepeatDetect : FunctionListener {
         }
 
         if (isRepeat(messageList)) {
-            val messageChain = event.message
-            when (messageChain.size) {
-                2 -> {
-                    when (messageChain[1]) {
-                        is PlainText -> {
-                            ArrayList<Char>().apply {
-                                message.forEach {
-                                    this.add(it)
-                                }
-                                this.shuffle()
-                                val builder = StringBuilder()
-                                this.forEach { builder.append(it) }
-                                event.reply(builder.toString())
-                            }
-                        }
-                        is Image -> {
-                            val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.first).let {
-                                when (Random().nextInt(2)) {
-                                    0 -> ImageUtil.rotateImage(it, 180)
-                                    1-> ImageUtil.reverseImage(it)
-                                    else -> it
+            Main.scheduler.async(coroutineScope {
+
+                val messageChain = event.message
+                when (messageChain.size) {
+                    2 -> {
+                        when (messageChain[1]) {
+                            is PlainText -> {
+                                ArrayList<Char>().apply {
+                                    message.forEach {
+                                        this.add(it)
+                                    }
+                                    this.shuffle()
+                                    val builder = StringBuilder()
+                                    this.forEach { builder.append(it) }
+                                    event.reply(builder.toString())
                                 }
                             }
-                            event.reply(event.uploadImage(bufferedImage))
+                            is Image -> {
+                                val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.first).let {
+                                    when (Random().nextInt(4)) {
+                                        0 -> ImageUtil.rotateImage(it, 180)
+                                        1 -> ImageUtil.mirrorImage(it)
+                                        2 -> ImageUtil.reverseImage(it, 1)
+                                        3 -> ImageUtil.reverseImage(it, 2)
+                                        else -> it
+                                    }
+                                }
+                                event.reply(event.uploadImage(bufferedImage))
+                            }
                         }
                     }
+                    else -> {
+                        event.reply(messageList[2])
+                    }
                 }
-                else -> event.reply(messageList[2])
-            }
 
-
-            messageList.clear()
+                messageList.clear()
+                this
+            })
         }
         return true
     }
