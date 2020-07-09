@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.withTimeout
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
@@ -32,8 +33,10 @@ class PixivCat : FunctionListener {
                 event.reply("获取中,请稍后..")
                 val byteArrayOutputStream = NetWorkUtil.inputStreamClone(orignInputStream)
                 try {
-                    event.reply(event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray())))
-                    event.reply("获取完成!")
+                    withTimeout(7500) {
+                        event.reply(event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray())))
+                        event.reply("获取完成!")
+                    }
                 } catch (e: Exception) {
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
                     val matcher = Pattern.compile("這個作品ID中有 \\d 張圖片").matcher(string)
