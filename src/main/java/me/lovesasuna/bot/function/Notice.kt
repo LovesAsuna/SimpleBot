@@ -6,7 +6,7 @@ import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
 import java.io.Serializable
 import java.util.*
-import kotlin.streams.toList
+import java.util.stream.Collectors
 
 class Notice : FunctionListener {
     private val calendar = Calendar.getInstance()
@@ -15,7 +15,7 @@ class Notice : FunctionListener {
         event as GroupMessageEvent
         val groupID = event.group.id
         val senderID = event.sender.id
-        val filterList = data.msgList.parallelStream().filter { it.first == groupID && it.second == senderID }.toList()
+        val filterList = data.msgList.parallelStream().filter { it.first == groupID && it.second == senderID }.collect(Collectors.toList())
         if (filterList.isNotEmpty()) {
             event.reply(filterList.first().third)
             data.msgList.remove(filterList.first())
