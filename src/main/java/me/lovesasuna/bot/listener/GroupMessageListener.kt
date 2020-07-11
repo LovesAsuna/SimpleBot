@@ -22,7 +22,7 @@ class GroupMessageListener {
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
-                Dynamic::class.java
+                Dynamic::class.java, Baike::class.java
         )
         listenersClass.forEach { listeners.add(it.getConstructor().newInstance() as FunctionListener) }
     }
