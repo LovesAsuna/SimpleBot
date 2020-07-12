@@ -14,6 +14,7 @@ import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -36,7 +37,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         private var downloadDepen = false
         private var pool: ThreadPoolExecutor? = null
         private var depenDir: File? = null
-        private var totalSize = 0
+        private var totalSize = 1
         private var downloadedSize = 0
         private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
         private fun download(dependence: Dependence) {
@@ -110,11 +111,9 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                 for (dependence in dependences) {
                     addURL.invoke(Main::class.java.classLoader, dependence.fileURL)
                 }
-
+                progressBar.index = 100.0
                 BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
-                progressBar.index = 101.0
             }
-
             progressBar.print()
         }
 
