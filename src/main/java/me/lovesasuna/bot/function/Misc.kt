@@ -41,6 +41,7 @@ class Misc : FunctionListener {
             message == "考试" -> event.reply(event.uploadImage(File(imagePath("exam.jpg"))))
             message == "/donate" -> event.reply(PlainText("我很可爱,请给我钱\n") + event.uploadImage(File(imagePath("pay.jpg"))))
             message == "开车" -> event.reply(event.uploadImage(File(imagePath(("car.jpg")))))
+            message == "/searchhelp" -> event.reply("发图前用点脑子，你觉得p站都不可能存在的图就别扔了，搜不到还赖我？我不是识图的，我是搜p站图的，懂？")
         }
         return true
     }
