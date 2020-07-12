@@ -1,6 +1,5 @@
 package me.lovesasuna.bot
 
-import kotlinx.coroutines.GlobalScope
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -50,7 +49,7 @@ object Main {
     var logger: MiraiLogger? = null
     val scheduler = PluginScheduler()
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
-            .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI()))}
+            .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI())) }
 
     fun initListener() {
         GroupMessageListener.onMessage()
