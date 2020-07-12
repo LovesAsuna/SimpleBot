@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
 import me.lovesasuna.bot.data.BotData.objectMapper
+import me.lovesasuna.bot.util.interfaces.PhotoSource
 import me.lovesasuna.bot.util.network.NetWorkUtil.get
 import java.io.IOException
 
@@ -8,7 +9,7 @@ import java.io.IOException
  * @author LovesAsuna
  * @date 2020/4/19 14:06
  */
-class Pixiv : Source {
+class Pixiv : PhotoSource {
     override fun fetchData(): String? {
         // 备用976835505edf70ff564238
         val source = "https://api.lolicon.app/setu/?apikey=560424975e992113ed5977"

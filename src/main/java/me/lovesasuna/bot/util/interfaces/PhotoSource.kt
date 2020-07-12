@@ -1,6 +1,6 @@
-package me.lovesasuna.bot.function.colorphoto
+package me.lovesasuna.bot.util.interfaces
 
-interface Source {
+interface PhotoSource {
     /**
      * 从api获得数据
      * @return 从api获得数据

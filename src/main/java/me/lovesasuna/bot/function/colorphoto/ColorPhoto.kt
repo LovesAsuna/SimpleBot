@@ -4,6 +4,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.interfaces.PhotoSource
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -11,7 +12,7 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.PlainText
 
 class ColorPhoto : FunctionListener {
-    lateinit var source: Source
+    lateinit var photoSource: PhotoSource
     var random = true
     var pixiv = true
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
@@ -20,8 +21,8 @@ class ColorPhoto : FunctionListener {
             when (message.split(" ")[1]) {
                 "pixiv" -> {
                     if (pixiv) {
-                        source = Pixiv()
-                        val data = source.fetchData()
+                        photoSource = Pixiv()
+                        val data = photoSource.fetchData()
                         val url = data?.split("|")?.get(0)
                         val quota = data?.split("|")?.get(1)
                         event.reply(event.uploadImage(NetWorkUtil.get(url)!!.first) + PlainText("\n剩余次数: $quota"))
@@ -32,8 +33,8 @@ class ColorPhoto : FunctionListener {
                 }
                 "random" -> {
                     if (random) {
-                        source = Random()
-                        event.reply(event.uploadImage(NetWorkUtil.get(source.fetchData())!!.first))
+                        photoSource = Random()
+                        event.reply(event.uploadImage(NetWorkUtil.get(photoSource.fetchData())!!.first))
                     } else {
                         bannotice.invoke()
                     }
