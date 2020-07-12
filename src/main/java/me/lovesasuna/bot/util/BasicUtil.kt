@@ -44,8 +44,7 @@ object BasicUtil {
             }
             inputStream.close()
             val md5bytes = messageDigest.digest()
-            val bigInteger = BigInteger(1, md5bytes)
-            bigInteger.toString(16)
+            BigInteger(1, md5bytes).toString(16)
         } catch (e: IOException) {
             null
         } catch (e: NoSuchAlgorithmException) {
