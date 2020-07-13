@@ -28,7 +28,7 @@ interface DependenceData {
         JACKSON_CORE("https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.11.1/jackson-core-2.11.1.jar"),
         JACKSON_ANNOTATIONS("https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.11.1/jackson-annotations-2.11.1.jar"),
 
-        CUSTOMCORE("https://github.com/LovesAsuna/Mirai-Bot/releases/download/2.5/CustomCore-1.1.1-all.jar"),
+        CUSTOMCORE("https://dev46.baidupan.com/071313bb/2020/07/13/517483107ef97cf8caa22ead4a332591.jar?st=wJ0jK848tqSf_bZInnWc3Q&e=1594619572&b=BhcNeAFyAnMEPgM4BBcAawIlXmdTfwo9An8APFV8UGMAfwhpVTkEbVkiUm5RYAdx&fi=26192564&pid=113-77-87-252&up=1."),
 
         KOTLIN_STDLIB("https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.3.72/kotlin-stdlib-1.3.72.jar"),
         KOTLIN_STDLIB_ANNOTATIONS("https://repo1.maven.org/maven2/org/jetbrains/annotations/19.0.0/annotations-19.0.0.jar"),
