@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import me.lovesasuna.bot.Agent
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
@@ -14,7 +15,6 @@ import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -27,14 +27,13 @@ import java.util.concurrent.atomic.AtomicReference
  * @author LovesAsuna
  * @date 2020/5/2 14:59
  */
-class Dependence constructor(private val fileName: String, url: DependenceData, MD5: DependenceData) {
-    val MD5: String
-    val url: String
+class Dependence constructor(private val fileName: String, url: DependenceData.URL, MD5: DependenceData.MD5) {
+    val MD5: String = MD5.data
+    val url: String = url.data
     var finish = false
     val fileURL: URL
 
     companion object {
-        private var downloadDepen = false
         private var pool: ThreadPoolExecutor? = null
         private var depenDir: File? = null
         private var totalSize = 1
@@ -84,21 +83,21 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
         fun init() {
             Logger.log(Logger.Messages.DOWNLOAD_DEPEN, Logger.LogLevel.CONSOLE)
             GlobalScope.launch {
-                val dependences: MutableList<Dependence> = ArrayList()
-                dependences.add(Dependence("jackson-databind-2.11.1.jar", DependenceData.JACKSON_DATABIND_URL, DependenceData.JACKSON_DATABIND_MD5))
-                dependences.add(Dependence("jackson-core-2.11.1.jar", DependenceData.JACKSON_CORE_URL, DependenceData.JACKSON_CORE_MD5))
-                dependences.add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.JACKSON_ANNOTATIONS_URL, DependenceData.JACKSON_ANNOTATIONS_MD5))
-                dependences.add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.JACKSON_MODULE_URL, DependenceData.JACKSON_MODULE_MD5))
-                // dependences.add(Dependence("ZXING-Core-3.4.0.jar", DependenceData.ZXING_URL, DependenceData.ZXING_MD5))
-
-                for (dependence in dependences) {
-                    download(dependence)
+                val dependencies = ArrayList<Dependence>()
+                dependencies.apply {
+                       add(Dependence("jackson-databind-2.11.1.jar", DependenceData.URL.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
+                    add(Dependence("jackson-core-2.11.1.jar", DependenceData.URL.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
+                    add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.URL.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
+                    add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.URL.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
+                    add(Dependence("custom-core-1.1.1.jar", DependenceData.URL.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
+                }.forEach {
+                    download(it)
                 }
 
                 while (true) {
                     var finish = true
-                    for (dependence in dependences) {
-                        if (!dependence.finish) {
+                    dependencies.forEach {
+                        if (!it.finish) {
                             finish = false
                         }
                     }
@@ -106,19 +105,18 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
                         break
                     }
                 }
-                val addURL = Class.forName("java.net.URLClassLoader").getDeclaredMethod("addURL", URL::class.java)
-                addURL.isAccessible = true
-                for (dependence in dependences) {
-                    addURL.invoke(Main::class.java.classLoader, dependence.fileURL)
+
+                for (dependence in dependencies) {
+                    Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
                 }
-                progressBar.index = 100.0
                 BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
+                progressBar.index = 100.0
             }
             progressBar.print()
         }
 
         init {
-            pool = ThreadPoolExecutor(5, 5, 1, TimeUnit.MINUTES, ArrayBlockingQueue(5))
+            pool = ThreadPoolExecutor(5, 10, 1, TimeUnit.MINUTES, ArrayBlockingQueue(5))
             depenDir = File("${Main.dataFolder.path}${File.separator}Dependencies").also {
                 if (!it.exists()) {
                     Files.createDirectories(Paths.get(it.toURI()))
@@ -128,8 +126,6 @@ class Dependence constructor(private val fileName: String, url: DependenceData, 
     }
 
     init {
-        this.MD5 = MD5.data
-        this.url = url.data
         fileURL = File(depenDir!!.path + File.separator + fileName).toURI().toURL()
     }
 
