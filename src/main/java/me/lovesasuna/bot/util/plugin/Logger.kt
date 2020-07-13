@@ -17,7 +17,7 @@ object Logger {
     }
 
     enum class Messages(val message: String) {
-        DOWNLOAD_DEPEN("正在获取依赖"),
+        DOWNLOAD_DEPEN("Loading libraries, please wait..."),
         BOT_SHUTDOWN("正在关闭 机器人...");
     }
 
