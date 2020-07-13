@@ -1,0 +1,12 @@
+plugins {
+    id 'java'
+}
+
+group 'me.lovesasuna'
+version '1.0'
+
+task copyAgent(type: Copy, dependsOn: compileJava) {
+    def path = 'me\\lovesasuna\\bot'
+    from('build\\classes\\java\\main\\' + path + '\\Agent.class')
+    into(getRootDir().path + '\\src\\main\\resources\\META-INF\\versions\\9\\me\\lovesasuna\\bot')
+}
