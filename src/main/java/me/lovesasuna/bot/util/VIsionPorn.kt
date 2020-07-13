@@ -6,7 +6,7 @@ import java.net.URLEncoder
 import java.security.MessageDigest
 
 fun main() {
-    TODO("腾讯API未知问题，有待解决")
+    //todo 腾讯API未知问题，有待解决
     val url = "https://s1.hdslb.com/bfs/static/jinkela/video/asserts/cm_2.png"
     val time = (System.currentTimeMillis() / 1000).toString()
     val builder = StringBuilder()
