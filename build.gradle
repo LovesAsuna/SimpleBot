@@ -6,7 +6,7 @@ plugins {
 
 description('一个基于Mirai的机器人')
 group 'me.lovesasuna'
-version '2.5.2'
+version '2.6.0'
 
 ext {
     workDir = 'E:\\work\\Mirai'
