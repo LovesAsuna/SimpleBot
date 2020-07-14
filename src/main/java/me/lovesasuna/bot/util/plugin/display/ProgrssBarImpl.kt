@@ -1,8 +1,6 @@
 package me.lovesasuna.bot.util.plugin.display
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.util.interfaces.ProgressBar
 
