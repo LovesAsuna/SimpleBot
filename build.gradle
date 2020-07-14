@@ -24,7 +24,7 @@ defaultTasks("shadowJar")
 
 shadowJar {
     processResources.dependsOn(project('Agent4j9').getTasksByName('copyAgent', false))
-    processResources.dependsOn(project('CustomCore').getTasksByName('copyCore', false))
+    processResources.dependsOn(project('CustomCore').getTasksByName('shadowJar', false))
     manifest {
         attributes("Main-Class": "me.lovesasuna.bot.MainKt")
         attributes("Launcher-Agent-Class": "me.lovesasuna.bot.Agent")
