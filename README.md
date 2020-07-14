@@ -52,3 +52,5 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 
 ## 📜 协议 
 [LGPL v3.0](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
+
+机器人采用的部分技术如果侵权，请直接联系邮箱[qq625924077@mail.com](mailto:qq625924077@mail.com)
