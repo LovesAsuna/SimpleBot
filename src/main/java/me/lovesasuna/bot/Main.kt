@@ -13,6 +13,7 @@ import net.mamoe.mirai.join
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.MiraiLogger
 import java.io.File
+import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -21,15 +22,17 @@ import java.nio.file.Paths
  * @date 2020/7/3 21:54
  */
 suspend fun main() {
+    Main.printSystemInfo()
     /*初始化机器人依赖*/
     Dependence.init()
-
+    Main.botConfig = BotConfiguration.Default.also {
+        it.randomDeviceInfo()
+    }
     FileManager.readValue()
+    Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
     Main.bot = Bot(Config.data.account,
             Config.data.password,
-            BotConfiguration.Default.also {
-                it.randomDeviceInfo()
-            }
+            Main.botConfig
     ).also {
         it.login()
         Main.logger = it.logger
@@ -46,6 +49,7 @@ suspend fun main() {
 
 object Main {
     lateinit var bot: Bot
+    lateinit var botConfig : BotConfiguration
     var logger: MiraiLogger? = null
     val scheduler = PluginScheduler()
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
@@ -54,5 +58,17 @@ object Main {
     fun initListener() {
         GroupMessageListener.onMessage()
         FriendMessageListener.onMessage()
+    }
+
+    fun printSystemInfo() {
+        val runtimeMX = ManagementFactory.getRuntimeMXBean()
+        val osMX = ManagementFactory.getOperatingSystemMXBean()
+        if (runtimeMX != null && osMX != null) {
+            val javaInfo = "Java " + runtimeMX.specVersion + " (" + runtimeMX.vmName + " " + runtimeMX.vmVersion + ")"
+            val osInfo = "Host: " + osMX.name + " " + osMX.version + " (" + osMX.arch + ")"
+            println("System Info: $javaInfo $osInfo")
+        } else {
+            println("Unable to read system info")
+        }
     }
 }
