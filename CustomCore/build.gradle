@@ -14,3 +14,13 @@ dependencies {
     implementation 'net.mamoe:mirai-core-qqandroid:' + version
 }
 
+task copyCore(type: Copy, dependsOn : shadowJar) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from('build/libs/')
+    into(rootDir.path + "\\libs")
+    include('*.jar')
+    rename {
+        "CustomCore-" + version + ".jar"
+    }
+}
+
