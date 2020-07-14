@@ -1,8 +1,20 @@
 package me.lovesasuna.bot.data
 
+import me.lovesasuna.bot.util.network.DownloadUtil
+
 
 interface DependenceData {
-    enum class MD5(val data: String) : DependenceData {
+    val data: String
+
+    interface DependenceMD5 : DependenceData
+
+    interface DependenceUrl : DependenceData
+
+    interface MavenUrl : DependenceUrl
+
+    interface LanzousUrl : DependenceUrl
+
+    enum class MD5(override val data: String) : DependenceMD5 {
         /*JackSon依赖*/
         JACKSON_ANNOTATIONS("ae29476ef47b802516535a8fbd964ec2"),
         JACKSON_CORE("178171dcc707f3aa1b5d53717530a589"),
@@ -22,13 +34,15 @@ interface DependenceData {
         CUSTOMCORE("ef85e90b643ce3380562a227b2bbd93"),
     }
 
-    enum class URL(val data: String) : DependenceData {
+    enum class Lanzous(override val data: String) : LanzousUrl {
+        CUSTOMCORE(DownloadUtil.getlanzousUrl("iJhvuekda7e")),
+    }
+
+    enum class Maven(override val data: String) : MavenUrl {
         JACKSON_DATABIND("https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.11.1/jackson-databind-2.11.1.jar"),
         JACKSON_MODULE("https://repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-kotlin/2.11.1/jackson-module-kotlin-2.11.1.jar"),
         JACKSON_CORE("https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.11.1/jackson-core-2.11.1.jar"),
         JACKSON_ANNOTATIONS("https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.11.1/jackson-annotations-2.11.1.jar"),
-
-        CUSTOMCORE("https://dev46.baidupan.com/071313bb/2020/07/13/517483107ef97cf8caa22ead4a332591.jar?st=wJ0jK848tqSf_bZInnWc3Q&e=1594619572&b=BhcNeAFyAnMEPgM4BBcAawIlXmdTfwo9An8APFV8UGMAfwhpVTkEbVkiUm5RYAdx&fi=26192564&pid=113-77-87-252&up=1."),
 
         KOTLIN_STDLIB("https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.3.72/kotlin-stdlib-1.3.72.jar"),
         KOTLIN_STDLIB_ANNOTATIONS("https://repo1.maven.org/maven2/org/jetbrains/annotations/19.0.0/annotations-19.0.0.jar"),

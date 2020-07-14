@@ -18,34 +18,36 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.system.exitProcess
 
 /**
  * @author LovesAsuna
  * @date 2020/5/2 14:59
  */
-class Dependence constructor(private val fileName: String, url: DependenceData.URL, MD5: DependenceData.MD5) {
-    val MD5: String = MD5.data
-    val url: String = url.data
+class Dependence constructor(private val fileName: String, val urlData: DependenceData.DependenceUrl, MD5Data: DependenceData.MD5) {
+    val MD5: String = MD5Data.data
+    val url: String = urlData.data
     var finish = false
     val fileURL: URL
 
     companion object {
-        private var pool: ThreadPoolExecutor? = null
         private var depenDir: File? = null
         private var totalSize = 1
         private var downloadedSize = 0
         private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
         private fun download(dependence: Dependence) {
-            pool!!.submit {
+            GlobalScope.launch {
                 val url: URL?
                 val conn = AtomicReference<HttpURLConnection>()
                 try {
                     url = URL(dependence.url)
                     conn.set(url.openConnection() as HttpURLConnection)
+                    when (dependence.urlData) {
+                        is DependenceData.LanzousUrl -> {
+                            conn.get().setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9")
+                        }
+                    }
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -76,7 +78,11 @@ class Dependence constructor(private val fileName: String, url: DependenceData.U
                     progressBar.index = (progressBar.PROGRESS_SIZE * downloadedSize).toDouble() / totalSize
                 }
             } catch (e: IOException) {
-                e.printStackTrace()
+                println()
+                System.err.println("An error occurred when downloading dependency: ${file.name}")
+                System.err.println("URL: ${conn.get().url}")
+                System.err.println("Process auto exit...")
+                exitProcess(0)
             }
         }
 
@@ -85,11 +91,11 @@ class Dependence constructor(private val fileName: String, url: DependenceData.U
             GlobalScope.launch {
                 val dependencies = ArrayList<Dependence>()
                 dependencies.apply {
-                    add(Dependence("jackson-databind-2.11.1.jar", DependenceData.URL.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
-                    add(Dependence("jackson-core-2.11.1.jar", DependenceData.URL.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
-                    add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.URL.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
-                    add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.URL.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
-                    add(Dependence("custom-core-1.1.1.jar", DependenceData.URL.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
+                    add(Dependence("jackson-databind-2.11.1.jar", DependenceData.Maven.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
+                    add(Dependence("jackson-core-2.11.1.jar", DependenceData.Maven.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
+                    add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.Maven.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
+                    add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.Maven.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
+                    add(Dependence("custom-core-1.1.1.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
                 }.forEach {
                     download(it)
                 }
@@ -116,7 +122,6 @@ class Dependence constructor(private val fileName: String, url: DependenceData.U
         }
 
         init {
-            pool = ThreadPoolExecutor(5, 10, 1, TimeUnit.MINUTES, ArrayBlockingQueue(5))
             depenDir = File("${Main.dataFolder.path}${File.separator}Dependencies").also {
                 if (!it.exists()) {
                     Files.createDirectories(Paths.get(it.toURI()))
