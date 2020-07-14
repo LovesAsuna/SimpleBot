@@ -6,7 +6,7 @@ plugins {
 
 description('一个基于Mirai的机器人')
 group 'me.lovesasuna'
-version '2.5'
+version '2.5.2'
 
 ext {
     workDir = 'E:\\work\\Mirai'
@@ -40,6 +40,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compileOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
+    testCompileOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
 }
 
 tasks.withType(JavaCompile) {
