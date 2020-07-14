@@ -85,7 +85,7 @@ class Dependence constructor(private val fileName: String, url: DependenceData.U
             GlobalScope.launch {
                 val dependencies = ArrayList<Dependence>()
                 dependencies.apply {
-                       add(Dependence("jackson-databind-2.11.1.jar", DependenceData.URL.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
+                    add(Dependence("jackson-databind-2.11.1.jar", DependenceData.URL.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
                     add(Dependence("jackson-core-2.11.1.jar", DependenceData.URL.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
                     add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.URL.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
                     add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.URL.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
