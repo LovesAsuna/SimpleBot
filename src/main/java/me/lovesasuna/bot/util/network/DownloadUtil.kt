@@ -88,8 +88,8 @@ object DownloadUtil {
         val fn = src.split("\"")[5]
         val fnurl = "https://wwa.lanzous.com$fn"
         reader = NetWorkUtil.get(fnurl)!!.first.bufferedReader()
-        for (i in 0 until 18) reader.readLine()
-        val sign = reader.readLine().split("'")[1]
+        for (i in 0 until 23) reader.readLine()
+        val sign = reader.readLine().split("'")[7]
         val data = "action=downprocess&sign=$sign&ves=1"
         reader = NetWorkUtil.post("https://wwa.lanzous.com/ajaxm.php", data.toByteArray(),
                 arrayOf("Referer", fnurl),
