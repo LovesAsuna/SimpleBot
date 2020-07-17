@@ -12,6 +12,9 @@ ext {
     workDir = 'E:\\work\\Mirai'
 }
 
+sourceCompatibility = 8
+targetCompatibility = 8
+
 repositories {
     mavenCentral()
     jcenter()
