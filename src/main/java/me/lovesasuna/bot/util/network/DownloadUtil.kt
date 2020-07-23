@@ -99,7 +99,6 @@ object DownloadUtil {
                 arrayOf("Host", "wwa.lanzous.com")
         )!!.first.bufferedReader()
         val magic = reader.readLine().run {
-            println(this)
             split("\"")[9]
         }
         return "https://vip.d0.baidupan.com/file/$magic"
