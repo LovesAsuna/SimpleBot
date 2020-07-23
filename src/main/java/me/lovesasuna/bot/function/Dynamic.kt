@@ -20,6 +20,7 @@ import java.lang.Runnable
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class Dynamic : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
@@ -105,19 +106,19 @@ class Dynamic : FunctionListener {
                     runBlocking {
                         with(it) {
                             try {
-                                withTimeout(15 * 1000) {
+                                val result = GlobalScope.async<Boolean> {
                                     read(it, 0)
                                     data.time = "${Calendar.getInstance().time}"
+                                    true
                                 }
-                            } catch (e: TimeoutCancellationException) {
+                                delay(10 * 1000)
+                                if (!result.isCompleted) {
+                                    throw TimeoutException()
+                                }
+                            } catch (e: TimeoutException) {
                                 data.subscribeMap[it]?.forEach {
                                     val group = Bot.botInstances[0].getGroup(it)
                                     group.sendMessage("查询${this}动态时超时!")
-                                }
-                            } catch (e: Exception) {
-                                data.subscribeMap[it]?.forEach {
-                                    val group = Bot.botInstances[0].getGroup(it)
-                                    e.message?.let { s -> group.sendMessage(s) }
                                 }
                             }
                             delay(15 * 1000)
