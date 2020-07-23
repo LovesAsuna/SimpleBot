@@ -1,11 +1,11 @@
 package me.lovesasuna.bot.util.network
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.stream.Collectors
 
 /**
  * @author LovesAsuna
@@ -88,15 +88,20 @@ object DownloadUtil {
         val fn = src.split("\"")[5]
         val fnurl = "https://wwa.lanzous.com$fn"
         reader = NetWorkUtil.get(fnurl)!!.first.bufferedReader()
-        for (i in 0 until 23) reader.readLine()
-        val sign = reader.readLine().split("'")[7]
+        val result = Regex("'\\w.*_c_c'").run {
+            this.find(reader.lines().filter { it.contains(this) }.collect(Collectors.toList()).first())!!.value
+        }
+        val sign = result.split("'")[1]
         val data = "action=downprocess&sign=$sign&ves=1"
         reader = NetWorkUtil.post("https://wwa.lanzous.com/ajaxm.php", data.toByteArray(),
                 arrayOf("Referer", fnurl),
                 arrayOf("Cookie", "noads=1; pc_ad1=1"),
                 arrayOf("Host", "wwa.lanzous.com")
         )!!.first.bufferedReader()
-        val magic = reader.readLine().split("\"")[9]
+        val magic = reader.readLine().run {
+            println(this)
+            split("\"")[9]
+        }
         return "https://vip.d0.baidupan.com/file/$magic"
     }
 }
