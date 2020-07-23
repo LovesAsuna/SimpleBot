@@ -29,7 +29,7 @@ object Config : FileManipulate {
 
 }
 
-data class Data(var protocol: String = "",
+data class Data(var protocol: String = "ANDROID_PAD",
                 var account: Long = 0,
                 var admin: Long = 0,
                 var password: String = "",
