@@ -95,7 +95,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     add(Dependence("jackson-core-2.11.1.jar", DependenceData.Maven.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
                     add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.Maven.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
                     add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.Maven.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
-                    add(Dependence("custom-core-1.1.1.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
+                    add(Dependence("custom-core-1.1.3.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
                 }.forEach {
                     download(it)
                 }
