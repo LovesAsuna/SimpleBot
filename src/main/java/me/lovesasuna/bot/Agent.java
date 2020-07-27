@@ -18,16 +18,16 @@ import java.nio.file.Path;
 public final class Agent {
     private static final Unsafe UNSAFE;
     private static final MethodHandles.Lookup LOOKUP;
-    private static final MethodType methodType;
-    private static final ClassLoader loader;
+    private static final MethodType METHODTYPE;
+    private static final ClassLoader LOADER;
 
     static {
         try {
-            loader = ClassLoader.getSystemClassLoader();
+            LOADER = ClassLoader.getSystemClassLoader();
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
             theUnsafe.setAccessible(true);
             UNSAFE = (Unsafe) theUnsafe.get(null);
-            methodType = MethodType.methodType(void.class, URL.class);
+            METHODTYPE = MethodType.methodType(void.class, URL.class);
             Field lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
             Object lookupBase = UNSAFE.staticFieldBase(lookupField);
             long lookupOffset = UNSAFE.staticFieldOffset(lookupField);
@@ -39,14 +39,14 @@ public final class Agent {
 
     public static void addToClassPath(Path jarPath) {
         try {
-            if (loader instanceof URLClassLoader) {
-                MethodHandle methodHandle = LOOKUP.findVirtual(loader.getClass(), "addURL", methodType);
-                methodHandle.invoke(loader, jarPath.toUri().toURL());
+            if (LOADER instanceof URLClassLoader) {
+                MethodHandle methodHandle = LOOKUP.findVirtual(LOADER.getClass(), "addURL", METHODTYPE);
+                methodHandle.invoke(LOADER, jarPath.toUri().toURL());
             } else {
-                Field ucpField = loader.getClass().getDeclaredField("ucp");
+                Field ucpField = LOADER.getClass().getDeclaredField("ucp");
                 long ucpOffset = UNSAFE.objectFieldOffset(ucpField);
-                Object ucp = UNSAFE.getObject(loader, ucpOffset);
-                MethodHandle methodHandle = LOOKUP.findVirtual(ucp.getClass(), "addURL", methodType);
+                Object ucp = UNSAFE.getObject(LOADER, ucpOffset);
+                MethodHandle methodHandle = LOOKUP.findVirtual(ucp.getClass(), "addURL", METHODTYPE);
                 methodHandle.invoke(ucp, jarPath.toUri().toURL());
             }
         } catch (Throwable e) {
