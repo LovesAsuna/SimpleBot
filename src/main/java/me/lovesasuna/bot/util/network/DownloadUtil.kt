@@ -69,6 +69,9 @@ object DownloadUtil {
         conn.disconnect()
     }
 
+    /**
+     * 蓝奏云相关服务
+     */
     object Lanzou {
         /**
          * @param id 蓝奏云地址后的字符串
@@ -91,7 +94,7 @@ object DownloadUtil {
             val fn = src.split("\"")[5]
             val fnurl = "https://wwa.lanzous.com$fn"
             reader = NetWorkUtil.get(fnurl)!!.first.bufferedReader()
-            val result = Regex("'\\w.*_c_c'").run {
+            val result = Regex("'\\w*_c_c'").run {
                 this.find(reader.lines().filter { it.contains(this) }.collect(Collectors.toList()).first())!!.value
             }
             val sign = result.split("'")[1]
@@ -107,7 +110,15 @@ object DownloadUtil {
             return "https://vip.d0.baidupan.com/file/$magic"
         }
 
-        fun uploadFile(file: File, cookie: String, user: String) {
+        /**
+         * @param file 待上传的文件
+         * @param cookie 蓝奏云cookie
+         */
+        fun uploadFile(file: File, cookie: String) {
+            val user = Regex("ylogin=\\d+").find(cookie)?.value?.split("=")?.get(1)
+            requireNotNull(user) {
+                "无法提取用户信息"
+            }
             val builder = StringBuilder()
             val random = "test"
             val contentType = "multipart/form-data; boundary=----WebKitFormBoundary$random"
@@ -146,7 +157,6 @@ object DownloadUtil {
                 println(line)
             }
         }
-
 
         private fun disposition(name: String): String {
             return "Content-Disposition: form-data; name=\"$name\""
