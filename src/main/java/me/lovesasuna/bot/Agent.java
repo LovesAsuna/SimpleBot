@@ -1,8 +1,11 @@
 package me.lovesasuna.bot;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
+import sun.misc.Unsafe;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -13,45 +16,42 @@ import java.nio.file.Path;
  */
 
 public final class Agent {
-    public static void addToClassPath(Path paperJar) {
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-        if (!(loader instanceof URLClassLoader)) {
-            throw new RuntimeException("System ClassLoader is not URLClassLoader");
-        } else {
-            try {
-                Method addURL = getAddMethod(loader);
-                if (addURL == null) {
-                    System.err.println("Unable to find method to add jar to System ClassLoader");
-                    System.exit(1);
-                }
+    private static final Unsafe UNSAFE;
+    private static final MethodHandles.Lookup LOOKUP;
+    private static final MethodType methodType;
+    private static final ClassLoader loader;
 
-                addURL.setAccessible(true);
-                addURL.invoke(loader, paperJar.toUri().toURL());
-            } catch (InvocationTargetException | MalformedURLException | IllegalAccessException e) {
-                System.err.println("Unable to add Jar to System ClassLoader");
-                e.printStackTrace();
-                System.exit(1);
-            }
-
+    static {
+        try {
+            loader = ClassLoader.getSystemClassLoader();
+            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            UNSAFE = (Unsafe) theUnsafe.get(null);
+            methodType = MethodType.methodType(void.class, URL.class);
+            Field lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+            Object lookupBase = UNSAFE.staticFieldBase(lookupField);
+            long lookupOffset = UNSAFE.staticFieldOffset(lookupField);
+            LOOKUP = (MethodHandles.Lookup) UNSAFE.getObject(lookupBase, lookupOffset);
+        } catch (Throwable t) {
+            throw new IllegalStateException("Unsafe not found");
         }
     }
 
-    private static Method getAddMethod(Object o) {
-        Class<?> clazz = o.getClass();
-        Method method = null;
-
-        while(method == null) {
-            try {
-                method = clazz.getDeclaredMethod("addURL", URL.class);
-            } catch (NoSuchMethodException e) {
-                clazz = clazz.getSuperclass();
-                if (clazz == null) {
-                    return null;
-                }
+    public static void addToClassPath(Path jarPath) {
+        try {
+            if (loader instanceof URLClassLoader) {
+                MethodHandle methodHandle = LOOKUP.findVirtual(loader.getClass(), "addURL", methodType);
+                methodHandle.invoke(loader, jarPath.toUri().toURL());
+            } else {
+                Field ucpField = loader.getClass().getDeclaredField("ucp");
+                long ucpOffset = UNSAFE.objectFieldOffset(ucpField);
+                Object ucp = UNSAFE.getObject(loader, ucpOffset);
+                MethodHandle methodHandle = LOOKUP.findVirtual(ucp.getClass(), "addURL", methodType);
+                methodHandle.invoke(ucp, jarPath.toUri().toURL());
             }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
-
-        return method;
     }
 }
 

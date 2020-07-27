@@ -1,4 +1,3 @@
 rootProject.name = 'Mirai-Bot'
-include 'Agent4j9'
 include 'CustomCore'
 
