@@ -31,7 +31,7 @@ interface DependenceData {
         KOTLIN_SERIALIZATION("4ad926d7024253a6b2347b11b256828c"),
 
         /*Mirai依赖*/
-        CUSTOMCORE("ef85e90b643ce3380562a227b2bbd93"),
+        CUSTOMCORE("c00de73bd290beb03673dc581d6382bf"),
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
