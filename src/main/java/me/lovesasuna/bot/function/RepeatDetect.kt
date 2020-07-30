@@ -62,11 +62,10 @@ class RepeatDetect : FunctionListener {
                                 }
                                 event.reply(event.uploadImage(bufferedImage))
                             }
+                            else -> event.reply(messageList[2])
                         }
                     }
-                    else -> {
-                        event.reply(messageList[2])
-                    }
+                    else -> event.reply(messageList[2])
                 }
 
                 messageList.clear()
