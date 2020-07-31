@@ -1,13 +1,14 @@
-package me.lovesasuna.bot.util
+package me.lovesasuna.bot.util.PictureSearchUtil
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import me.lovesasuna.bot.util.interfaces.PictureSearchSource
 import me.lovesasuna.bot.util.network.NetWorkUtil
 
-object PictureSearchUtil {
+object Saucenao : PictureSearchSource{
     private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&numres=16&url="
     private val mapper = ObjectMapper()
 
-    fun search(url: String): List<Result> {
+    override fun search(url: String): List<Result> {
         val inputStream = NetWorkUtil.get(api + url)?.first ?: return emptyList()
         val results = mapper.readTree(inputStream)["results"]
         val resultList = ArrayList<Result>()
@@ -30,5 +31,4 @@ object PictureSearchUtil {
         return resultList
     }
 
-    data class Result(val similarity: Int, val thumbnail: String, val extUrls: List<String>, val memberName: String)
 }
