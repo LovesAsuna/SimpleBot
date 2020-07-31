@@ -19,14 +19,14 @@ import java.util.regex.Pattern
  * @date 2020/4/19 14:05
  */
 object BasicUtil {
-    fun ExtraceInt(string: String?): Int {
+    fun ExtraceInt(string: String, defaultValue: Int = 0): Int {
         val pattern = Pattern.compile("\\d+")
         val buffer = StringBuffer()
         val matcher = pattern.matcher(string)
         while (matcher.find()) {
             buffer.append(matcher.group())
         }
-        return if (buffer.toString().isEmpty()) 0 else buffer.toString().toInt()
+        return if (buffer.toString().isEmpty()) defaultValue else buffer.toString().toInt()
     }
 
     fun <T> replace(message: String, `var`: String, replace: T): String {
@@ -84,7 +84,7 @@ object BasicUtil {
         return Paths.get(c.protectionDomain.codeSource.location.path.replaceFirst("/", "")).parent.toFile()
     }
 
-    fun getLocation(fileName : String): File {
+    fun getLocation(fileName: String): File {
         return File("${getLocation(Main::class.java).path}${File.separator}$fileName")
     }
 }
