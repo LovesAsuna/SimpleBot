@@ -49,7 +49,7 @@ suspend fun main() {
 
 object Main {
     lateinit var bot: Bot
-    lateinit var botConfig : BotConfiguration
+    lateinit var botConfig: BotConfiguration
     var logger: MiraiLogger? = null
     val scheduler = PluginScheduler()
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
