@@ -1,11 +1,12 @@
 package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.data.NoticeData
 import me.lovesasuna.bot.function.Notice
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.*
 
-object NoticeData : FileManipulate {
+object NoticeFile : FileManipulate {
     private val noticeFile = File(Main.dataFolder.toString() + File.separator + "notice.dat")
 
     override fun writeDefault() {
@@ -18,7 +19,7 @@ object NoticeData : FileManipulate {
 
     override fun readValue() {
         if (noticeFile.exists()) {
-            Notice.data = ObjectInputStream(FileInputStream(noticeFile)).readObject() as Notice.Data
+            Notice.data = ObjectInputStream(FileInputStream(noticeFile)).readObject() as NoticeData
         }
     }
 }
