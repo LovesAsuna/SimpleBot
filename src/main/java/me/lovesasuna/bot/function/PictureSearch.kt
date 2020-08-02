@@ -19,8 +19,7 @@ class PictureSearch : FunctionListener {
             map[senderID] = BasicUtil.ExtraceInt(message.split(" ")[1], 1)
             event.reply(At(event.sender as Member) + "请发送图片")
         }
-
-
+        
         if (map[senderID] != null && image != null) {
             val source = when (map[senderID]) {
                 1 -> {
@@ -39,6 +38,7 @@ class PictureSearch : FunctionListener {
                 map.remove(senderID)
                 return true
             }
+            map.remove(senderID)
             results.forEach {
                 val builder = StringBuilder()
                 it.extUrls.forEach {
@@ -46,7 +46,6 @@ class PictureSearch : FunctionListener {
                 }
                 event.reply(event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
             }
-            map.remove(senderID)
         }
         return true
     }
