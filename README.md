@@ -2,6 +2,8 @@
 
 一个基于 [Mirai](https://github.com/mamoe/mirai) 开发的机器人
 
+Mirai目前的状态还需要观望
+
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0364d226b78149979387cb47f44b365c)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&utm_medium=referral&utm_content=LovesAsuna/Mirai-Bot&utm_campaign=Badge_Grade_Dashboard)
 [![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
