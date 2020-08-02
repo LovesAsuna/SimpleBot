@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.PictureSearchUtil
+package me.lovesasuna.bot.util.pictureSearchUtil
 
 import me.lovesasuna.bot.util.interfaces.PictureSearchSource
 import org.jsoup.Jsoup
