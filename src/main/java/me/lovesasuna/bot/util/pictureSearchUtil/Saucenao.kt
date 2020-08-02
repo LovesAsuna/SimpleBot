@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.PictureSearchUtil
+package me.lovesasuna.bot.util.pictureSearchUtil
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.interfaces.PictureSearchSource
