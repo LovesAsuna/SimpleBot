@@ -1,11 +1,10 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.PictureSearchUtil.Ascii2d
+import me.lovesasuna.bot.util.pictureSearchUtil.Ascii2d
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
-import me.lovesasuna.bot.util.PictureSearchUtil.Saucenao
-import me.lovesasuna.bot.util.interfaces.PictureSearchSource
+import me.lovesasuna.bot.util.pictureSearchUtil.Saucenao
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
