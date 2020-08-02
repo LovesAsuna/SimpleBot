@@ -2,16 +2,17 @@ package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.ConfigData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import net.mamoe.mirai.utils.BotConfiguration
 
 object Config : FileManipulate {
     private val file = BasicUtil.getLocation("config.json")
-    lateinit var data: Data
+    lateinit var data: ConfigData
 
     override fun writeDefault() {
-        val data = Data()
+        val data = ConfigData()
         if (!file.exists()) {
             BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
@@ -23,15 +24,10 @@ object Config : FileManipulate {
     }
 
     override fun readValue() {
-        data = BotData.objectMapper!!.readValue(BasicUtil.getLocation("config.json"), Data::class.java)
+        data = BotData.objectMapper!!.readValue(file, ConfigData::class.java)
         Main.botConfig.protocol = BotConfiguration.MiraiProtocol.valueOf(data.protocol.toUpperCase())
     }
 
 }
 
-data class Data(var protocol: String = "ANDROID_PAD",
-                var account: Long = 0,
-                var admin: Long = 0,
-                var password: String = "",
-                var pictureSearchAPI: String = "",
-                var bilibiliCookie: String = "")
+
