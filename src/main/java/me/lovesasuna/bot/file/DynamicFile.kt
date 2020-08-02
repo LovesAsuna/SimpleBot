@@ -5,7 +5,7 @@ import me.lovesasuna.bot.function.Dynamic
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.*
 
-object DynamicData : FileManipulate {
+object DynamicFile : FileManipulate {
     private val dynamicFile = File(Main.dataFolder.toString() + File.separator + "dynamic.dat")
 
     override fun writeDefault() {
