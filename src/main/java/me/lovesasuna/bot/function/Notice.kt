@@ -1,10 +1,10 @@
 package me.lovesasuna.bot.function
 
+import me.lovesasuna.bot.data.NoticeData
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
-import java.io.Serializable
 import java.util.*
 import java.util.stream.Collectors
 
@@ -41,9 +41,7 @@ class Notice : FunctionListener {
         return calendar.get(filed)
     }
 
-    data class Data(var msgList: ArrayList<Triple<Long, Long, MessageChain>>) : Serializable
-
     companion object {
-        var data = Data(arrayListOf())
+        var data = NoticeData(arrayListOf())
     }
 }
