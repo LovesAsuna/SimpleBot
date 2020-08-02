@@ -20,7 +20,6 @@ object FunctionFilterFile : FileManipulate {
             list.add(map)
         }
         val data = FilterData(list)
-        println(data)
         if (!file.exists()) {
             BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
