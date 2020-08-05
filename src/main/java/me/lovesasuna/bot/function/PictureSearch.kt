@@ -16,7 +16,7 @@ class PictureSearch : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val senderID = event.sender.id
         if (message.startsWith("/搜图 ") && !map.contains(senderID)) {
-            map[senderID] = BasicUtil.ExtraceInt(message.split(" ")[1], 1)
+            map[senderID] = BasicUtil.extractInt(message.split(" ")[1], 1)
             event.reply(At(event.sender as Member) + "请发送图片")
         }
         

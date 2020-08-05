@@ -24,7 +24,7 @@ class Bilibili : FunctionListener {
         var reader: BufferedReader?
         var inputStream: InputStream?
         if (message.toLowerCase().contains("av")) {
-            av = BasicUtil.ExtraceInt(message).toString()
+            av = BasicUtil.extractInt(message).toString()
             inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?aid=$av")?.first
         } else if (message.contains("BV")) {
             val matcher = pattern.matcher(message)

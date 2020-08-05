@@ -15,7 +15,7 @@ class PixivCat : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         when {
             message.startsWith("/pixiv work ") -> {
-                val ID = BasicUtil.ExtraceInt(message.split(" ")[2])
+                val ID = BasicUtil.extractInt(message.split(" ")[2])
                 val reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.first.bufferedReader()
                 val root = ObjectMapper().readTree(reader.readLine())
                 val status = root["status"].asText()
@@ -41,7 +41,7 @@ class PixivCat : FunctionListener {
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
                     val matcher = Pattern.compile("這個作品ID中有 \\d 張圖片").matcher(string)
                     if (matcher.find()) {
-                        val num = BasicUtil.ExtraceInt(matcher.group())
+                        val num = BasicUtil.extractInt(matcher.group())
                         event.reply("该作品共有${num}张图片")
                         repeat(num) {
                             val inputStream = NetWorkUtil.get("https://pixiv.cat/$ID-${it + 1}.jpg")!!.first
