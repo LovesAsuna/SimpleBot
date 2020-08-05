@@ -3,7 +3,12 @@ package me.lovesasuna.bot.function
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import me.lovesasuna.bot.data.ConfigData
+import me.lovesasuna.bot.file.Config
+import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.file.FileUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.network.DownloadUtil
 import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -17,14 +22,16 @@ import java.net.SocketTimeoutException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DownloadImage : FunctionListener {
     companion object {
         var max = 0
-        val path = "C:/Users/${System.getenv()["USERNAME"]}/Desktop/image"
+        val file = BasicUtil.getLocation("Bot${File.separator}DownloadedImage")
+        val path = file.path
 
-        fun init() {
-            Sort.sort("png")
+        fun getIndex() {
             File(path).apply {
                 if (!this.exists()) {
                     Files.createDirectories(this.toPath())
@@ -43,6 +50,13 @@ class DownloadImage : FunctionListener {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+
+        }
+
+        fun init() {
+            getIndex()
+            Sort.sort("png")
+            getIndex()
         }
 
         init {
@@ -75,6 +89,20 @@ class DownloadImage : FunctionListener {
 
                 while (inputstream.read(bytes).also { length = it } != -1) {
                     fileOutputStream.write(bytes, 0, length)
+                }
+                fileOutputStream.close()
+                if (max >= 250) {
+                    GlobalScope.launch {
+                        val time = SimpleDateFormat("MM月dd日HH时mm分").format(Date())
+                        FileUtil.toZip(path, BasicUtil.getLocation("Bot${File.separator}$time.zip").path)
+                        DownloadUtil.Lanzou.uploadFile(BasicUtil.getLocation("Bot${File.separator}$time.zip"),
+                                Config.data.lanzouCookie,
+                                0)
+                        max = 0
+                        Companion.file.listFiles().forEach {
+                            it.delete()
+                        }
+                    }
                 }
             }
         }
