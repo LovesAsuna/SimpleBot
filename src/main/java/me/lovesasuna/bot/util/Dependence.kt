@@ -8,6 +8,7 @@ import me.lovesasuna.bot.Agent
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
+import me.lovesasuna.bot.util.file.FileUtil
 import me.lovesasuna.bot.util.network.DownloadUtil
 import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.display.ProgressBarImpl
@@ -59,7 +60,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     dependence.finish = true
                 } else {
                     /*文件存在*/
-                    if (dependence.MD5 != BasicUtil.getFileMD5(dependenceFile)) {
+                    if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
                         /*MD5不匹配*/
                         download(conn, dependenceFile)
                     }

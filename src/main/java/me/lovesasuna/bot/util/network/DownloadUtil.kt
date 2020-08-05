@@ -80,13 +80,13 @@ object DownloadUtil {
          * @param consumer 消费者函数，对下载时的字节长度进行处理
          */
         fun lanzousDownload(id: String, fileName: String, savePath: String, consumer: (Int) -> Unit = {}) {
-            DownloadUtil.download(getlanzousUrl(id), fileName, savePath, consumer, arrayOf("Accept-Language", "zh-CN,zh;q=0.9"))
+            DownloadUtil.download(getlanzouUrl(id), fileName, savePath, consumer, arrayOf("Accept-Language", "zh-CN,zh;q=0.9"))
         }
 
         /**
          * @param id 蓝奏云地址后的字符串
          */
-        fun getlanzousUrl(id: String): String {
+        fun getlanzouUrl(id: String): String {
             val lanzousUrl = "https://wwa.lanzous.com/$id"
             var reader = NetWorkUtil.get(lanzousUrl)!!.first.bufferedReader()
             for (i in 0 until 45) reader.readLine()
@@ -113,8 +113,9 @@ object DownloadUtil {
         /**
          * @param file 待上传的文件
          * @param cookie 蓝奏云cookie
+         * @param loc 蓝奏云文件位置
          */
-        fun uploadFile(file: File, cookie: String) {
+        fun uploadFile(file: File, cookie: String, loc: Int) {
             val user = Regex("ylogin=\\d+").find(cookie)?.value?.split("=")?.get(1)
             requireNotNull(user) {
                 "无法提取用户信息"
@@ -127,7 +128,7 @@ object DownloadUtil {
             val size = file.length()
             writeNode(builder, prefix, "task", "1")
             writeNode(builder, prefix, "ve", "2")
-            writeNode(builder, prefix, "id", "WU_FILE_0")
+            writeNode(builder, prefix, "id", "WU_FILE_$loc")
             writeNode(builder, prefix, "name", file.name)
             writeNode(builder, prefix, "type", "application/x-zip-compressed")
             writeNode(builder, prefix, "lastModifiedDate", "Thu Jan 1 2020 00:00:00 GMT+0800 (中国标准时间)")
