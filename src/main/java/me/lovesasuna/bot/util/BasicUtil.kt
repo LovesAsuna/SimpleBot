@@ -67,7 +67,11 @@ object BasicUtil {
     }
 
     fun getLocation(c: Class<*>): File {
-        return Paths.get(c.protectionDomain.codeSource.location.path.replaceFirst("/", "")).parent.toFile()
+        return if (System.getProperty("os.name").contains("windows", true)) {
+            Paths.get(c.protectionDomain.codeSource.location.path.replaceFirst("/", "")).parent.toFile()
+        } else {
+            Paths.get(c.protectionDomain.codeSource.location.path).parent.toFile()
+        }
     }
 
     fun getLocation(fileName: String): File {

@@ -8,7 +8,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import net.mamoe.mirai.utils.BotConfiguration
 
 object Config : FileManipulate {
-    private val file = BasicUtil.getLocation("config.json")
+     val file = BasicUtil.getLocation("config.json")
     lateinit var data: ConfigData
 
     override fun writeDefault() {

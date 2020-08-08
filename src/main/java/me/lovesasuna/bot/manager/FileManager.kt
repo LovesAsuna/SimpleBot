@@ -6,6 +6,7 @@ import me.lovesasuna.bot.file.FunctionFilterFile
 import me.lovesasuna.bot.file.NoticeFile
 import me.lovesasuna.bot.util.exceptions.AccountNotFoundException
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
+import kotlin.jvm.Throws
 
 
 object FileManager : FileManipulate {

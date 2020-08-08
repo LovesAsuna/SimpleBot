@@ -9,6 +9,7 @@ import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.IOException
+import kotlin.jvm.Throws
 
 class McQuery : FunctionListener {
     @Throws(IOException::class)
