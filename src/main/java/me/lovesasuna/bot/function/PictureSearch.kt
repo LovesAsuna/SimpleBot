@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.function
 
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.pictureSearchUtil.Ascii2d
 import me.lovesasuna.bot.util.interfaces.FunctionListener
@@ -32,19 +33,25 @@ class PictureSearch : FunctionListener {
                 }
                 else -> Saucenao
             }
-            val results = source.search(image.queryUrl())
+            val imgUrl = image.queryUrl()
+            val results = source.search(imgUrl)
             if (results.isEmpty()) {
                 event.reply("未查找到结果!")
                 map.remove(senderID)
                 return true
             }
             map.remove(senderID)
+            if (BotData.debug) {
+                event.reply("图片URL: $imgUrl")
+                event.reply(results.toString())
+            }
+
             results.forEach {
                 val builder = StringBuilder()
                 it.extUrls.forEach {
                     builder.append(it).append("\n")
                 }
-                event.reply(event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.first) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                event.reply(event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.second) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
             }
         }
         return true
