@@ -2,11 +2,13 @@ package me.lovesasuna.bot.listener
 
 import kotlinx.coroutines.async
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.function.Danmu.Danmu
 import me.lovesasuna.bot.function.colorphoto.ColorPhoto
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.MessageListener
+import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -24,7 +26,12 @@ class GroupMessageListener {
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
                 Dynamic::class.java, Baike::class.java
         )
-        listenersClass.forEach { listeners.add(it.getConstructor().newInstance() as FunctionListener) }
+        listenersClass.filter {
+            !Config.data.disableFunction.contains(it.simpleName)
+        }.forEach {
+            listeners.add(it.getConstructor().newInstance() as FunctionListener)
+            Logger.log("注册功能: ${it.simpleName}", Logger.LogLevel.INFO)
+        }
     }
 
 

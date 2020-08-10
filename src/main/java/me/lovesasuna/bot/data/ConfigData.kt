@@ -6,4 +6,5 @@ data class ConfigData(var protocol: String = "ANDROID_PAD",
                       var password: String = "",
                       var pictureSearchAPI: String = "",
                       var bilibiliCookie: String = "",
-                      var lanzouCookie: String = "")
+                      var lanzouCookie: String = "",
+                      var disableFunction: List<String> = ArrayList())
