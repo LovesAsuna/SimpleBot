@@ -10,6 +10,7 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.Throws
 
 class Hitokoto : FunctionListener {
     @Throws(IOException::class)
@@ -20,10 +21,7 @@ class Hitokoto : FunctionListener {
             val mapper = ObjectMapper()
             /*如果不带参数,默认全部获取*/
             if (strings.size == 1) {
-                val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/")?.first
-                if (inputStream == null) {
-                    return false
-                }
+                val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/")?.second ?: return false
                 reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
                 var string: String?
                 var text: String? = ""
@@ -50,10 +48,7 @@ class Hitokoto : FunctionListener {
      不填 - 随机
      """.trimIndent())
                 } else {
-                    val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/?c=" + strings[1])?.first
-                    if (inputStream == null) {
-                        return false
-                    }
+                    val inputStream = NetWorkUtil.get("https://v1.hitokoto.cn/?c=" + strings[1])?.second ?: return false
                     reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
                     var string: String?
                     var text: String? = ""

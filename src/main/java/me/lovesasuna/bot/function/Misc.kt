@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -41,6 +42,15 @@ class Misc : FunctionListener {
             message == "/donate" -> event.reply(PlainText("我很可爱,请给我钱\n") + event.uploadImage(File(imagePath("pay.jpg"))))
             message == "开车" -> event.reply(event.uploadImage(File(imagePath(("car.jpg")))))
             message == "AI" -> event.reply(event.uploadImage(File(imagePath(("AI.jpg")))))
+            message == "/debug" -> {
+                if (BotData.debug) {
+                    BotData.debug = !BotData.debug
+                    event.reply("调试模式关闭")
+                } else {
+                    BotData.debug = !BotData.debug
+                    event.reply("调试模式开启")
+                }
+            }
         }
         return true
     }

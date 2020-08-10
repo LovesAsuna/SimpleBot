@@ -45,7 +45,7 @@ class RainbowSix : FunctionListener {
             event.reply("连接超时！")
             return
         }
-        val inputStream = result.first
+        val inputStream = result.second
         val reader = BufferedReader(InputStreamReader(inputStream))
         val line = reader.readLine()
         reader.close()
@@ -125,7 +125,7 @@ class RainbowSix : FunctionListener {
             event.reply("连接超时！")
             return
         }
-        val inputStream = result.first
+        val inputStream = result.second
         val reader = BufferedReader(InputStreamReader(inputStream))
         val line = reader.readLine()
         reader.close()

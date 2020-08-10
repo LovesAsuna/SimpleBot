@@ -131,7 +131,7 @@ class Dynamic : FunctionListener {
         }
 
         private suspend fun read(uid: Int, num: Int, push: Boolean = false) {
-            val reader = NetWorkUtil.get("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.first.bufferedReader()
+            val reader = NetWorkUtil.get("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.second.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
                 if (!data.intercept) {

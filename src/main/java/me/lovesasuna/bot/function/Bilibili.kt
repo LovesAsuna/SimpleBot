@@ -25,7 +25,7 @@ class Bilibili : FunctionListener {
         var inputStream: InputStream?
         if (message.toLowerCase().contains("av")) {
             av = BasicUtil.extractInt(message).toString()
-            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?aid=$av")?.first
+            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?aid=$av")?.second
         } else if (message.contains("BV")) {
             val matcher = pattern.matcher(message)
             bv = if (matcher.find()) {
@@ -33,7 +33,7 @@ class Bilibili : FunctionListener {
             } else {
                 return false
             }
-            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?bvid=$bv")?.first
+            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?bvid=$bv")?.second
         } else {
             return false
         }

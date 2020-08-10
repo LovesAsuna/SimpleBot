@@ -55,7 +55,7 @@ class RepeatDetect : FunctionListener {
                                 }
                             }
                             is Image -> {
-                                val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.first).let {
+                                val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.second).let {
                                     when (Random().nextInt(4)) {
                                         0 -> ImageUtil.rotateImage(it, 180)
                                         1 -> ImageUtil.mirrorImage(it)

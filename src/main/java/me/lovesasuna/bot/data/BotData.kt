@@ -14,4 +14,5 @@ object BotData {
 
     var objectMapper: ObjectMapper? = null
 
+    var debug: Boolean = false
 }

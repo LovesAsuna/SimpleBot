@@ -57,7 +57,7 @@ object BasicUtil {
                 "poster=Bot&syntax=text&expiration=day&content=$message".toByteArray(Charsets.UTF_8),
                 arrayOf("Content-Type", "application/x-www-form-urlencoded"),
                 arrayOf("host", "paste.ubuntu.com")
-        )!!.first.bufferedReader()
+        )!!.second.bufferedReader()
         val builder = StringBuilder()
         reader.lines().skip(25).parallel().forEach {
             builder.append(it)

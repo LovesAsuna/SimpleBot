@@ -12,7 +12,7 @@ class Baike : FunctionListener {
         if (message.startsWith("/baike ")) {
             val string = message.split(" ")[1]
             val url = "https://baike.baidu.com/item/${URLEncoder.encode(string, "UTF-8")}"
-            val reader = NetWorkUtil.get(url)!!.first.bufferedReader()
+            val reader = NetWorkUtil.get(url)!!.second.bufferedReader()
             for (i in 0 until 10) reader.readLine()
             val desc = reader.readLine()
             val args = desc.split("\"")

@@ -40,7 +40,7 @@ fun main() {
     origin = builder.toString().replace(Regex("&$"), "")
     println(origin)
     val api = "https://api.ai.qq.com/fcgi-bin/vision/vision_porn"
-    val reader = NetWorkUtil.post(api, origin.toByteArray(), arrayOf("Content-Type", "application/x-www-form-urlencoded"))!!.first.bufferedReader()
+    val reader = NetWorkUtil.post(api, origin.toByteArray(), arrayOf("Content-Type", "application/x-www-form-urlencoded"))!!.second.bufferedReader()
     var line: String?
     while (reader.readLine().also { line = it } != null) {
         println(line)

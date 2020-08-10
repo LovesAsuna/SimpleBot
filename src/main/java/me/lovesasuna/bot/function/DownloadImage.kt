@@ -69,12 +69,12 @@ class DownloadImage : FunctionListener {
         val imageURL = image?.queryUrl()
         GlobalScope.launch {
             if (imageURL != null) {
-                var result: Pair<InputStream, Int>? = null
+                var result: Triple<Int, InputStream, Int>? = null
                 try {
                     result = NetWorkUtil.get(imageURL)
                 } catch (e: SocketTimeoutException) {
                 }
-                val size = result!!.second
+                val size = result!!.third
                 if (size < 650000) {
                     return@launch
                 }
@@ -82,7 +82,7 @@ class DownloadImage : FunctionListener {
                 if (!file.exists()) {
                     Files.createDirectories(Paths.get(file.path))
                 }
-                val inputstream = result.first
+                val inputstream = result.second
                 val bytes = ByteArray(2048)
                 var length: Int
                 val fileOutputStream = FileOutputStream(file.path + File.separator + ++max + ".png")

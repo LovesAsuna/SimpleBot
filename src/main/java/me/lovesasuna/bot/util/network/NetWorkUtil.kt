@@ -10,7 +10,7 @@ import java.net.URL
  */
 object NetWorkUtil {
     @JvmStatic
-    fun get(urlString: String?, vararg headers: Array<String>): Pair<InputStream, Int>? {
+    fun get(urlString: String?, vararg headers: Array<String>): Triple<Int, InputStream, Int>? {
         return try {
             val url = URL(urlString)
             val conn = url.openConnection() as HttpURLConnection
@@ -18,7 +18,7 @@ object NetWorkUtil {
             val responseCore = conn.responseCode
             val inputStream = if (responseCore == 200) conn.inputStream else conn.errorStream
             val length = conn.contentLength
-            Pair(inputStream, length)
+            Triple(responseCore, inputStream, length)
         } catch (e: IOException) {
             e.printStackTrace()
             null
@@ -43,7 +43,7 @@ object NetWorkUtil {
 
     @JvmStatic
     fun inputStreamClone(inputStream: InputStream): ByteArrayOutputStream? {
-        try {
+        return try {
             var baos = ByteArrayOutputStream()
             var buffer = ByteArray(1024)
             var len: Int
@@ -51,15 +51,15 @@ object NetWorkUtil {
                 baos.write(buffer, 0, len)
             }
             baos.flush()
-            return baos
+            baos
         } catch (e: IOException) {
             e.printStackTrace();
-            return null
+            null
         }
     }
 
     @JvmStatic
-    fun post(urlString: String?, body: ByteArray, vararg headers: Array<String>): Pair<InputStream, Int>? {
+    fun post(urlString: String?, body: ByteArray, vararg headers: Array<String>): Triple<Int, InputStream, Int>? {
         return try {
             val url = URL(urlString)
             val conn = url.openConnection() as HttpURLConnection
@@ -72,7 +72,7 @@ object NetWorkUtil {
             val responseCore = conn.responseCode
             val inputStream = if (responseCore == 200) conn.inputStream else conn.errorStream
             val length = conn.contentLength
-            Pair(inputStream, length)
+            Triple(responseCore, inputStream, length)
         } catch (e: IOException) {
             e.printStackTrace()
             null

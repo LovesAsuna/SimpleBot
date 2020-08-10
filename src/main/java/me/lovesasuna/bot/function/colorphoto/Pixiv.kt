@@ -15,7 +15,7 @@ class Pixiv : PhotoSource {
         val source = "https://api.lolicon.app/setu/?apikey=560424975e992113ed5977"
         val result = get(source)
         return try {
-            val inputStream = result!!.first
+            val inputStream = result!!.second
             val root = objectMapper!!.readTree(inputStream)
             root["data"][0]["url"].asText() + "|" + root["quota"].asText()
         } catch (e: IOException) {

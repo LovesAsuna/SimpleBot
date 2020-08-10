@@ -88,12 +88,12 @@ object DownloadUtil {
          */
         fun getlanzouUrl(id: String): String {
             val lanzousUrl = "https://wwa.lanzous.com/$id"
-            var reader = NetWorkUtil.get(lanzousUrl)!!.first.bufferedReader()
+            var reader = NetWorkUtil.get(lanzousUrl)!!.second.bufferedReader()
             for (i in 0 until 45) reader.readLine()
             val src = reader.readLine().also { reader.close() }
             val fn = src.split("\"")[5]
             val fnurl = "https://wwa.lanzous.com$fn"
-            reader = NetWorkUtil.get(fnurl)!!.first.bufferedReader()
+            reader = NetWorkUtil.get(fnurl)!!.second.bufferedReader()
             val result = Regex("'\\w*_c_c'").run {
                 this.find(reader.lines().filter { it.contains(this) }.collect(Collectors.toList()).first())!!.value
             }
@@ -103,7 +103,7 @@ object DownloadUtil {
                     arrayOf("Referer", fnurl),
                     arrayOf("Cookie", "noads=1; pc_ad1=1"),
                     arrayOf("Host", "wwa.lanzous.com")
-            )!!.first.bufferedReader()
+            )!!.second.bufferedReader()
             val magic = reader.readLine().run {
                 split("\"")[9]
             }
@@ -152,7 +152,7 @@ object DownloadUtil {
                     arrayOf("cookie", cookie),
                     arrayOf("origin", "https://pc.woozooo.com"),
                     arrayOf("referer", "https://pc.woozooo.com/mydisk.php?item=files&action=index&u=$user")
-            )!!.first.bufferedReader()
+            )!!.second.bufferedReader()
             var line: String?
             while (reader.readLine().also { line = it } != null) {
                 println(line)
