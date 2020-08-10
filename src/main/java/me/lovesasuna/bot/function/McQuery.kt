@@ -67,8 +67,8 @@ class McQuery : FunctionListener {
 
     @Throws(IOException::class)
     private suspend fun query(event: MessageEvent, ipAndport: String, SRV: Boolean): Boolean {
-        var host: String
-        var port: Int
+        val host: String
+        val port: Int
         if (SRV) {
             val NewipAndport = SRVConvertUtil.convert(ipAndport)
             host = NewipAndport ?: ipAndport.split(":").toTypedArray()[0]

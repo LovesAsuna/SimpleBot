@@ -35,6 +35,9 @@ interface DependenceData {
 
         /*Jsoup依赖*/
         JSOUP("5ee148bf2db7c6d81edb7904e970e9db"),
+
+        /*DNSJava*/
+        DNSJAVA("80ad3247ab61ee84245becc94e931c68"),
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
@@ -56,6 +59,8 @@ interface DependenceData {
         KOTLIN_SERIALIZATION("https://repo1.maven.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-runtime/0.20.0/kotlinx-serialization-runtime-0.20.0.jar"),
 
         JSOUP("https://repo1.maven.org/maven2/org/jsoup/jsoup/1.13.1/jsoup-1.13.1.jar"),
+
+        DNSJAVA("https://repo1.maven.org/maven2/dnsjava/dnsjava/3.2.2/dnsjava-3.2.2.jar"),
     }
 
 
