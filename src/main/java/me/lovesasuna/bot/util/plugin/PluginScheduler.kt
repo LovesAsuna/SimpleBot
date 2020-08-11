@@ -1,7 +1,10 @@
 package me.lovesasuna.bot.util.plugin
 
 import kotlinx.coroutines.*
+import kotlinx.io.errors.IOException
+import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
+import kotlin.jvm.Throws
 
 class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalScope.coroutineContext) : CoroutineScope {
 
@@ -53,6 +56,29 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalSc
         this.launch {
             withContext(Dispatchers.IO) {
                 runnable
+            }
+        }
+    }
+
+    /**
+     * 执行一个任务，若超时执行Action
+     *
+     * @param consumer 执行的任务
+     * @param delayMs 超时时间
+     * @param notCompletedAction 超时动作
+     */
+    @ExperimentalCoroutinesApi
+    @Throws(TimeoutException::class)
+    suspend fun <R> withTimeOut(consumer: suspend () -> R, delayMs: Long, notCompletedAction: suspend () -> Unit) {
+        val result = GlobalScope.async {
+            consumer.invoke()
+        }
+
+        GlobalScope.launch {
+            delay(delayMs)
+            if (!result.isCompleted) {
+                notCompletedAction.invoke()
+                result.cancel()
             }
         }
     }

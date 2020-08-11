@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.function
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.pictureSearchUtil.Ascii2d
@@ -14,13 +16,14 @@ import java.lang.StringBuilder
 class PictureSearch : FunctionListener {
     private val map = HashMap<Long, Int>()
 
+    @ExperimentalCoroutinesApi
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val senderID = event.sender.id
         if (message.startsWith("/搜图 ") && !map.contains(senderID)) {
             map[senderID] = BasicUtil.extractInt(message.split(" ")[1], 1)
             event.reply(At(event.sender as Member) + "请发送图片")
         }
-        
+
         if (map[senderID] != null && image != null) {
             val source = when (map[senderID]) {
                 1 -> {
@@ -51,7 +54,15 @@ class PictureSearch : FunctionListener {
                 it.extUrls.forEach {
                     builder.append(it).append("\n")
                 }
-                event.reply(event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.second) as Message + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                Main.scheduler.withTimeOut(suspend {
+                    val uploadImage = event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.second) as Message
+                    event.reply(uploadImage + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                    uploadImage
+                }, 3 * 1000) {
+                    event.reply("缩略图上传超时")
+                    event.reply(PlainText("空图像(上传失败)\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                }
+
             }
         }
         return true

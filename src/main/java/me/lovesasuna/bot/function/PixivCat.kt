@@ -39,27 +39,18 @@ class PixivCat : FunctionListener {
                 val responseCode = result.first
                 event.reply("获取中,请稍后..")
                 if (responseCode != 404) {
-                    event.reply("尝试复制IO流")
-                    val async = GlobalScope.async {
+                    if (BotData.debug) event.reply("尝试复制IO流")
+                    Main.scheduler.withTimeOut(suspend {
+                        if (BotData.debug) event.reply("计时1分钟")
                         val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
                         if (BotData.debug) event.reply("IO流复制完成，开始上传图片!")
                         val uploadImage = event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray()))
                         event.reply(uploadImage)
                         event.reply("获取完成!")
                         byteArrayOutputStream
+                    }, 60 * 1000) {
+                        event.reply("图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者")
                     }
-
-                    Main.scheduler.async(coroutineScope {
-                        if (BotData.debug) event.reply("计时1分钟")
-                        delay(60 * 1000)
-                        if (BotData.debug) event.reply("1分钟计时结束！")
-                        if (!async.isCompleted) {
-                            async.cancel("获取超时")
-                            event.reply("图片获取失败,大概率是服务器宽带问题，请捐赠支持作者")
-                        }
-                        this
-                    }
-                    )
                 } else {
                     val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
