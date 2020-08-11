@@ -43,6 +43,7 @@ class PictureSearch : FunctionListener {
                 map.remove(senderID)
                 return true
             }
+            event.reply("搜索完成!")
             map.remove(senderID)
             if (BotData.debug) {
                 event.reply("图片URL: $imgUrl")
