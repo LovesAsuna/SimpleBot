@@ -50,18 +50,18 @@ class PictureSearch : FunctionListener {
                 event.reply(results.toString())
             }
 
-            results.forEach {
+            results.forEach { result ->
                 val builder = StringBuilder()
-                it.extUrls.forEach {
+                result.extUrls.forEach {
                     builder.append(it).append("\n")
                 }
                 Main.scheduler.withTimeOut(suspend {
-                    val uploadImage = event.uploadImage(NetWorkUtil.get(it.thumbnail)!!.second) as Message
-                    event.reply(uploadImage + PlainText("\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                    val uploadImage = event.uploadImage(NetWorkUtil.get(result.thumbnail)!!.second) as Message
+                    event.reply(uploadImage + PlainText("\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
                     uploadImage
                 }, 3 * 1000) {
                     event.reply("缩略图上传超时")
-                    event.reply(PlainText("空图像(上传失败)\n相似度: ${it.similarity} \n画师名: ${it.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                    event.reply(PlainText("空图像(上传失败)\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
                 }
 
             }
