@@ -7,7 +7,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.*
 
 object NoticeFile : FileManipulate {
-    private val noticeFile = File(Main.dataFolder.toString() + File.separator + "notice.dat")
+    override val file = File(Main.dataFolder.toString() + File.separator + "notice.dat")
 
     override fun writeDefault() {
         throw UnsupportedOperationException("Nothing can be wrote out!")
@@ -18,8 +18,8 @@ object NoticeFile : FileManipulate {
     }
 
     override fun readValue() {
-        if (noticeFile.exists()) {
-            Notice.data = ObjectInputStream(FileInputStream(noticeFile)).readObject() as NoticeData
+        if (file.exists()) {
+            Notice.data = ObjectInputStream(FileInputStream(file)).readObject() as NoticeData
         }
     }
 }
