@@ -6,7 +6,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.*
 
 object DynamicFile : FileManipulate {
-    private val dynamicFile = File(Main.dataFolder.toString() + File.separator + "dynamic.dat")
+    override val file = File(Main.dataFolder.toString() + File.separator + "dynamic.dat")
 
     override fun writeDefault() {
         throw UnsupportedOperationException("Nothing can be wrote out!")
@@ -17,8 +17,8 @@ object DynamicFile : FileManipulate {
     }
 
     override fun readValue() {
-        if (dynamicFile.exists()) {
-            Dynamic.data = ObjectInputStream(FileInputStream(dynamicFile)).readObject() as Dynamic.Data
+        if (file.exists()) {
+            Dynamic.data = ObjectInputStream(FileInputStream(file)).readObject() as Dynamic.Data
         }
     }
 }

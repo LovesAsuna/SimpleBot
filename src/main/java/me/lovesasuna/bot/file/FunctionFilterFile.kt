@@ -8,7 +8,7 @@ import me.lovesasuna.bot.util.annotations.processors.FilterProcessorHandler
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 
 object FunctionFilterFile : FileManipulate {
-    private val file = BasicUtil.getLocation("filter.json")
+    override val file = BasicUtil.getLocation("filter.json")
     lateinit var data: FilterData
 
     override fun writeDefault() {
@@ -23,7 +23,7 @@ object FunctionFilterFile : FileManipulate {
         if (!file.exists()) {
             BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
-        this.data = data
+        readValue()
     }
 
     override fun writeValue() {
