@@ -25,7 +25,7 @@ class ProgressBarImpl(val PROGRESS_SIZE: Int = 50) : ProgressBar {
     override suspend fun printWithInterval(interval: Long) {
         print("Progress:")
         finish = getNChar(0, '=')
-        unFinish = getNChar(PROGRESS_SIZE, '─')
+        unFinish = getNChar(PROGRESS_SIZE, ' ')
         printTarget(0.0) {}
         while (index < PROGRESS_SIZE) {
             finish = getNChar(index.toInt(), '=')
