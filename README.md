@@ -52,6 +52,6 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
 ## 📜 协议 
-[LGPL v3.0](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
+[AGPLv3 with Mamoe Exceptions](https://github.com/mamoe/mirai/blob/master/LICENSE)
 
 机器人采用的部分技术如果侵权，请直接联系邮箱[qq625924077@gmail.com](mailto:qq625924077@gmail.com)
