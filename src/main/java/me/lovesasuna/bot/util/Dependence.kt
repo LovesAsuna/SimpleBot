@@ -52,13 +52,11 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
             val dependenceFile = getFile(dependence)
             /*文件不存在*/
             if (!dependenceFile.exists()) {
-                println("不存在添加: ${dependence.fileName}")
                 dependence.needDownload = true
             } else {
                 /*文件存在*/
                 if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
                     /*MD5不匹配*/
-                    println("MD5不匹配添加: ${dependence.fileName}")
                     dependence.needDownload = true
                 }
             }
