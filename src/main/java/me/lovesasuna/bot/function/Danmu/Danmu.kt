@@ -2,9 +2,11 @@ package me.lovesasuna.bot.function.Danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
+import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -67,7 +69,7 @@ class Danmu : FunctionListener {
 
         socket = Socket(host, port.toInt())
         PacketManager.sendJoinChannel(event, roomID, DataOutputStream(socket.getOutputStream()), token)
-        scheduledFuture = BotData.scheduledpool.scheduleWithFixedDelay({
+        BasicUtil.scheduleWithFixedDelay(Runnable {
             try {
                 if (!socket.isClosed && !closed) {
                     val out = DataOutputStream(socket.getOutputStream())
