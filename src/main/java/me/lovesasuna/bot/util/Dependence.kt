@@ -2,8 +2,7 @@ package me.lovesasuna.bot.util
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import me.lovesasuna.bot.Agent
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
@@ -37,6 +36,8 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
         private var totalSize = 1
         private var downloadedSize = 0
         private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
+        @ObsoleteCoroutinesApi
+        private val counterContext = newSingleThreadContext("CounterContext")
         private fun download(dependence: Dependence) {
             GlobalScope.launch {
                 val url: URL?
@@ -54,18 +55,21 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                 }
                 val dependenceFile = File(Main.dataFolder.path + File.separator + "Dependencies" + File.separator + dependence.fileName)
 
-                /*文件不存在*/
-                if (!dependenceFile.exists()) {
-                    download(conn, dependenceFile)
-                    dependence.finish = true
-                } else {
-                    /*文件存在*/
-                    if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
-                        /*MD5不匹配*/
+                withContext(counterContext) {
+                    /*文件不存在*/
+                    if (!dependenceFile.exists()) {
                         download(conn, dependenceFile)
+                        dependence.finish = true
+                    } else {
+                        /*文件存在*/
+                        if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
+                            /*MD5不匹配*/
+                            download(conn, dependenceFile)
+                        }
+                        dependence.finish = true
                     }
-                    dependence.finish = true
                 }
+
             }
         }
 
@@ -113,6 +117,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     if (finish) {
                         break
                     }
+                    delay(500)
                 }
 
                 for (dependence in dependencies) {
