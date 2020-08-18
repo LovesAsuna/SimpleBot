@@ -27,8 +27,9 @@ import kotlin.system.exitProcess
  */
 class Dependence constructor(private val fileName: String, val urlData: DependenceData.DependenceUrl, MD5Data: DependenceData.MD5) {
     val MD5: String = MD5Data.data
-    val url: String = urlData.data
-    var finish = false
+    lateinit var conn: AtomicReference<HttpURLConnection>
+    var needDownload = false
+    var finish = true
     val fileURL: URL
 
     companion object {
@@ -38,42 +39,45 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
         private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
         private fun download(dependence: Dependence) {
             GlobalScope.launch {
-                val url: URL?
-                val conn = AtomicReference<HttpURLConnection>()
-                try {
-                    url = URL(dependence.url)
-                    conn.set(url.openConnection() as HttpURLConnection)
-                    when (dependence.urlData) {
-                        is DependenceData.LanzousUrl -> {
-                            conn.get().setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9")
-                        }
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                val dependenceFile = File(Main.dataFolder.path + File.separator + "Dependencies" + File.separator + dependence.fileName)
-
-                /*文件不存在*/
-                if (!dependenceFile.exists()) {
-                    download(conn, dependenceFile)
-                    dependence.finish = true
-                } else {
-                    /*文件存在*/
-                    if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
-                        /*MD5不匹配*/
-                        download(conn, dependenceFile)
-                    }
-                    dependence.finish = true
-                }
-
+                download(dependence.conn, getFile(dependence))
+                dependence.finish = true
             }
         }
 
+        private fun getFile(dependence: Dependence): File {
+            return File("${Main.dataFolder.path}${File.separator}Dependencies${File.separator}${dependence.fileName}")
+        }
+
+        private fun getResource(dependence: Dependence) {
+            val dependenceFile = getFile(dependence)
+            /*文件不存在*/
+            if (!dependenceFile.exists()) {
+                println("不存在添加: ${dependence.fileName}")
+                dependence.needDownload = true
+            } else {
+                /*文件存在*/
+                if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
+                    /*MD5不匹配*/
+                    println("MD5不匹配添加: ${dependence.fileName}")
+                    dependence.needDownload = true
+                }
+            }
+            if (dependence.needDownload) {
+                dependence.finish = false
+                dependence.conn = AtomicReference()
+                dependence.conn.set(URL(dependence.urlData.data).openConnection() as HttpURLConnection)
+                when (dependence.urlData) {
+                    is DependenceData.LanzousUrl -> {
+                        dependence.conn.get().setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9")
+                    }
+                }
+                dependence.conn.get().connect()
+                totalSize += dependence.conn.get().contentLength
+            }
+        }
 
         private fun download(conn: AtomicReference<HttpURLConnection>, file: File) {
             try {
-                conn.get().connect()
-                totalSize += conn.get().contentLength
                 DownloadUtil.download(conn.get(), file) { i ->
                     downloadedSize += i
                     progressBar.index = (progressBar.PROGRESS_SIZE * downloadedSize).toDouble() / totalSize
@@ -99,17 +103,26 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     add(Dependence("custom-core-1.1.3.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
                     add(Dependence("jsoup-1.13.1.jar", DependenceData.Maven.JSOUP, DependenceData.MD5.JSOUP))
                     add(Dependence("dnsjava-3.2.2.jar", DependenceData.Maven.DNSJAVA, DependenceData.MD5.DNSJAVA))
-                }.forEach {
-                    download(it)
+                    forEach {
+                        getResource(it)
+                    }
+
+                    forEach {
+                        if (it.needDownload) {
+                            download(it)
+                        }
+                    }
                 }
 
                 while (true) {
                     var finish = true
-                    dependencies.forEach {
-                        if (!it.finish) {
+                    for (dependence in dependencies) {
+                        if (!dependence.finish) {
                             finish = false
+                            break
                         }
                     }
+
                     if (finish) {
                         break
                     }
