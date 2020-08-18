@@ -36,8 +36,6 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
         private var totalSize = 1
         private var downloadedSize = 0
         private val progressBar = ProgressBarImpl(50).also { it.setInterval(500) }
-        @ObsoleteCoroutinesApi
-        private val counterContext = newSingleThreadContext("CounterContext")
         private fun download(dependence: Dependence) {
             GlobalScope.launch {
                 val url: URL?
@@ -55,19 +53,17 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                 }
                 val dependenceFile = File(Main.dataFolder.path + File.separator + "Dependencies" + File.separator + dependence.fileName)
 
-                withContext(counterContext) {
-                    /*文件不存在*/
-                    if (!dependenceFile.exists()) {
+                /*文件不存在*/
+                if (!dependenceFile.exists()) {
+                    download(conn, dependenceFile)
+                    dependence.finish = true
+                } else {
+                    /*文件存在*/
+                    if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
+                        /*MD5不匹配*/
                         download(conn, dependenceFile)
-                        dependence.finish = true
-                    } else {
-                        /*文件存在*/
-                        if (dependence.MD5 != FileUtil.getFileMD5(dependenceFile)) {
-                            /*MD5不匹配*/
-                            download(conn, dependenceFile)
-                        }
-                        dependence.finish = true
                     }
+                    dependence.finish = true
                 }
 
             }
