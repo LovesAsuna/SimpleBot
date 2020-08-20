@@ -54,7 +54,7 @@ class PixivCat : FunctionListener {
                 } else {
                     val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
                     val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
-                    val matcher = Pattern.compile("這個作品ID中有 \\d 張圖片").matcher(string)
+                    val matcher = Pattern.compile("這個作品ID中有 \\d+ 張圖片").matcher(string)
                     if (matcher.find()) {
                         val num = BasicUtil.extractInt(matcher.group())
                         event.reply("该作品共有${num}张图片")

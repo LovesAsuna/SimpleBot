@@ -31,7 +31,7 @@ interface DependenceData {
         KOTLIN_SERIALIZATION("4ad926d7024253a6b2347b11b256828c"),
 
         /*Mirai*/
-        CUSTOMCORE("35525d4dd32a123b93fc704d19472ddc"),
+        CUSTOMCORE("aeda4b3e02190baaeade56c70b2b50fc"),
 
         /*Jsoup依赖*/
         JSOUP("5ee148bf2db7c6d81edb7904e970e9db"),
@@ -41,7 +41,7 @@ interface DependenceData {
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
-        CUSTOMCORE(DownloadUtil.Lanzou.getlanzouUrl("iFl8mflgzwj")),
+        CUSTOMCORE(DownloadUtil.Lanzou.getlanzouUrl("iIVhAfu89he")),
     }
 
     enum class Maven(override val data: String) : MavenUrl {

@@ -78,7 +78,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
             try {
                 DownloadUtil.download(conn.get(), file) { i ->
                     downloadedSize += i
-                    progressBar.index = (progressBar.PROGRESS_SIZE * downloadedSize).toDouble() / totalSize
+                    progressBar.index = downloadedSize.toDouble() / totalSize * progressBar.PROGRESS_SIZE
                 }
             } catch (e: IOException) {
                 println()
@@ -98,7 +98,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     add(Dependence("jackson-core-2.11.1.jar", DependenceData.Maven.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
                     add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.Maven.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
                     add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.Maven.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
-                    add(Dependence("custom-core-1.1.3.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
+                    add(Dependence("custom-core-1.2.1.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
                     add(Dependence("jsoup-1.13.1.jar", DependenceData.Maven.JSOUP, DependenceData.MD5.JSOUP))
                     add(Dependence("dnsjava-3.2.2.jar", DependenceData.Maven.DNSJAVA, DependenceData.MD5.DNSJAVA))
                     forEach {

@@ -199,7 +199,7 @@ class Dynamic : FunctionListener {
             val pictures = origin["item"]["pictures"]
             var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
             for (i in 0 until pictures.size()) {
-                messageChain += URL(pictures[i]["img_src"].asText()).uploadAsImage(group)
+                messageChain += NetWorkUtil.get(pictures[i]["img_src"].asText())!!.second.uploadAsImage(group)
             }
             return messageChain
         }

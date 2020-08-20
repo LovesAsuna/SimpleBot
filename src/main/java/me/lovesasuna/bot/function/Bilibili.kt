@@ -7,6 +7,7 @@ import me.lovesasuna.bot.util.network.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.uploadAsImage
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -85,7 +86,7 @@ class Bilibili : FunctionListener {
                 .append(like)
                 .append("\n")
                 .append(desc)
-        event.reply(event.uploadImage(URL(pic)) + builder.toString())
+        event.reply(NetWorkUtil.get(pic)!!.second.uploadAsImage(event.sender) + builder.toString())
         return true
     }
 
