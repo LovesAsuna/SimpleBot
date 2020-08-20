@@ -37,6 +37,7 @@ class PictureSearch : FunctionListener {
                 else -> Saucenao
             }
             val imgUrl = image.queryUrl()
+            if (BotData.debug) event.reply("图片URL: $imgUrl")
             val results = source.search(imgUrl)
             if (results.isEmpty()) {
                 event.reply("未查找到结果!")
@@ -45,11 +46,7 @@ class PictureSearch : FunctionListener {
             }
             event.reply("搜索完成!")
             map.remove(senderID)
-            if (BotData.debug) {
-                event.reply("图片URL: $imgUrl")
-                event.reply(results.toString())
-            }
-
+            if (BotData.debug) event.reply(results.toString())
             results.forEach { result ->
                 val builder = StringBuilder()
                 result.extUrls.forEach {
