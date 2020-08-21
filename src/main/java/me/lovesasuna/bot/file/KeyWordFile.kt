@@ -7,7 +7,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
 
-object KeyWordFile : FileManipulate {
+object KeyWordFile : AbstractFile() {
     override val file = BasicUtil.getLocation("keyword.json")
     lateinit var data: KeyWord.KeyWordChain
     override fun writeDefault() {

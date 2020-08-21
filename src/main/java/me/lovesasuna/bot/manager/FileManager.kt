@@ -6,7 +6,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.File
 import kotlin.jvm.Throws
 
-object FileManager : FileManipulate {
+object FileManager : AbstractFile() {
     private val fileList = setOf(
             Config, NoticeFile, DynamicFile, FunctionFilterFile, KeyWordFile
     )
@@ -17,8 +17,6 @@ object FileManager : FileManipulate {
         if (Config.data.account == 0L || Config.data.password.isEmpty())
             throw AccountNotFoundException("账号信息未填写")
     }
-
-    override val file: File = File("")
 
     override fun writeDefault() {
         throw UnsupportedOperationException()
