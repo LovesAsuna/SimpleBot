@@ -27,11 +27,13 @@ class KeyWord : FunctionListener {
         val sender = event.sender.id
         when {
             message == "/debug" -> {
-                if (BotData.debug) {
-                    event.reply("调试模式关闭")
-                } else {
-                    event.reply("调试模式开启")
-                }
+                event.reply("调试模式${
+                    if (BotData.debug) {
+                        "关闭"
+                    } else {
+                        "开启"
+                    }
+                }")
                 BotData.debug = !BotData.debug
                 return true
             }
