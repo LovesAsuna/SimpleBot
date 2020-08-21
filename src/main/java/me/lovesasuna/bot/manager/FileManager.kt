@@ -3,8 +3,6 @@ package me.lovesasuna.bot.manager
 import me.lovesasuna.bot.file.*
 import me.lovesasuna.bot.util.exceptions.AccountNotFoundException
 import me.lovesasuna.bot.util.interfaces.file.FileManipulate
-import java.io.File
-import kotlin.jvm.Throws
 
 object FileManager : AbstractFile() {
     private val fileList = setOf(
