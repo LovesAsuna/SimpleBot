@@ -22,7 +22,7 @@ object KeyWordFile : AbstractFile() {
     }
 
     override fun writeValue() {
-        ObjectOutputStream(FileOutputStream(file)).writeObject(data)
+        BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
     }
 
     override fun readValue() {
