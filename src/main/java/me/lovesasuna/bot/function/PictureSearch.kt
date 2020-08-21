@@ -56,7 +56,7 @@ class PictureSearch : FunctionListener {
                     val uploadImage = event.uploadImage(NetWorkUtil.get(result.thumbnail)!!.second) as Message
                     event.reply(uploadImage + PlainText("\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
                     uploadImage
-                }, 3 * 1000) {
+                }, 5 * 1000) {
                     event.reply("缩略图上传超时")
                     event.reply(PlainText("空图像(上传失败)\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
                 }
