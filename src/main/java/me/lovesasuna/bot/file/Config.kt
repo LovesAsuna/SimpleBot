@@ -20,7 +20,7 @@ object Config : FileManipulate {
     }
 
     override fun writeValue() {
-        throw UnsupportedOperationException()
+        return
     }
 
     override fun readValue() {

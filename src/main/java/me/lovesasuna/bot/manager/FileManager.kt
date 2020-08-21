@@ -6,18 +6,16 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.File
 import kotlin.jvm.Throws
 
-
 object FileManager : FileManipulate {
+    private val fileList = setOf(
+            Config, NoticeFile, DynamicFile, FunctionFilterFile, KeyWordFile
+    )
+
     @Throws(AccountNotFoundException::class)
     override fun readValue() {
-        Config.writeDefault()
+        fileList.forEach(FileManipulate::writeDefault)
         if (Config.data.account == 0L || Config.data.password.isEmpty())
             throw AccountNotFoundException("账号信息未填写")
-
-        NoticeFile.readValue()
-        DynamicFile.readValue()
-        FunctionFilterFile.writeDefault()
-        KeyWordFile.writeDefault()
     }
 
     override val file: File = File("")
@@ -27,7 +25,6 @@ object FileManager : FileManipulate {
     }
 
     override fun writeValue() {
-        DynamicFile.writeValue()
-        NoticeFile.writeValue()
+        fileList.forEach(FileManipulate::writeValue)
     }
 }
