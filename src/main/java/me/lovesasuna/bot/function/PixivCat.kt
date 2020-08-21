@@ -22,7 +22,7 @@ class PixivCat : FunctionListener {
                 val reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.second.bufferedReader()
                 val root = ObjectMapper().readTree(reader.readLine())
                 val status = root["status"].asText()
-                if (BotData.debug) event.reply("R级检测相应: $status")
+                if (BotData.debug) event.reply("R级检测响应: $status")
                 if (status == "failure") {
                     event.reply("查询图片信息失败，跳过R级检测...")
                 } else {
