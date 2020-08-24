@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.util.network
 
+import me.lovesasuna.lanzou.Lanzou
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -173,23 +174,5 @@ object DownloadUtil {
                     .append("\n")
         }
 
-        private fun randomString(): String {
-            val maxNum = 36
-            var i: Int
-            var count = 0
-            val str = charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-                    'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-                    'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-            val code = StringBuffer("")
-            val r = Random()
-            while (count < 16) {
-                i = Math.abs(r.nextInt(maxNum)) // 0到36的随机数
-                if (i >= 0 && i < str.size) { //如果i>=0且i<36
-                    code.append(str[i])
-                    count++
-                }
-            }
-            return code.toString()
-        }
     }
 }
