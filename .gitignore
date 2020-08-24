@@ -28,8 +28,6 @@ hs_err_pid*
 
 # Cusom
 src/test
-Agent4j9/src/test
 .idea
 build
-Agent4j9/build
 .gradle
