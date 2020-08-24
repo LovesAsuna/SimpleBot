@@ -17,7 +17,7 @@ object ImageUtil {
         var revisedAngel = angel
         if (revisedAngel < 0) {
             // 将负数角度，纠正为正数角度
-            revisedAngel = revisedAngel + 360
+            revisedAngel += 360
         }
         val imageWidth = bufferedImage.getWidth(null)
         val imageHeight = bufferedImage.getHeight(null)
@@ -52,7 +52,7 @@ object ImageUtil {
                 src.height = src.width
                 src.width = temp
             }
-            revisedAngel = revisedAngel % 90
+            revisedAngel %= 90
         }
         val r = Math.sqrt((src.height * src.height + src.width * src.width).toDouble()) / 2
         val len = 2 * Math.sin(Math.toRadians(revisedAngel.toDouble()) / 2) * r
