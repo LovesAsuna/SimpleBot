@@ -49,7 +49,7 @@ class Bilibili : FunctionListener {
         val mapper = ObjectMapper()
         val jsonNode = mapper.readTree(line)
         val dataObject = jsonNode["data"]
-        val pic = dataObject["pic"].asText();
+        val pic = dataObject["pic"].asText()
         val title = dataObject["title"].asText()
         val UP = dataObject["owner"]["name"].asText()
         val uplink = dataObject["owner"]["mid"].asText()

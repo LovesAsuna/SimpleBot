@@ -34,7 +34,7 @@ class Danmu : FunctionListener {
         when {
             message.startsWith("/直播 connect ") -> {
                 closed = false
-                roomID = message.split(" ")[2].toInt();
+                roomID = message.split(" ")[2].toInt()
                 GlobalScope.launch {
                     connect(event)
                 }

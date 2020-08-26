@@ -53,7 +53,7 @@ object NetWorkUtil {
             baos.flush()
             baos
         } catch (e: IOException) {
-            e.printStackTrace();
+            e.printStackTrace()
             null
         }
     }
