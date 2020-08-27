@@ -7,6 +7,7 @@ import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -23,10 +24,12 @@ class PixivCat : FunctionListener {
                 val root = ObjectMapper().readTree(reader.readLine())
                 val status = root["status"].asText()
                 if (BotData.debug) event.reply("R级检测响应: $status")
+                var count = 1
                 if (status == "failure") {
                     event.reply("查询图片信息失败，跳过R级检测...")
                 } else {
                     val tags = root["response"][0]["tags"].toString()
+                    count = root["response"][0]["page_count"].asInt()
                     if (BotData.debug) event.reply(tags)
                     if (tags.contains(Regex("R-[1-9]+"))) {
                         event.reply("图片含有R18内容,禁止显示！")
@@ -53,12 +56,10 @@ class PixivCat : FunctionListener {
                     }
                 } else {
                     val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
-                    val string = ByteArrayInputStream(byteArrayOutputStream?.toByteArray()).bufferedReader().lineSequence().joinToString()
-                    val matcher = Pattern.compile("這個作品ID中有 \\d+ 張圖片").matcher(string)
-                    if (matcher.find()) {
-                        val num = BasicUtil.extractInt(matcher.group())
-                        event.reply("该作品共有${num}张图片")
-                        repeat(num) {
+                    val string = ByteArrayInputStream(byteArrayOutputStream!!.toByteArray()).bufferedReader().lineSequence().joinToString()
+                    if (string.contains("這個作品ID中有多張圖片")) {
+                        event.reply("该作品共有${count}张图片")
+                        repeat(count) {
                             val inputStream = NetWorkUtil.get("https://pixiv.cat/$ID-${it + 1}.jpg")!!.second
                             event.reply(event.uploadImage(inputStream))
                         }
