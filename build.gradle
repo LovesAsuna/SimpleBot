@@ -37,7 +37,7 @@ dependencies {
     compileOnly 'org.jsoup:jsoup:1.13.1'
     compileOnly 'net.mamoe:mirai-core-qqandroid:' + project('CustomCore').version
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
-    implementation 'me.lovesasuna:Lanzou:1.1'
+    implementation 'me.lovesasuna:Lanzou:1.3.3'
     compileOnly 'dnsjava:dnsjava:3.2.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compileOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
