@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
@@ -116,6 +117,7 @@ class Dynamic : FunctionListener {
                                     throw TimeoutException()
                                 }
                             } catch (e: TimeoutException) {
+                                e.pushError()
                                 data.subscribeMap[it]?.forEach {
                                     val group = Bot.botInstances[0].getGroup(it)
                                     group.sendMessage("查询${this}动态时超时!")

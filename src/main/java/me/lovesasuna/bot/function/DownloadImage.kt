@@ -3,6 +3,8 @@ package me.lovesasuna.bot.function
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.file.FileUtil
@@ -48,6 +50,7 @@ class DownloadImage : FunctionListener {
                     }
                 }
             } catch (e: IOException) {
+                e.pushError()
                 e.printStackTrace()
             }
 

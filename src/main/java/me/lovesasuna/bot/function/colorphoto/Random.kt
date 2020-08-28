@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
 import me.lovesasuna.bot.data.BotData.objectMapper
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.interfaces.PhotoSource
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.IOException
@@ -17,6 +18,7 @@ class Random : PhotoSource {
             val root = objectMapper!!.readTree(result!!.second)
             root["imgurl"].asText()
         } catch (e: IOException) {
+            e.pushError()
             e.printStackTrace()
             null
         }

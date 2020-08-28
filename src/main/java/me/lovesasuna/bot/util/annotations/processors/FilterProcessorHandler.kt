@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.util.annotations.processors
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.data.pushError
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
@@ -70,11 +71,13 @@ class FilterProcessorHandler {
                                 }
                             }
                         } catch (e: IOException) {
+                            e.pushError()
                             e.printStackTrace()
                         }
                     }
                 }
             } catch (e: IOException) {
+                e.pushError()
                 e.printStackTrace()
             }
             return if (annotationClass != null) {
@@ -106,6 +109,7 @@ class FilterProcessorHandler {
                     try {
                         classes.add(Thread.currentThread().contextClassLoader.loadClass("$packageName.$className"))
                     } catch (e: Throwable) {
+                        e.pushError()
                         e.printStackTrace()
                     }
                 }

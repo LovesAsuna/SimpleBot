@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
 import me.lovesasuna.bot.data.BotData.objectMapper
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.interfaces.PhotoSource
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.IOException
@@ -19,9 +20,11 @@ class Pixiv : PhotoSource {
             val root = objectMapper!!.readTree(inputStream)
             root["data"][0]["url"].asText() + "|" + root["quota"].asText()
         } catch (e: IOException) {
+            e.pushError()
             e.printStackTrace()
             null
         } catch (e: NullPointerException) {
+            e.pushError()
             e.printStackTrace()
             null
         }
