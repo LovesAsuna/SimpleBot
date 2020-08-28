@@ -6,13 +6,11 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.network.NetWorkUtil
-import me.lovesasuna.bot.util.plugin.Logger
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.ByteArrayInputStream
-import java.util.regex.Pattern
 
 class PixivCat : FunctionListener {
     @ExperimentalCoroutinesApi

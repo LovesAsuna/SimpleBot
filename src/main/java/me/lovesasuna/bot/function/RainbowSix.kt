@@ -2,7 +2,7 @@ package me.lovesasuna.bot.function
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -10,6 +10,7 @@ import net.mamoe.mirai.message.data.Image
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 /**
  * @author LovesAsuna
@@ -39,83 +40,84 @@ class RainbowSix : FunctionListener {
     }
 
     private suspend fun normalCheck(event: GroupMessageEvent, username: String) {
-        val start = System.currentTimeMillis()
-        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
-        if (result == null) {
-            event.reply("连接超时！")
-            return
-        }
-        val inputStream = result.second
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val line = reader.readLine()
-        reader.close()
-        val mapper = ObjectMapper()
-        val root = mapper.readTree(line)
-        val basicStat = root["Basicstat"][0]
-        val level = basicStat["level"].asText()
-        var historyMaxMMR = basicStat["max_mmr"].asText()
-        val uuid = basicStat["user_id"].asText()
-        val statCR = root["StatCR"]
-        val model = statCR[0]["model"].asText()
-        var rankWon = "0"
-        var rankLost = "0"
-        var rankKills = "0"
-        var rankDeaths = "0"
-        var rankMMR = "0"
-        var casualWon = "0"
-        var casualLost = "0"
-        var casualKills = "0"
-        var casualDeaths = "0"
-        if (model == "casual") {
-            if (statCR.size() > 1) {
-                rankWon = statCR[1]["won"].asText()
-                rankLost = statCR[1]["lost"].asText()
-                rankKills = statCR[1]["kills"].asText()
-                rankDeaths = statCR[1]["deaths"].asText()
-                rankMMR = statCR[1]["mmr"].asText()
-            }
-            casualWon = statCR[0]["won"].asText()
-            casualLost = statCR[0]["lost"].asText()
-            casualKills = statCR[0]["kills"].asText()
-            casualDeaths = statCR[0]["deaths"].asText()
-        } else {
-            rankWon = statCR[0]["won"].asText()
-            rankLost = statCR[0]["lost"].asText()
-            rankKills = statCR[0]["kills"].asText()
-            rankDeaths = statCR[0]["deaths"].asText()
-            rankMMR = statCR[0]["mmr"].asText()
-            if (statCR.size() > 1) {
-                casualWon = statCR[1]["won"].asText()
-                casualLost = statCR[1]["lost"].asText()
-                casualKills = statCR[1]["kills"].asText()
-                casualDeaths = statCR[1]["deaths"].asText()
-            }
-        }
-        val statGeneral = root["StatGeneral"][0]
-        val killAssists = statGeneral["killAssists"].asText()
-        val kills = statGeneral["kills"].asText()
-        val deaths = statGeneral["deaths"].asText()
-        val meleeKills = statGeneral["meleeKills"].asText()
-        val revives = statGeneral["revives"].asText()
-        val headshot = statGeneral["headshot"].asText()
-        val won = statGeneral["won"].asText()
-        val lost = statGeneral["lost"].asText()
         val builder = StringBuilder()
-        historyMaxMMR = if (historyMaxMMR.toDouble() > rankMMR.toDouble()) historyMaxMMR else rankMMR
-        builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n").append("UUID: ").append(uuid).append("\n")
-        builder.append("------------------排位数据------------------\n")
-        builder.append("历史最高MMR: ").append(historyMaxMMR).append(" ").append("MMR: ").append(rankMMR).append("\n")
-                .append("击杀: ").append(rankKills).append(" ").append("死亡: ").append(rankDeaths).append(" ").append("K/D: ").append(String.format("%.4f", rankKills.toDouble() / rankDeaths.toDouble())).append("\n")
-                .append("胜利: ").append(rankWon).append(" ").append("失败: ").append(rankLost).append(" ").append("W/L: ").append(String.format("%.4f", rankWon.toDouble() / rankLost.toDouble())).append("\n")
-        builder.append("------------------休闲数据------------------\n")
-        builder.append("击杀: ").append(casualKills).append(" ").append("死亡: ").append(casualDeaths).append("K/D: ").append(String.format("%.4f", casualKills.toDouble() / casualDeaths.toDouble())).append("\n")
-                .append("胜利: ").append(casualWon).append(" ").append("失败: ").append(casualLost).append(" ").append("W/L: ").append(String.format("%.4f", casualWon.toDouble() / casualLost.toDouble())).append("\n")
-        builder.append("------------------其他数据------------------\n")
-        builder.append("击杀: ").append(kills).append(" ").append("助攻: ").append(killAssists).append(" ").append("刀杀: ").append(meleeKills).append(" ").append("爆头: ").append(headshot).append("\n")
-                .append("死亡: ").append(deaths).append(" ").append("被救起: ").append(revives).append(" ").append("K/D: ").append(String.format("%.4f", kills.toDouble() / deaths.toDouble())).append("\n")
-                .append("胜利: ").append(won).append(" ").append("失败: ").append(lost).append(" ").append("W/L: ").append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
-        val end = System.currentTimeMillis()
-        event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
+        val time = measureTimeMillis {
+            val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
+            if (result == null) {
+                event.reply("连接超时！")
+                return
+            }
+            val inputStream = result.second
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            val line = reader.readLine()
+            reader.close()
+            val mapper = ObjectMapper()
+            val root = mapper.readTree(line)
+            val basicStat = root["Basicstat"][0]
+            val level = basicStat["level"].asText()
+            var historyMaxMMR = basicStat["max_mmr"].asText()
+            val uuid = basicStat["user_id"].asText()
+            val statCR = root["StatCR"]
+            val model = statCR[0]["model"].asText()
+            var rankWon = "0"
+            var rankLost = "0"
+            var rankKills = "0"
+            var rankDeaths = "0"
+            var rankMMR = "0"
+            var casualWon = "0"
+            var casualLost = "0"
+            var casualKills = "0"
+            var casualDeaths = "0"
+            if (model == "casual") {
+                if (statCR.size() > 1) {
+                    rankWon = statCR[1]["won"].asText()
+                    rankLost = statCR[1]["lost"].asText()
+                    rankKills = statCR[1]["kills"].asText()
+                    rankDeaths = statCR[1]["deaths"].asText()
+                    rankMMR = statCR[1]["mmr"].asText()
+                }
+                casualWon = statCR[0]["won"].asText()
+                casualLost = statCR[0]["lost"].asText()
+                casualKills = statCR[0]["kills"].asText()
+                casualDeaths = statCR[0]["deaths"].asText()
+            } else {
+                rankWon = statCR[0]["won"].asText()
+                rankLost = statCR[0]["lost"].asText()
+                rankKills = statCR[0]["kills"].asText()
+                rankDeaths = statCR[0]["deaths"].asText()
+                rankMMR = statCR[0]["mmr"].asText()
+                if (statCR.size() > 1) {
+                    casualWon = statCR[1]["won"].asText()
+                    casualLost = statCR[1]["lost"].asText()
+                    casualKills = statCR[1]["kills"].asText()
+                    casualDeaths = statCR[1]["deaths"].asText()
+                }
+            }
+            val statGeneral = root["StatGeneral"][0]
+            val killAssists = statGeneral["killAssists"].asText()
+            val kills = statGeneral["kills"].asText()
+            val deaths = statGeneral["deaths"].asText()
+            val meleeKills = statGeneral["meleeKills"].asText()
+            val revives = statGeneral["revives"].asText()
+            val headshot = statGeneral["headshot"].asText()
+            val won = statGeneral["won"].asText()
+            val lost = statGeneral["lost"].asText()
+            historyMaxMMR = if (historyMaxMMR.toDouble() > rankMMR.toDouble()) historyMaxMMR else rankMMR
+            builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n").append("UUID: ").append(uuid).append("\n")
+            builder.append("------------------排位数据------------------\n")
+            builder.append("历史最高MMR: ").append(historyMaxMMR).append(" ").append("MMR: ").append(rankMMR).append("\n")
+                    .append("击杀: ").append(rankKills).append(" ").append("死亡: ").append(rankDeaths).append(" ").append("K/D: ").append(String.format("%.4f", rankKills.toDouble() / rankDeaths.toDouble())).append("\n")
+                    .append("胜利: ").append(rankWon).append(" ").append("失败: ").append(rankLost).append(" ").append("W/L: ").append(String.format("%.4f", rankWon.toDouble() / rankLost.toDouble())).append("\n")
+            builder.append("------------------休闲数据------------------\n")
+            builder.append("击杀: ").append(casualKills).append(" ").append("死亡: ").append(casualDeaths).append("K/D: ").append(String.format("%.4f", casualKills.toDouble() / casualDeaths.toDouble())).append("\n")
+                    .append("胜利: ").append(casualWon).append(" ").append("失败: ").append(casualLost).append(" ").append("W/L: ").append(String.format("%.4f", casualWon.toDouble() / casualLost.toDouble())).append("\n")
+            builder.append("------------------其他数据------------------\n")
+            builder.append("击杀: ").append(kills).append(" ").append("助攻: ").append(killAssists).append(" ").append("刀杀: ").append(meleeKills).append(" ").append("爆头: ").append(headshot).append("\n")
+                    .append("死亡: ").append(deaths).append(" ").append("被救起: ").append(revives).append(" ").append("K/D: ").append(String.format("%.4f", kills.toDouble() / deaths.toDouble())).append("\n")
+                    .append("胜利: ").append(won).append(" ").append("失败: ").append(lost).append(" ").append("W/L: ").append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
+
+        }
+        event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", time / 1000)).toString())
     }
 
     private suspend fun operatorCheck(event: GroupMessageEvent, username: String, operatorName: String) {

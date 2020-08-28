@@ -5,8 +5,8 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.FunctionFilterFile
 import me.lovesasuna.bot.util.annotations.Filter
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.network.NetWorkUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
@@ -55,7 +55,7 @@ class RepeatDetect : FunctionListener {
                                 }
                             }
                             is Image -> {
-                                val bufferedImage = ImageIO.read(NetWorkUtil.get(image!!.queryUrl())?.second).let {
+                                val bufferedImage = ImageIO.read(NetWorkUtil[image!!.queryUrl()]?.second).let {
                                     when (Random().nextInt(4)) {
                                         0 -> ImageUtil.rotateImage(it, 180)
                                         1 -> ImageUtil.mirrorImage(it)

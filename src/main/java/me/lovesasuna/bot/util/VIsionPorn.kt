@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.util
 
-import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.math.BigInteger
 import java.net.URLEncoder
 import java.security.MessageDigest

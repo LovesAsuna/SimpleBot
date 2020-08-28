@@ -3,13 +3,13 @@ package me.lovesasuna.bot.function
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import me.lovesasuna.bot.data.ConfigData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.file.FileUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.network.DownloadUtil
-import me.lovesasuna.bot.util.network.NetWorkUtil
+import me.lovesasuna.lanzou.bean.User
+import me.lovesasuna.lanzou.file.FileAdapter
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -69,17 +69,14 @@ class DownloadImage : FunctionListener {
         val imageURL = image?.queryUrl()
         GlobalScope.launch {
             if (imageURL != null) {
-                var result: Triple<Int, InputStream, Int>? = null
-                try {
-                    result = NetWorkUtil.get(imageURL)
-                } catch (e: SocketTimeoutException) {
-                }
+                var result = NetWorkUtil.get(imageURL)
+
                 val size = result!!.third
                 if (size < 650000) {
                     return@launch
                 }
-                val file = File(path)
-                if (!file.exists()) {
+
+                if (!File(path).exists()) {
                     Files.createDirectories(Paths.get(file.path))
                 }
                 val inputstream = result.second
@@ -95,9 +92,10 @@ class DownloadImage : FunctionListener {
                     GlobalScope.launch {
                         val time = SimpleDateFormat("MM月dd日HH时mm分").format(Date())
                         FileUtil.toZip(path, BasicUtil.getLocation("Bot${File.separator}$time.zip").path)
-                        DownloadUtil.Lanzou.uploadFile(BasicUtil.getLocation("Bot${File.separator}$time.zip"),
-                                Config.data.lanzouCookie,
-                                0)
+                        val user = User(Config.data.lanzouCookie)
+                        val file = BasicUtil.getLocation("Bot${File.separator}$time.zip")
+                        val fileAdapter = FileAdapter(user, file)
+                        fileAdapter.upload()
                         max = 0
                         Companion.file.listFiles().forEach {
                             it.delete()

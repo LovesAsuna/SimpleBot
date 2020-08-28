@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.data
 
-import me.lovesasuna.bot.util.network.DownloadUtil
+import me.lovesasuna.lanzou.Lanzou
 
 
 interface DependenceData {
@@ -41,7 +41,7 @@ interface DependenceData {
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
-        CUSTOMCORE(DownloadUtil.Lanzou.getlanzouUrl("iIVhAfu89he")),
+        CUSTOMCORE(Lanzou.getFileDownloadUrl("iIVhAfu89he").path),
     }
 
     enum class Maven(override val data: String) : MavenUrl {
