@@ -1,14 +1,10 @@
 package me.lovesasuna.bot.util.network
 
-import me.lovesasuna.lanzou.Lanzou
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
-import java.util.stream.Collectors
 
 /**
  * @author LovesAsuna
@@ -70,109 +66,4 @@ object DownloadUtil {
         conn.disconnect()
     }
 
-    /**
-     * 蓝奏云相关服务
-     */
-    object Lanzou {
-        /**
-         * @param id 蓝奏云地址后的字符串
-         * @param fileName 不包含路径的文件名
-         * @param savePath 不包含文件名的路径
-         * @param consumer 消费者函数，对下载时的字节长度进行处理
-         */
-        fun lanzousDownload(id: String, fileName: String, savePath: String, consumer: (Int) -> Unit = {}) {
-            DownloadUtil.download(getlanzouUrl(id), fileName, savePath, consumer, arrayOf("Accept-Language", "zh-CN,zh;q=0.9"))
-        }
-
-        /**
-         * @param id 蓝奏云地址后的字符串
-         */
-        fun getlanzouUrl(id: String): String {
-            val lanzousUrl = "https://wwa.lanzous.com/$id"
-            var reader = NetWorkUtil.get(lanzousUrl)!!.second.bufferedReader()
-            for (i in 0 until 45) reader.readLine()
-            val src = reader.readLine().also { reader.close() }
-            val fn = src.split("\"")[5]
-            val fnurl = "https://wwa.lanzous.com$fn"
-            reader = NetWorkUtil.get(fnurl)!!.second.bufferedReader()
-            val result = Regex("'\\w*_c_c'").run {
-                this.find(reader.lines().filter { it.contains(this) }.collect(Collectors.toList()).first())!!.value
-            }
-            val sign = result.split("'")[1]
-            val data = "action=downprocess&sign=$sign&ves=1"
-            reader = NetWorkUtil.post("https://wwa.lanzous.com/ajaxm.php", data.toByteArray(),
-                    arrayOf("Referer", fnurl),
-                    arrayOf("Cookie", "noads=1; pc_ad1=1"),
-                    arrayOf("Host", "wwa.lanzous.com")
-            )!!.second.bufferedReader()
-            val magic = reader.readLine().run {
-                split("\"")[9]
-            }
-            return "https://vip.d0.baidupan.com/file/$magic"
-        }
-
-        /**
-         * @param file 待上传的文件
-         * @param cookie 蓝奏云cookie
-         * @param loc 蓝奏云文件位置
-         */
-        fun uploadFile(file: File, cookie: String, loc: Int) {
-            val user = Regex("ylogin=\\d+").find(cookie)?.value?.split("=")?.get(1)
-            requireNotNull(user) {
-                "无法提取用户信息"
-            }
-            val builder = StringBuilder()
-            val random = "test"
-            val contentType = "multipart/form-data; boundary=----WebKitFormBoundary$random"
-            val prefix = "------WebKitFormBoundary$random"
-            val inputStream = file.inputStream()
-            val size = file.length()
-            writeNode(builder, prefix, "task", "1")
-            writeNode(builder, prefix, "ve", "2")
-            writeNode(builder, prefix, "id", "WU_FILE_$loc")
-            writeNode(builder, prefix, "name", file.name)
-            writeNode(builder, prefix, "type", "application/x-zip-compressed")
-            writeNode(builder, prefix, "lastModifiedDate", "Thu Jan 1 2020 00:00:00 GMT+0800 (中国标准时间)")
-            writeNode(builder, prefix, "size", "$size")
-            writeNode(builder, prefix, "folder_id_bb_n", "-1")
-            builder.append(prefix)
-                    .append("\n")
-                    .append(disposition("upload_file\"; filename=\"${file.name}"))
-                    .append("\n")
-                    .append("Content-Type: application/x-zip-compressed")
-                    .append("\n")
-                    .append("\n")
-
-            val stream = ByteArrayOutputStream()
-            stream.write(builder.toString().toByteArray())
-            stream.write(inputStream.readBytes())
-            stream.write(("\n$prefix--").toByteArray())
-            val reader = NetWorkUtil.post("https://pc.woozooo.com/fileup.php",
-                    stream.toByteArray(),
-                    arrayOf("content-type", contentType),
-                    arrayOf("cookie", cookie),
-                    arrayOf("origin", "https://pc.woozooo.com"),
-                    arrayOf("referer", "https://pc.woozooo.com/mydisk.php?item=files&action=index&u=$user")
-            )!!.second.bufferedReader()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                println(line)
-            }
-        }
-
-        private fun disposition(name: String): String {
-            return "Content-Disposition: form-data; name=\"$name\""
-        }
-
-        private fun writeNode(builder: StringBuilder, prefix: String, name: String, content: String) {
-            builder.append(prefix)
-                    .append("\n")
-                    .append(disposition(name))
-                    .append("\n")
-                    .append("\n")
-                    .append(content)
-                    .append("\n")
-        }
-
-    }
 }
