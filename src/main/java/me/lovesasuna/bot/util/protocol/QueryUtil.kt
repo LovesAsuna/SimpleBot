@@ -39,7 +39,7 @@ object QueryUtil {
         dataOutputStream.writeByte(0x00)
         val dataInputStream = DataInputStream(inputStream)
         /*返回的数据包大小*/
-        val size = readVarInt(dataInputStream)
+        readVarInt(dataInputStream)
         /*返回的数据包id*/
         var id = readVarInt(dataInputStream)
         if (id == -1) {
@@ -76,8 +76,8 @@ object QueryUtil {
         if (id != 0x01) {
             throw IOException("无效的数据包id")
         }
-        /*读取回应*/
-        val pingtime = dataInputStream.readLong()
+        /*读取回应(pingtime)*/
+        dataInputStream.readLong()
         dataOutputStream.close()
         outputStream.close()
         inputStreamReader.close()
@@ -88,14 +88,14 @@ object QueryUtil {
 
     @Throws(IOException::class)
     private fun writeVarInt(out: DataOutputStream, paramInt: Int) {
-        var paramInt = paramInt
+        var int = paramInt
         while (true) {
-            if (paramInt and -0x80 == 0) {
-                out.writeByte(paramInt)
+            if (int and -0x80 == 0) {
+                out.writeByte(int)
                 return
             }
-            out.writeByte(paramInt and 0x7F or 0x80)
-            paramInt = paramInt ushr 7
+            out.writeByte(int and 0x7F or 0x80)
+            int = int ushr 7
         }
     }
 
