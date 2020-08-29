@@ -41,7 +41,7 @@ interface DependenceData {
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
-        CUSTOMCORE(Lanzou.getFileDownloadUrl("iIVhAfu89he").path),
+        CUSTOMCORE(Lanzou.getFileDownloadUrl("iIVhAfu89he").toString()),
     }
 
     enum class Maven(override val data: String) : MavenUrl {
