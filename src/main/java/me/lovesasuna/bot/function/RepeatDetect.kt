@@ -37,7 +37,7 @@ class RepeatDetect : FunctionListener {
         }
 
         if (isRepeat(messageList)) {
-            Main.scheduler.async(coroutineScope {
+            Main.scheduler.async(suspend {
 
                 val messageChain = event.message
                 when (messageChain.size) {
