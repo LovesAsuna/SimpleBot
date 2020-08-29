@@ -16,10 +16,8 @@ class Nbnhhsh : FunctionListener{
                     arrayOf("content-type", "application/json"))
             val result = post?.second?.bufferedReader()?.lineSequence()?.joinToString()
             if (result != null) {
-                val node = BotData.objectMapper!!.readTree(result)[0]["trans"]
-                if (node != null) {
-                    event.reply("可能的结果: $node")
-                }
+                event.reply("可能的结果: ${BotData.objectMapper!!.readTree(result)[0]["trans"] ?: "[]"}")
+
             }
             return true
         }
