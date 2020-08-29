@@ -24,7 +24,7 @@ class GroupMessageListener {
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
-                Dynamic::class.java, Baike::class.java
+                Dynamic::class.java, Baike::class.java, Nbnhhsh::class.java
         )
         listenersClass.filter {
             !Config.data.disableFunction.contains(it.simpleName)
