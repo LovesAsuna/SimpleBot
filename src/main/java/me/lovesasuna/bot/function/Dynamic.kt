@@ -78,7 +78,7 @@ class Dynamic : FunctionListener {
                 }
                 "push" -> {
                     event.reply("开始往订阅群推送消息！")
-                    Main.scheduler.async(coroutineScope {
+                    Main.scheduler.async(suspend {
                         data.upSet.forEach {
                             runBlocking {
                                 read(it, 0, true)
@@ -138,7 +138,7 @@ class Dynamic : FunctionListener {
                 if (!data.intercept) {
                     Main.logger!!.error("B站动态api请求被拦截")
                     data.subscribeMap[uid]?.forEach {
-                        Main.scheduler.async(coroutineScope {
+                        Main.scheduler.async(suspend {
                             val group = Bot.botInstances[0].getGroup(it)
                             group.sendMessage("B站动态api请求被拦截，请联系管理员!")
                             this
