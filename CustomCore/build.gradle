@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+group 'me.lovesasuna'
+version '1.2.1'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.mamoe:mirai-core-qqandroid:' + version
+}
+
+
