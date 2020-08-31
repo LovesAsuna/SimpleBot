@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.function
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.lanzou.util.NetWorkUtil
@@ -42,17 +43,7 @@ class RainbowSix : FunctionListener {
     private suspend fun normalCheck(event: GroupMessageEvent, username: String) {
         val builder = StringBuilder()
         val time = measureTimeMillis {
-            val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
-            if (result == null) {
-                event.reply("连接超时！")
-                return
-            }
-            val inputStream = result.second
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            val line = reader.readLine()
-            reader.close()
-            val mapper = ObjectMapper()
-            val root = mapper.readTree(line)
+            val root = getRoot(event, username)
             val basicStat = root["Basicstat"][0]
             val level = basicStat["level"].asText()
             var historyMaxMMR = basicStat["max_mmr"].asText()
@@ -117,22 +108,12 @@ class RainbowSix : FunctionListener {
                     .append("胜利: ").append(won).append(" ").append("失败: ").append(lost).append(" ").append("W/L: ").append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
 
         }
-        event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", time / 1000)).toString())
+        event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", (time / 1000).toDouble())).toString())
     }
 
     private suspend fun operatorCheck(event: GroupMessageEvent, username: String, operatorName: String) {
         val start = System.currentTimeMillis()
-        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
-        if (result == null) {
-            event.reply("连接超时！")
-            return
-        }
-        val inputStream = result.second
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val line = reader.readLine()
-        reader.close()
-        val mapper = ObjectMapper()
-        val root = mapper.readTree(line)
+        val root = getRoot(event, username)
         val statOperator = root["StatOperator"]
         val size = statOperator.size()
         val operators: MutableList<String> = ArrayList()
@@ -140,7 +121,7 @@ class RainbowSix : FunctionListener {
             var opName = statOperator[i]["name"].asText().toLowerCase()
             opName.apply {
                 when {
-                    contains("盲") ->  opName = "jager"
+                    contains("盲") -> opName = "jager"
                     contains("茫") -> opName = "capitao"
                     contains("脴") -> opName = "nokk"
                 }
@@ -156,7 +137,7 @@ class RainbowSix : FunctionListener {
             builder.setLength(0)
             val operator = statOperator[operators.indexOf(strings[i])]
             if (operator == null) {
-               continue
+                continue
             }
             val operatorKills = operator["kills"].asText()
             val operatorDeaths = operator["deaths"].asText()
@@ -175,5 +156,20 @@ class RainbowSix : FunctionListener {
             builder.append("数据不存在").append("\n")
         }
         event.reply(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
+    }
+
+    private suspend fun getRoot(event: GroupMessageEvent, username: String): JsonNode {
+        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
+        requireNotNull(result) {
+            "连接超时".also {
+                event.reply(it)
+            }
+        }
+        val inputStream = result.second
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        val line = reader.readLine()
+        reader.close()
+        val mapper = ObjectMapper()
+        return mapper.readTree(line)
     }
 }
