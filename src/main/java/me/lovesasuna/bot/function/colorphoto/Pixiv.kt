@@ -18,7 +18,9 @@ class Pixiv : PhotoSource {
         return try {
             val inputStream = result!!.second
             val root = objectMapper!!.readTree(inputStream)
-            root["data"][0]["url"].asText() + "|" + root["quota"].asText()
+            val quota = root["quota"].asText()
+            val url = root["data"][0]?.let { it["url"].asText() } ?: return "|0"
+            return "$url|$quota"
         } catch (e: IOException) {
             e.pushError()
             e.printStackTrace()

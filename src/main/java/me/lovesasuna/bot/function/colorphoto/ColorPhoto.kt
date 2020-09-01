@@ -2,6 +2,7 @@ package me.lovesasuna.bot.function.colorphoto
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.PhotoSource
@@ -16,20 +17,23 @@ class ColorPhoto : FunctionListener {
     var random = true
     var pixiv = true
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val bannotice = { GlobalScope.async { event.reply("该图源已被禁用！") } }
+        val bannotice = { Main.scheduler.async { suspend { event.reply("该图源已被禁用！") } } }
         if (message.startsWith("/色图")) {
             when (message.split(" ")[1]) {
                 "pixiv" -> {
                     if (pixiv) {
                         photoSource = Pixiv()
                         val data = photoSource.fetchData()
-                        val url = data?.split("|")!![0]
-                        val quota = data.split("|")[1]
-                        event.reply(event.uploadImage(NetWorkUtil[url]!!.second) + PlainText("\n剩余次数: $quota"))
+                        val quota = data?.split("|")!![1]
+                        if (quota == "0") {
+                            event.reply("达到每日调用额度限制")
+                        } else {
+                            val url = data.split("|")[0]
+                            event.reply(event.uploadImage(NetWorkUtil[url]!!.second) + PlainText("\n剩余次数: $quota"))
+                        }
                     } else {
                         bannotice.invoke()
                     }
-
                 }
                 "random" -> {
                     if (random) {
