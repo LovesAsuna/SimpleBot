@@ -55,7 +55,7 @@ class PixivCat : FunctionListener {
                 } else {
                     val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
                     val string = ByteArrayInputStream(byteArrayOutputStream!!.toByteArray()).bufferedReader().lineSequence().joinToString()
-                    if (string.contains("這個作品ID中有多張圖片")) {
+                    if (string.contains("這個作品ID中")) {
                         event.reply("该作品共有${count}张图片")
                         repeat(count) {
                             val inputStream = NetWorkUtil.get("https://pixiv.cat/$ID-${it + 1}.jpg")!!.second
