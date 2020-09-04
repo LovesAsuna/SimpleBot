@@ -156,7 +156,7 @@ class Dynamic : FunctionListener {
                 data.subscribeMap[uid]?.forEach {
                     Main.scheduler.async {
                         val group = Bot.botInstances[0].getGroup(it)
-                        group.sendMessage(PlainText("${card["user"]["name"].asText()}发布了以下动态!"))
+                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                         parse(group, card)
                     }
                 }
