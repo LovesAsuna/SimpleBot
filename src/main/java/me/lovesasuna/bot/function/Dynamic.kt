@@ -102,7 +102,7 @@ class Dynamic : FunctionListener {
         private var task: Job
 
         init {
-            task = BasicUtil.scheduleWithFixedDelay(Runnable {
+            task = BasicUtil.scheduleWithFixedDelay({
                 data.upSet.forEach {
                     runBlocking {
                         with(it) {
@@ -200,7 +200,7 @@ class Dynamic : FunctionListener {
             val pictures = origin["item"]["pictures"]
             var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
             for (i in 0 until pictures.size()) {
-                messageChain += NetWorkUtil.get(pictures[i]["img_src"].asText())!!.second.uploadAsImage(group)
+                messageChain += NetWorkUtil[pictures[i]["img_src"].asText()]!!.second.uploadAsImage(group)
             }
             return messageChain
         }
