@@ -19,7 +19,7 @@ class GroupMessageListener {
         val listenersClass = arrayOf<Class<*>>(
                 KeyWord::class.java, McQuery::class.java,
                 Bilibili::class.java, Hitokoto::class.java,
-                DeBug::class.java, DownloadImage::class.java,
+                Admin::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
                 Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
