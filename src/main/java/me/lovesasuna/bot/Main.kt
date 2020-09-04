@@ -3,9 +3,11 @@ package me.lovesasuna.bot
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
+import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.Dependence
+import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot
@@ -56,8 +58,10 @@ object Main {
             .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI())) }
 
     fun initListener() {
-        GroupMessageListener.onMessage()
-        FriendMessageListener.onMessage()
+        val listenerList = listOf(
+                GroupMessageListener, FriendMessageListener, MemberLeaveListener
+        )
+        listenerList.forEach(EventListener::onAction)
     }
 
     fun printSystemInfo() {

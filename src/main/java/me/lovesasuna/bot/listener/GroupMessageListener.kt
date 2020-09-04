@@ -6,14 +6,16 @@ import me.lovesasuna.bot.function.*
 import me.lovesasuna.bot.function.Danmu.Danmu
 import me.lovesasuna.bot.function.colorphoto.ColorPhoto
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.interfaces.MessageListener
+import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
-import net.mamoe.mirai.event.subscribeGroupMessages
+import net.mamoe.mirai.event.Event
+import net.mamoe.mirai.event.subscribeAlways
+import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 
-class GroupMessageListener {
-    val listeners = ArrayList<FunctionListener>()
+object GroupMessageListener : EventListener{
+    private val listeners = ArrayList<FunctionListener>()
 
     init {
         val listenersClass = arrayOf<Class<*>>(
@@ -33,20 +35,13 @@ class GroupMessageListener {
         }
     }
 
-
-    companion object : MessageListener {
-        val listener = GroupMessageListener()
-        override fun onMessage() {
-            Main.bot.subscribeGroupMessages {
-                always {
-                    listener.listeners.forEach {
-                        Main.scheduler.asyncTask {
-                            it.execute(this@always, this@always.message.contentToString(), this@always.message[Image], this@always.message[Face])
-                        }
-                    }
+    override fun onAction() {
+        Main.bot.subscribeAlways(GroupMessageEvent::class) {
+           listeners.forEach {
+                Main.scheduler.asyncTask {
+                    it.execute(this, this.message.contentToString(), this.message[Image], this.message[Face])
                 }
             }
         }
     }
-
 }
