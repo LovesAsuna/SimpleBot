@@ -9,6 +9,7 @@ import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
@@ -150,7 +151,7 @@ class Dynamic : FunctionListener {
             data.intercept = false
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
-            if (push || data.dynamicMap[uid] != card.toString().substring(50..100)) {
+            if (push || StringUtil.getSimilarityRatio(data.dynamicMap[uid]!!, card.toString().substring(50..100)) < 90) {
                 data.dynamicMap[uid] = card.toString().substring(50..100)
                 data.subscribeMap[uid]?.forEach {
                     Main.scheduler.asyncTask {
