@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.function
 
-import kotlinx.coroutines.coroutineScope
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.FunctionFilterFile
 import me.lovesasuna.bot.util.annotations.Filter
@@ -37,7 +36,7 @@ class RepeatDetect : FunctionListener {
         }
 
         if (isRepeat(messageList)) {
-            Main.scheduler.async(suspend {
+            Main.scheduler.asyncTask {
 
                 val messageChain = event.message
                 when (messageChain.size) {
@@ -74,7 +73,7 @@ class RepeatDetect : FunctionListener {
 
                 messageList.clear()
                 this
-            })
+            }
         }
         return true
     }

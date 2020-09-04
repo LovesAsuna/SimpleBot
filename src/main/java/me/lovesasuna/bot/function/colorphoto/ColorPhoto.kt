@@ -17,7 +17,7 @@ class ColorPhoto : FunctionListener {
     var random = true
     var pixiv = true
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val bannotice = { Main.scheduler.async { suspend { event.reply("该图源已被禁用！") } } }
+        val bannotice = { Main.scheduler.asyncTask { event.reply("该图源已被禁用！") } }
         if (message.startsWith("/色图")) {
             when (message.split(" ")[1]) {
                 "pixiv" -> {

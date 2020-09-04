@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.listener
 
-import kotlinx.coroutines.async
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.function.*
@@ -41,7 +40,7 @@ class GroupMessageListener {
             Main.bot.subscribeGroupMessages {
                 always {
                     listener.listeners.forEach {
-                        Main.scheduler.async {
+                        Main.scheduler.asyncTask {
                             it.execute(this@always, this@always.message.contentToString(), this@always.message[Image], this@always.message[Face])
                         }
                     }

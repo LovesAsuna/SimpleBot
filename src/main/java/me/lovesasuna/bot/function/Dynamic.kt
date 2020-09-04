@@ -17,7 +17,6 @@ import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.uploadAsImage
 import java.io.Serializable
-import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -78,7 +77,7 @@ class Dynamic : FunctionListener {
                 }
                 "push" -> {
                     event.reply("开始往订阅群推送消息！")
-                    Main.scheduler.async(suspend {
+                    Main.scheduler.asyncTask {
                         data.upSet.forEach {
                             runBlocking {
                                 read(it, 0, true)
@@ -88,7 +87,7 @@ class Dynamic : FunctionListener {
                         }
                         event.reply("推送完成")
                         this
-                    })
+                    }
                 }
             }
         }
@@ -138,11 +137,11 @@ class Dynamic : FunctionListener {
                 if (!data.intercept) {
                     Main.logger!!.error("B站动态api请求被拦截")
                     data.subscribeMap[uid]?.forEach {
-                        Main.scheduler.async(suspend {
+                        Main.scheduler.asyncTask {
                             val group = Bot.botInstances[0].getGroup(it)
                             group.sendMessage("B站动态api请求被拦截，请联系管理员!")
                             this
-                        })
+                        }
                     }
                 }
                 data.intercept = true
@@ -154,7 +153,7 @@ class Dynamic : FunctionListener {
             if (push || data.dynamicMap[uid] != card.toString().substring(50..100)) {
                 data.dynamicMap[uid] = card.toString().substring(50..100)
                 data.subscribeMap[uid]?.forEach {
-                    Main.scheduler.async {
+                    Main.scheduler.asyncTask {
                         val group = Bot.botInstances[0].getGroup(it)
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                         parse(group, card)
