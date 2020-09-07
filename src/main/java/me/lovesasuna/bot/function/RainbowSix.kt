@@ -21,9 +21,6 @@ class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val groupID = (event as GroupMessageEvent).group.id
-        if (groupID != 797764751L && groupID != 343234268L) {
-            return false
-        }
         if (!message.startsWith("R6 ") && !message.startsWith("r6 ")) {
             return false
         }
@@ -152,7 +149,7 @@ class RainbowSix : FunctionListener {
         }
         val end = System.currentTimeMillis()
         builder.setLength(0)
-        if (strings.size == 0) {
+        if (strings.isEmpty()) {
             builder.append("数据不存在").append("\n")
         }
         event.reply(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
