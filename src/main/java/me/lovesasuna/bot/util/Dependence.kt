@@ -101,6 +101,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     add(Dependence("custom-core-1.2.1.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
                     add(Dependence("jsoup-1.13.1.jar", DependenceData.Maven.JSOUP, DependenceData.MD5.JSOUP))
                     add(Dependence("dnsjava-3.2.2.jar", DependenceData.Maven.DNSJAVA, DependenceData.MD5.DNSJAVA))
+                    add(Dependence("h2-1.4.200.jar", DependenceData.Maven.H2, DependenceData.MD5.H2))
                     forEach {
                         getResource(it)
                     }
