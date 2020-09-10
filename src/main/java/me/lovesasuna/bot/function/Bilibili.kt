@@ -85,7 +85,7 @@ class Bilibili : FunctionListener {
                 .append(like)
                 .append("\n")
                 .append(desc)
-        event.reply(NetWorkUtil.get(pic)!!.second.uploadAsImage(event.sender) + builder.toString())
+        event.reply(NetWorkUtil[pic]!!.second.uploadAsImage(event.sender) + builder.toString())
         return true
     }
 
