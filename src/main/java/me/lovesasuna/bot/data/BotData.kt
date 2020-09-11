@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.data
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.hibernate.cfg.Configuration
 import java.util.*
 
 /**
@@ -13,6 +14,8 @@ object BotData {
     var debug: Boolean = false
 
     val error = Stack<Throwable>()
+
+    val HibernateConfig = Configuration().configure()
 }
 
 fun Throwable.pushError() {

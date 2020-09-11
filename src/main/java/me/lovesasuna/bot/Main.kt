@@ -1,12 +1,13 @@
 package me.lovesasuna.bot
 
+import me.lovesasuna.bot.dao.DynamicDao
+import me.lovesasuna.bot.data.DynamicData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.Dependence
 import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
@@ -14,19 +15,27 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.join
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.MiraiLogger
+import org.hibernate.cfg.Configuration
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.logging.Level
+import java.util.logging.LogManager
 
 /**
  * @author LovesAsuna
  * @date 2020/7/3 21:54
  */
 suspend fun main() {
+
+
+    DynamicDao.save(DynamicData())
+
+    return
     Main.printSystemInfo()
     /*初始化机器人依赖*/
-    Dependence.init()
+//    Dependence.init()
     Main.botConfig = BotConfiguration.Default.also {
         it.randomDeviceInfo()
     }

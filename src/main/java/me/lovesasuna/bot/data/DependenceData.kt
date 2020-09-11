@@ -41,6 +41,9 @@ interface DependenceData {
 
         /*H2*/
         H2("18c05829a03b92c0880f22a3c4d1d11d"),
+
+        /*MyBaits*/
+        MYBATIS("4c8905eba706ce15addbf5ee2b0d5b9"),
     }
 
     enum class Lanzous(override val data: String) : LanzousUrl {
@@ -66,6 +69,8 @@ interface DependenceData {
         DNSJAVA("https://repo1.maven.org/maven2/dnsjava/dnsjava/3.2.2/dnsjava-3.2.2.jar"),
 
         H2("https://repo1.maven.org/maven2/com/h2database/h2/1.4.200/h2-1.4.200.jar"),
+
+        MYBATIS("https://repo1.maven.org/maven2/org/mybatis/mybatis/3.5.5/mybatis-3.5.5.jar"),
     }
 
 

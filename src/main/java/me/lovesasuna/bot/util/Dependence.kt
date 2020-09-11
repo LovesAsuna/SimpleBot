@@ -25,6 +25,7 @@ import kotlin.system.exitProcess
  * @author LovesAsuna
  * @date 2020/5/2 14:59
  */
+@Deprecated("不再采用依赖注入而采取直接打包依赖")
 class Dependence constructor(private val fileName: String, val urlData: DependenceData.DependenceUrl, MD5Data: DependenceData.MD5) {
     val MD5: String = MD5Data.data
     lateinit var conn: AtomicReference<HttpURLConnection>
@@ -102,6 +103,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                     add(Dependence("jsoup-1.13.1.jar", DependenceData.Maven.JSOUP, DependenceData.MD5.JSOUP))
                     add(Dependence("dnsjava-3.2.2.jar", DependenceData.Maven.DNSJAVA, DependenceData.MD5.DNSJAVA))
                     add(Dependence("h2-1.4.200.jar", DependenceData.Maven.H2, DependenceData.MD5.H2))
+                    add(Dependence("mybatis-3.5.5.jar", DependenceData.Maven.MYBATIS, DependenceData.MD5.MYBATIS))
                     forEach {
                         getResource(it)
                     }
