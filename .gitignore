@@ -31,3 +31,4 @@ src/test
 .idea
 build
 .gradle
+db
