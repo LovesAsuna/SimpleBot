@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.entity.BotData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.file.KeyWordFile
 import me.lovesasuna.bot.util.BasicUtil

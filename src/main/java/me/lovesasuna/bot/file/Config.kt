@@ -1,10 +1,9 @@
 package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.ConfigData
+import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.ConfigData
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import net.mamoe.mirai.utils.BotConfiguration
 
 object Config : AbstractFile() {

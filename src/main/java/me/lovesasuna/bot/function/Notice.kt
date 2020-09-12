@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.function
 
-import me.lovesasuna.bot.data.NoticeData
+import me.lovesasuna.bot.entity.NoticeData
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.data
+package me.lovesasuna.bot.entity
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hibernate.cfg.Configuration
@@ -15,7 +15,7 @@ object BotData {
 
     val error = Stack<Throwable>()
 
-    val HibernateConfig = Configuration().configure()
+    val HibernateConfig: Configuration = Configuration().addAnnotatedClass(DynamicEntity::class.java).configure()
 }
 
 fun Throwable.pushError() {

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Agent
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.DependenceData
+import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.DependenceData
 import me.lovesasuna.bot.util.file.FileUtil
 import me.lovesasuna.bot.util.network.DownloadUtil
 import me.lovesasuna.bot.util.plugin.Logger

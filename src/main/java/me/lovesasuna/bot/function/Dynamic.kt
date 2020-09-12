@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener

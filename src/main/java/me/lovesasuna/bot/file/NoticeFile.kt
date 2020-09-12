@@ -1,9 +1,8 @@
 package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.NoticeData
+import me.lovesasuna.bot.entity.NoticeData
 import me.lovesasuna.bot.function.Notice
-import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.*
 
 object NoticeFile : AbstractFile() {

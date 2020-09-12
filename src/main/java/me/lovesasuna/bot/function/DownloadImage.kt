@@ -3,8 +3,7 @@ package me.lovesasuna.bot.function
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.entity.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.file.FileUtil
@@ -19,8 +18,6 @@ import net.mamoe.mirai.message.data.queryUrl
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.net.SocketTimeoutException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths

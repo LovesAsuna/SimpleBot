@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.data
+package me.lovesasuna.bot.entity
 
 import net.mamoe.mirai.message.data.MessageChain
 import java.io.Serializable

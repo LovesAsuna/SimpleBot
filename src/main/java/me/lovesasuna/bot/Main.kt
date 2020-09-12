@@ -1,7 +1,8 @@
 package me.lovesasuna.bot
 
 import me.lovesasuna.bot.dao.DynamicDao
-import me.lovesasuna.bot.data.DynamicData
+import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.DynamicEntity
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -15,22 +16,19 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.join
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.MiraiLogger
-import org.hibernate.cfg.Configuration
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.logging.Level
-import java.util.logging.LogManager
 
 /**
  * @author LovesAsuna
  * @date 2020/7/3 21:54
  */
 suspend fun main() {
-
-
-    DynamicDao.save(DynamicData())
+    val session = BotData.HibernateConfig.buildSessionFactory().openSession()
+    val query = DynamicDao(session).removeUP(4)
+    println(query)
 
     return
     Main.printSystemInfo()

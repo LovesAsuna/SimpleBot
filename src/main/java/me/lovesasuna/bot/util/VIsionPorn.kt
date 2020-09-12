@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.util
 
-import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.entity.pushError
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.math.BigInteger
 import java.net.URLEncoder

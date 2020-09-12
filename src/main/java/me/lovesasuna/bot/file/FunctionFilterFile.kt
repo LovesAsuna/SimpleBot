@@ -1,11 +1,10 @@
 package me.lovesasuna.bot.file
 
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.FilterData
+import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.FilterData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.annotations.Filter
 import me.lovesasuna.bot.util.annotations.processors.FilterProcessorHandler
-import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 
 object FunctionFilterFile : AbstractFile() {
     override val file = BasicUtil.getLocation("filter.json")

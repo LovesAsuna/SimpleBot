@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.util.network
 
-import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.entity.pushError
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.function.colorphoto
 
-import me.lovesasuna.bot.data.BotData.objectMapper
-import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.entity.BotData.objectMapper
+import me.lovesasuna.bot.entity.pushError
 import me.lovesasuna.bot.util.interfaces.PhotoSource
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.IOException
