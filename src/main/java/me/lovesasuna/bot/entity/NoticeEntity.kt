@@ -16,5 +16,4 @@ data class NoticeEntity(
         @Column(name = "targets")
         var targetID: Long? = null,
         var message: String = ""
-//var msgList: ArrayList<Triple<Long, Long, MessageChain>>
 )
