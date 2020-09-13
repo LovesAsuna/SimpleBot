@@ -4,7 +4,7 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.controller.*
 import me.lovesasuna.bot.controller.Danmu.Danmu
-import me.lovesasuna.bot.controller.colorphoto.ColorPhoto
+import me.lovesasuna.bot.controller.photo.Photo
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
@@ -23,7 +23,7 @@ object GroupMessageListener : EventListener{
                 Admin::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
-                Notice::class.java, Danmu::class.java, ColorPhoto::class.java,
+                Notice::class.java, Danmu::class.java, Photo::class.java,
                 Dynamic::class.java, Baike::class.java, Nbnhhsh::class.java
         )
         listenersClass.filter {
