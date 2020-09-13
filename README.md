@@ -2,7 +2,7 @@
 
 一个基于 [Mirai](https://github.com/mamoe/mirai) 开发的机器人
 
-当 [YuQ](https://github.com/YuQWorks/YuQ-Mirai) 的文档完善，机器人将使用YuQ进行开发
+当 [Mirai-Console](https://github.com/mamoe/mirai-console) 的正式版推出，机器人将作为Console进行开发
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0364d226b78149979387cb47f44b365c)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&utm_medium=referral&utm_content=LovesAsuna/Mirai-Bot&utm_campaign=Badge_Grade_Dashboard)
 [![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
