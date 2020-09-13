@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import me.lovesasuna.bot.entity.dynamic.DynamicEntity
 import me.lovesasuna.bot.entity.dynamic.LinkEntity
+import me.lovesasuna.bot.util.annotations.processors.FilterProcessorHandler
 import org.hibernate.cfg.Configuration
 import java.util.*
 
@@ -19,7 +20,12 @@ object BotData {
 
     val error = Stack<Throwable>()
 
-    val HibernateConfig: Configuration = Configuration().addAnnotatedClass(LinkEntity::class.java).addAnnotatedClass(DynamicEntity::class.java).configure()
+    val HibernateConfig: Configuration = Configuration().also {
+        FilterProcessorHandler.getClasses("me.lovesasuna.bot.entity").forEach { c ->
+            it.addAnnotatedClass(c)
+        }
+        it.configure()
+    }
 }
 
 fun Throwable.pushError() {
