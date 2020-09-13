@@ -5,8 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.entity.dynamic.LinkEntity
 import me.lovesasuna.bot.entity.pushError
 import me.lovesasuna.bot.file.Config
+import me.lovesasuna.bot.service.DynamicService
+import me.lovesasuna.bot.service.LinkService
+import me.lovesasuna.bot.service.impl.DynamicServiceImpl
+import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.string.StringUtil
@@ -23,29 +28,22 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class Dynamic : FunctionListener {
+
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
         if (message.startsWith("/subscribe ")) {
             when (message.split(" ")[1]) {
                 "list" -> {
-                    val list = arrayListOf<Int>()
-                    data.subscribeMap.keys.forEach {
-                        if (data.subscribeMap[it]!!.contains(event.group.id)) {
-                            list.add(it)
-                        }
-                    }
-                    event.reply("当前订阅的up: $list")
+                    event.reply("当前订阅的up: ${linkService.getUPByGroup(event.group.id.toInt())}")
                 }
                 "add" -> {
                     val upID = message.split(" ")[2].toInt()
-                    data.upSet.add(upID)
-                    data.subscribeMap.putIfAbsent(upID, hashSetOf())
-                    data.subscribeMap[upID]?.add(event.group.id)
+                    linkService.addLink(upID, event.group.id.toInt())
                     event.reply("up动态订阅成功!")
                 }
                 "remove" -> {
                     val upID = message.split(" ")[2].toInt()
-                    data.subscribeMap[upID]?.remove(event.group.id)
+                    linkService.deleteUp(upID, event.group.id.toInt())
                     event.reply("up动态取消订阅成功!")
                 }
                 "test" -> {
@@ -61,28 +59,29 @@ class Dynamic : FunctionListener {
                         builder.append("Active: ${task.isActive}\n")
                         builder.append("Completed: ${task.isCompleted}\n")
                         builder.append("Cancelled: ${task.isCancelled}\n\n")
-                        builder.append("最后查询时间: ${data.time}\n\n")
-                        builder.append("是否被拦截: ${data.intercept}\n\n")
-                        builder.append("订阅的UP集合: ${data.upSet}\n\n")
+                        builder.append("最后查询时间: $time\n\n")
+                        builder.append("是否被拦截: $intercept\n\n")
+                        builder.append("订阅的UP集合: ${linkService.getUps()}\n\n")
                         builder.append("up与群的对应关系: \n")
-                        data.subscribeMap.entries.forEach {
-                            builder.append("UP=${it.key}: 群聊=${it.value}\n")
+                        linkService.getUps().forEach {
+                            builder.append("UP=${it}: 群聊=${linkService.getGroupByUp(it)}\n")
                         }
                         builder.append("\n")
                         builder.append("UP消息摘要: \n")
-                        data.dynamicMap.entries.forEach {
-                            builder.append("UP=${it.key}: 摘要=${it.value}\n")
+                        linkService.getUps().forEach {
+                            builder.append("UP=$it: 摘要=${dynamicService.getContext(it)}\n")
                         }
+
                         event.reply("debug信息: ${BasicUtil.debug(builder.toString())}")
                     }
                 }
                 "push" -> {
                     event.reply("开始往订阅群推送消息！")
                     Main.scheduler.asyncTask {
-                        data.upSet.forEach {
+                        linkService.getUps().forEach {
                             runBlocking {
                                 read(it, 0, true)
-                                data.time = "${Calendar.getInstance().time}"
+                                time = "${Calendar.getInstance().time}"
                                 delay(15 * 1000)
                             }
                         }
@@ -95,21 +94,22 @@ class Dynamic : FunctionListener {
         return true
     }
 
-    data class Data(var upSet: HashSet<Int>, var subscribeMap: HashMap<Int, HashSet<Long>>, var dynamicMap: HashMap<Int, String>, var time: String, var intercept: Boolean) : Serializable
-
     companion object {
-        var data = Data(hashSetOf(), hashMapOf(), hashMapOf(), "", false)
         private var task: Job
+        val dynamicService: DynamicService = DynamicServiceImpl
+        val linkService: LinkService = LinkServiceImpl
+        var intercept = false
+        var time = ""
 
         init {
             task = BasicUtil.scheduleWithFixedDelay({
-                data.upSet.forEach {
+                linkService.getUps().forEach {
                     runBlocking {
                         with(it) {
                             try {
                                 val result = GlobalScope.async {
                                     read(it, 0)
-                                    data.time = "${Calendar.getInstance().time}"
+                                    time = "${Calendar.getInstance().time}"
                                     true
                                 }
                                 delay(10 * 1000)
@@ -118,8 +118,8 @@ class Dynamic : FunctionListener {
                                 }
                             } catch (e: TimeoutException) {
                                 e.pushError()
-                                data.subscribeMap[it]?.forEach {
-                                    val group = Bot.botInstances[0].getGroup(it)
+                                linkService.getGroupByUp(it).forEach {
+                                    val group = Bot.botInstances[0].getGroup(it.toLong())
                                     group.sendMessage("查询${this}动态时超时!")
                                 }
                             }
@@ -132,32 +132,34 @@ class Dynamic : FunctionListener {
         }
 
         private suspend fun read(uid: Int, num: Int, push: Boolean = false) {
-            val reader = NetWorkUtil.get("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")!!.second.bufferedReader()
+            val reader = NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
-                if (!data.intercept) {
+                if (!intercept) {
                     Main.logger!!.error("B站动态api请求被拦截")
-                    data.subscribeMap[uid]?.forEach {
+                    linkService.getGroupByUp(uid).forEach {
                         Main.scheduler.asyncTask {
-                            val group = Bot.botInstances[0].getGroup(it)
+                            val group = Bot.botInstances[0].getGroup(it.toLong())
                             group.sendMessage("B站动态api请求被拦截，请联系管理员!")
                             this
                         }
                     }
                 }
-                data.intercept = true
+                intercept = true
                 return
             }
-            data.intercept = false
+            intercept = false
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
-            if (push || StringUtil.getSimilarityRatio(data.dynamicMap[uid]!!, card.toString().substring(50..100)) < 90) {
-                data.dynamicMap[uid] = card.toString().substring(50..100)
-                data.subscribeMap[uid]?.forEach {
+            if (push || dynamicService.getContext(uid).isEmpty() || StringUtil.getSimilarityRatio(dynamicService.getContext(uid), card.toString().substring(50..100)) < 90) {
+                println("更新$uid 动态")
+                dynamicService.update(uid, card.toString().substring(50..100))
+                linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
-                        val group = Bot.botInstances[0].getGroup(it)
-                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        parse(group, card)
+                        val group = Bot.botInstances[0].getGroup(it.toLong())
+//                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
+//                        parse(group, card)
+                        1
                     }
                 }
 
@@ -205,11 +207,11 @@ class Dynamic : FunctionListener {
             return messageChain
         }
 
-        private suspend fun videoParse(origin: JsonNode): Message {
+        private fun videoParse(origin: JsonNode): Message {
             return makeCard(origin["title"].asText(), origin["desc"].asText(), "哔哩哔哩视频", origin["jump_url"].asText(), origin["pic"].asText())
         }
 
-        private suspend fun articleParse(origin: JsonNode): Message {
+        private fun articleParse(origin: JsonNode): Message {
             return makeCard(origin["title"].asText(), origin["summary"].asText(), "哔哩哔哩专栏", "https://www.bilibili.com/read/cv${origin["id"].asText()}", origin["banner_url"].asText())
         }
 
@@ -219,7 +221,7 @@ class Dynamic : FunctionListener {
         }
 
         private fun dequate(node: JsonNode): JsonNode {
-            return BotData.objectMapper!!.readTree(node.asText())
+            return BotData.objectMapper.readTree(node.asText())
         }
     }
 }
