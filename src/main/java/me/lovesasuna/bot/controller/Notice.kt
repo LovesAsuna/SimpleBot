@@ -1,12 +1,12 @@
 package me.lovesasuna.bot.controller
 
-import me.lovesasuna.bot.entity.NoticeData
+import me.lovesasuna.bot.service.NoticeService
+import me.lovesasuna.bot.service.impl.NoticeServiceImpl
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
 import java.util.*
-import java.util.stream.Collectors
 
 class Notice : FunctionListener {
     private val calendar = Calendar.getInstance()
@@ -15,10 +15,8 @@ class Notice : FunctionListener {
         event as GroupMessageEvent
         val groupID = event.group.id
         val senderID = event.sender.id
-        val filterList = data.msgList.parallelStream().filter { it.first == groupID && it.second == senderID }.collect(Collectors.toList())
-        if (filterList.isNotEmpty()) {
-            event.reply(filterList.first().third)
-            data.msgList.remove(filterList.first())
+        noticeService.getMatchMessage(groupID, senderID)?.let {
+            event.reply(it)
             return true
         }
 
@@ -29,19 +27,19 @@ class Notice : FunctionListener {
                 event.message.listIterator(4).forEach {
                     messageChain += it
                 }
-                data.msgList.add(Triple(groupID, at.target, at + PlainText("\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${getTime(Calendar.SECOND)}\n") + messageChain))
-                event.reply(At(event.group.get(senderID)) + "此留言将在该用户下次说话时发送！")
+                noticeService.addNotice(groupID, at.target, at + PlainText("\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${getTime(Calendar.SECOND)}\n") + messageChain)
+                event.reply(At(event.group[senderID]) + "此留言将在该用户下次说话时发送！")
             }
             return true
         }
         return false
     }
 
-    fun getTime(filed: Int): Int {
+    private fun getTime(filed: Int): Int {
         return calendar.get(filed)
     }
 
     companion object {
-        var data = NoticeData(arrayListOf())
+        var noticeService: NoticeService = NoticeServiceImpl
     }
 }
