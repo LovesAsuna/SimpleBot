@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.function
+package me.lovesasuna.bot.controller
 
 import kotlinx.coroutines.delay
 import me.lovesasuna.bot.file.Config

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.function.colorphoto
+package me.lovesasuna.bot.controller.colorphoto
 
 import me.lovesasuna.bot.entity.BotData.objectMapper
 import me.lovesasuna.bot.entity.pushError

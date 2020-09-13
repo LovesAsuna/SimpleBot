@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.function
+package me.lovesasuna.bot.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.function
+package me.lovesasuna.bot.controller
 
 import me.lovesasuna.bot.entity.BotData
 import me.lovesasuna.bot.util.interfaces.FunctionListener

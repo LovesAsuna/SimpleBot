@@ -2,7 +2,7 @@ package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.entity.NoticeData
-import me.lovesasuna.bot.function.Notice
+import me.lovesasuna.bot.controller.Notice
 import java.io.*
 
 object NoticeFile : AbstractFile() {

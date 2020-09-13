@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.entity.BotData
-import me.lovesasuna.bot.function.KeyWord
+import me.lovesasuna.bot.controller.KeyWord
 import me.lovesasuna.bot.util.BasicUtil
 
 object KeyWordFile : AbstractFile() {

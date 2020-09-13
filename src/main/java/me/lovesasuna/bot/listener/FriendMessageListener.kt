@@ -2,12 +2,10 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.function.Sort
+import me.lovesasuna.bot.controller.Sort
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.EventListener
-import net.mamoe.mirai.event.subscribe
 import net.mamoe.mirai.event.subscribeAlways
-import net.mamoe.mirai.event.subscribeFriendMessages
 import net.mamoe.mirai.message.FriendMessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image

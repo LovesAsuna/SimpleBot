@@ -2,13 +2,12 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.function.*
-import me.lovesasuna.bot.function.Danmu.Danmu
-import me.lovesasuna.bot.function.colorphoto.ColorPhoto
+import me.lovesasuna.bot.controller.*
+import me.lovesasuna.bot.controller.Danmu.Danmu
+import me.lovesasuna.bot.controller.colorphoto.ColorPhoto
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
-import net.mamoe.mirai.event.Event
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.Face

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.function.colorphoto
+package me.lovesasuna.bot.controller.colorphoto
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
