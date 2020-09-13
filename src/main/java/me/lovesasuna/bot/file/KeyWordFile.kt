@@ -13,16 +13,16 @@ object KeyWordFile : AbstractFile() {
             add(KeyWord.KeyWord("啊这", "这啊", 10))
         }
         if (!file.exists()) {
-            BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
+            BotData.objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
         readValue()
     }
 
     override fun writeValue() {
-        BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
+        BotData.objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data)
     }
 
     override fun readValue() {
-        data = BotData.objectMapper!!.readValue(file, KeyWord.KeyWordChain::class.java)
+        data = BotData.objectMapper.readValue(file, KeyWord.KeyWordChain::class.java)
     }
 }
