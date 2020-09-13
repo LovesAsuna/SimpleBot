@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.dao
 
-import me.lovesasuna.bot.entity.BotData
 import me.lovesasuna.bot.util.interfaces.dao.HibernateDao
 import org.hibernate.Session
 import org.hibernate.query.Query
@@ -15,18 +14,26 @@ open class DefaultHibernateDao<T>(open val session: Session) : HibernateDao<T> {
         return setPrams(queryString, resultType, *prams).list()
     }
 
-    override fun <F>queryField(queryString: String, resultType: Class<F>, vararg prams: Any): List<F> {
+    override fun <F> queryField(queryString: String, resultType: Class<F>, vararg prams: Any): List<F> {
         return setPrams(queryString, resultType, *prams).list()
     }
 
-    override fun update(queryString: String, resultType: Class<T>, vararg prams: Any): Int {
-        return setPrams(queryString, resultType, *prams).executeUpdate()
+    override fun update(queryString: String, vararg prams: Any): Int {
+        return setPrams(queryString, *prams).executeUpdate()
     }
 
-    private fun <T>setPrams(queryString: String, resultType: Class<T>, vararg prams: Any): Query<T> {
+    private fun <T> setPrams(queryString: String, resultType: Class<T>, vararg prams: Any): Query<T> {
         val query = session.createQuery(queryString, resultType)
         for ((index, pram) in prams.withIndex()) {
             query.setParameter(index, pram)
+        }
+        return query
+    }
+
+    private fun setPrams(queryString: String, vararg prams: Any): Query<*> {
+        val query = session.createQuery(queryString)
+        for ((index, pram) in prams.withIndex()) {
+            query.setParameter(index + 1, pram)
         }
         return query
     }
