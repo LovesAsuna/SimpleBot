@@ -1,12 +1,8 @@
 package me.lovesasuna.bot.service
 
-import me.lovesasuna.bot.entity.DynamicEntity
-import org.hibernate.SessionFactory
+interface DynamicService : Service {
 
-interface DynamicService {
-    val factory: SessionFactory
+    fun update(upID: Int, context: String)
 
-    fun save(entity : DynamicEntity)
-
-    fun update()
+    fun getContext(upID: Int): String
 }
