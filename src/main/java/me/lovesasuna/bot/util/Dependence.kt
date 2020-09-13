@@ -131,7 +131,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                 }
 
                 for (dependence in dependencies) {
-                    Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
+//                    Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
                 }
                 BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
                 progressBar.index = 100.0
