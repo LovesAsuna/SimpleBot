@@ -20,7 +20,7 @@ import kotlin.system.measureTimeMillis
 class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val groupID = (event as GroupMessageEvent).group.id
+        event as GroupMessageEvent
         if (!message.startsWith("R6 ") && !message.startsWith("r6 ")) {
             return false
         }
