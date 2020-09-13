@@ -17,7 +17,7 @@ class Pixiv : PhotoSource {
         val result = NetWorkUtil[source]
         return try {
             val inputStream = result!!.second
-            val root = objectMapper!!.readTree(inputStream)
+            val root = objectMapper.readTree(inputStream)
             val quota = root["quota"].asText()
             val url = root["data"][0]?.let { it["url"].asText() } ?: return "|0"
             return "$url|$quota"

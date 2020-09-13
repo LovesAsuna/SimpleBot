@@ -15,7 +15,7 @@ class Random : PhotoSource {
         val source = "http://api.mtyqx.cn/api/random.php?return=json"
         val result = NetWorkUtil[source]
         return try {
-            val root = objectMapper!!.readTree(result!!.second)
+            val root = objectMapper.readTree(result!!.second)
             root["imgurl"].asText()
         } catch (e: IOException) {
             e.pushError()
