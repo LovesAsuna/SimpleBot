@@ -1,8 +1,10 @@
-package me.lovesasuna.bot.controller.colorphoto
+package me.lovesasuna.bot.controller.photo
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.photo.source.Pixiv
+import me.lovesasuna.bot.controller.photo.source.Random
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.PhotoSource
@@ -12,7 +14,7 @@ import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.PlainText
 
-class ColorPhoto : FunctionListener {
+class Photo : FunctionListener {
     lateinit var photoSource: PhotoSource
     var random = true
     var pixiv = true
