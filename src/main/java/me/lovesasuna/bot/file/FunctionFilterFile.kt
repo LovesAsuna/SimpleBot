@@ -20,7 +20,7 @@ object FunctionFilterFile : AbstractFile() {
         }
         val data = FilterData(list)
         if (!file.exists()) {
-            BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
+            BotData.objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
         readValue()
     }
@@ -30,7 +30,7 @@ object FunctionFilterFile : AbstractFile() {
     }
 
     override fun readValue() {
-        data = BotData.objectMapper!!.readValue(file, FilterData::class.java)
+        data = BotData.objectMapper.readValue(file, FilterData::class.java)
     }
 
     fun filter(function: String, groupID: Long): Boolean {
