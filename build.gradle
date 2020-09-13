@@ -26,8 +26,6 @@ repositories {
 defaultTasks("shadowJar")
 
 shadowJar {
-    processResources.dependsOn(project('CustomCore').getTasksByName('shadowJar', false))
-    logger.log(LogLevel.INFO, "The newest mirai version is " + project('CustomCore').version)
     manifest {
         attributes("Main-Class": "me.lovesasuna.bot.MainKt")
     }
@@ -40,7 +38,7 @@ shadowJar {
 
 dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'net.mamoe:mirai-core-qqandroid:' + project('CustomCore').version
+    implementation 'net.mamoe:mirai-core-qqandroid:1.2.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
     implementation 'me.lovesasuna:Lanzou:1.3.3'
     implementation 'dnsjava:dnsjava:3.2.2'
