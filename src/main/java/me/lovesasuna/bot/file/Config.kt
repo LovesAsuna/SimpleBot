@@ -13,7 +13,7 @@ object Config : AbstractFile() {
     override fun writeDefault() {
         val data = ConfigData()
         if (!file.exists()) {
-            BotData.objectMapper!!.writerWithDefaultPrettyPrinter().writeValue(file, data)
+            BotData.objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data)
         }
         readValue()
     }
@@ -23,7 +23,7 @@ object Config : AbstractFile() {
     }
 
     override fun readValue() {
-        data = BotData.objectMapper!!.readValue(file, ConfigData::class.java)
+        data = BotData.objectMapper.readValue(file, ConfigData::class.java)
         Main.botConfig.protocol = BotConfiguration.MiraiProtocol.valueOf(data.protocol.toUpperCase())
     }
 
