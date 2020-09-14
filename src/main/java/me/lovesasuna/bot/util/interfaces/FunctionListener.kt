@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.util.interfaces
 
-import me.lovesasuna.bot.util.interfaces.processor.FilterProcessor
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
@@ -9,7 +8,7 @@ import java.io.IOException
 /**
  * @author LovesAsuna
  */
-interface FunctionListener : FilterProcessor {
+interface FunctionListener {
     /**
      * @param event 群消息事件
      * @param message 群消息
