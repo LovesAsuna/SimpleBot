@@ -3,9 +3,7 @@ package me.lovesasuna.bot.entity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import me.lovesasuna.bot.entity.dynamic.DynamicEntity
-import me.lovesasuna.bot.entity.dynamic.LinkEntity
-import me.lovesasuna.bot.util.annotations.processors.FilterProcessorHandler
+import me.lovesasuna.bot.util.annotations.processors.ProcessorHandler
 import org.hibernate.cfg.Configuration
 import java.util.*
 
@@ -21,7 +19,7 @@ object BotData {
     val error = Stack<Throwable>()
 
     val HibernateConfig: Configuration = Configuration().also {
-        FilterProcessorHandler.getClasses("me.lovesasuna.bot.entity").forEach { c ->
+        ProcessorHandler.getClasses("me.lovesasuna.bot.entity").forEach { c ->
             it.addAnnotatedClass(c)
         }
         it.configure()
