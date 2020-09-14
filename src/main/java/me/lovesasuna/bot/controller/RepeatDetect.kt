@@ -1,8 +1,6 @@
 package me.lovesasuna.bot.controller
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.file.FunctionFilterFile
-import me.lovesasuna.bot.util.annotations.Filter
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
@@ -16,12 +14,10 @@ import javax.imageio.ImageIO
  * @author LovesAsuna
  * @date 2020/4/22 23:50
  */
-@Filter
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         val groupID = (event as GroupMessageEvent).group.id
-        if (filter(groupID)) return false
         maps.putIfAbsent(groupID, ArrayList())
         val messageList = maps[groupID]!!
 
@@ -76,10 +72,6 @@ class RepeatDetect : FunctionListener {
             }
         }
         return true
-    }
-
-    override fun filter(groupID: Long): Boolean {
-        return FunctionFilterFile.filter(this::class.java.simpleName, groupID)
     }
 
     private fun operate(event: MessageEvent, messageList: MutableList<MessageChain>) {
