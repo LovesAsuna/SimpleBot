@@ -6,7 +6,7 @@ import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 
 object FileManager : AbstractFile() {
     private val fileList = setOf(
-            Config, NoticeFile, DynamicFile, FunctionFilterFile, KeyWordFile
+            Config
     )
 
     @Throws(AccountNotFoundException::class)
