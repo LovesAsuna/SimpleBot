@@ -1,8 +1,5 @@
 package me.lovesasuna.bot
 
-import me.lovesasuna.bot.dao.DynamicDao
-import me.lovesasuna.bot.entity.BotData
-import me.lovesasuna.bot.entity.DynamicEntity
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -20,20 +17,16 @@ import java.io.File
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.logging.Level
+import java.util.logging.Logger.getLogger
 
 /**
  * @author LovesAsuna
  * @date 2020/7/3 21:54
  */
 suspend fun main() {
-    val session = BotData.HibernateConfig.buildSessionFactory().openSession()
-    val query = DynamicDao(session).removeUP(4)
-    println(query)
-
-    return
+    getLogger("org.hibernate").level = Level.OFF;
     Main.printSystemInfo()
-    /*初始化机器人依赖*/
-//    Dependence.init()
     Main.botConfig = BotConfiguration.Default.also {
         it.randomDeviceInfo()
     }
