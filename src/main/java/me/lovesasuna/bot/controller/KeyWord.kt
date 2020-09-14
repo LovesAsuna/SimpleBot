@@ -45,27 +45,28 @@ class KeyWord : FunctionListener {
                 val builder = StringBuilder()
                 builder.append("匹配规则  |  回复词  |  几率\n")
                 builder.append("======================\n")
-                var index = 0
                 keyWordService.getKeyWordsByGroup(groupID).forEach {
-                    builder.append("$index. ${it.wordRegex} | ${
+                    builder.append("${it.id}. ${it.wordRegex} | ${
                         it.reply.subSequence(0, if (it.reply.length >= 10) {
                             10
                         } else {
                             it.reply.length
                         })
                     } | ${it.chance}\n")
-                    index++
                 }
 
                 event.reply(builder.toString())
                 return true
             }
             message.startsWith("/keyword remove ") && senderID == Config.data.admin -> {
-                //tood 删除操作(Dao也并未设计)
-//                val index = BasicUtil.extractInt(message)
-//                if (index >= KeyWordFile.data.list.size) throw IllegalArgumentException()
-//                KeyWordFile.data.list.removeAt(index)
-//                event.reply("关键词删除成功")
+                val id = BasicUtil.extractInt(message)
+                keyWordService.removeKeyWord(id).also {
+                    if (it) {
+                        event.reply("关键词删除成功")
+                    } else {
+                        event.reply("关键词删除失败")
+                    }
+                }
                 return true
             }
             message.startsWith("/keyword add ") && senderID == Config.data.admin -> {

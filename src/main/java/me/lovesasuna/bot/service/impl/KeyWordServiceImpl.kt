@@ -26,16 +26,16 @@ object KeyWordServiceImpl : KeyWordService {
         }
     }
 
-    override fun removeKeyWord(groupID: Long, wordRegex: String): Boolean {
+    override fun removeKeyWord(id : Int): Boolean {
         val session = factory.openSession()
         session.beginTransaction()
         session.use {
             val dao = KeyWordDao(session)
-            return if (!dao.checkKeyWordExist(groupID, wordRegex)) {
+            return if (!dao.checkKeyWordExist(id)) {
                 session.transaction.commit()
                 false
             } else {
-                dao.removeKeyWord(groupID, wordRegex)
+                dao.removeKeyWord(id)
                 session.transaction.commit()
                 false
             }

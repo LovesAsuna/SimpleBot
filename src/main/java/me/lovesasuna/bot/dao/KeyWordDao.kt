@@ -12,12 +12,16 @@ class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEnt
         return queryEntity("from KeyWordEntity where groupID = $groupID and wordRegex = $wordRegex", KeyWordEntity::class.java).isNotEmpty()
     }
 
+    fun checkKeyWordExist(id: Int): Boolean {
+        return queryEntity("from KeyWordEntity where id = $id", KeyWordEntity::class.java).isNotEmpty()
+    }
+
     fun addKeyWord(entity: KeyWordEntity) {
         session.saveOrUpdate(entity)
     }
 
-    fun removeKeyWord(groupID: Long, wordRegex: String) {
-        update("delete from KeyWordEntity where groupID = $groupID and wordRegex = $wordRegex")
+    fun removeKeyWord(id: Int) {
+        update("delete from KeyWordEntity where id = $id")
     }
 
     fun getKeyWordsByGroup(groupID: Long): List<KeyWordEntity> {
