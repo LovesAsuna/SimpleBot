@@ -10,7 +10,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.jar.JarFile
 
-class FilterProcessorHandler {
+class ProcessorHandler {
     private val jarFile = JarFile(Main::class.java.protectionDomain.codeSource.location.path)
 
     @Deprecated("不建议使用")
@@ -19,7 +19,7 @@ class FilterProcessorHandler {
         val functionList = arrayListOf<String>()
         while (jarEntry.hasMoreElements()) {
             val file = jarEntry.nextElement()
-            if (file.name.contains(Regex("me/lovesasuna/bot/function/\\w+.class"))) {
+            if (file.name.contains(Regex("me/lovesasuna/bot/controller/\\w+.class"))) {
                 functionList.add(file.name.split("/")[4].split(".")[0])
             }
         }
