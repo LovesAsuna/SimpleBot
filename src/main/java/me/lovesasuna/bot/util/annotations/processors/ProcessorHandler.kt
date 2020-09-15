@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.util.annotations.processors
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.entity.pushError
+import me.lovesasuna.bot.data.pushError
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
