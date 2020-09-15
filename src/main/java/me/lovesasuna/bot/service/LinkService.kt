@@ -1,15 +1,15 @@
 package me.lovesasuna.bot.service
 
 interface LinkService : Service {
-    fun addLink(upID: Int, groupID: Int)
+    fun addLink(upID: Long, groupID: Long)
 
-    fun getUPByGroup(groupID: Int): List<Int>
+    fun getUPByGroup(groupID: Long): List<Long>
 
-    fun getGroupByUp(upID: Int): List<Int>
+    fun getGroupByUp(upID: Long): List<Long>
 
-    fun deleteUp(upID: Int, groupID: Int): Int
+    fun deleteUp(upID: Long, groupID: Long): Int
 
-    fun getGroups(): List<Int>
+    fun getGroups(): List<Long>
 
-    fun getUps(): List<Int>
+    fun getUps(): List<Long>
 }

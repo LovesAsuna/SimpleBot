@@ -1,9 +1,8 @@
 package me.lovesasuna.bot.dao
 
-import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.entity.NoticeEntity
 import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.messageChainOf
 import org.hibernate.Session
 
 /**
@@ -12,7 +11,7 @@ import org.hibernate.Session
  **/
 class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntity>(session) {
     fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {
-        return queryField("select distinct e.groupID from NoticeEntity as e where groupID = $groupID and targetID = $targetID", String::class.java).let {
+        return queryField("select distinct e.message from NoticeEntity as e where groupID = $groupID and targetID = 1", String::class.java).let {
             if (it.isEmpty()) {
                 null
             } else {

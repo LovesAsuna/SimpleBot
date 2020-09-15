@@ -3,7 +3,7 @@ package me.lovesasuna.bot.controller
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import me.lovesasuna.bot.entity.pushError
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.file.FileUtil

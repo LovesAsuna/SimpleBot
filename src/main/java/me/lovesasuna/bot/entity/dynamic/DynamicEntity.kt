@@ -9,7 +9,7 @@ data class DynamicEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int? = null,
         @Column(name = "ups")
-        var upID: Int? = null,
+        var upID: Long? = null,
         @Lob
         var context: String = ""
 )

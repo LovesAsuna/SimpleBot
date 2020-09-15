@@ -2,7 +2,7 @@ package me.lovesasuna.bot.service
 
 interface DynamicService : Service {
 
-    fun update(upID: Int, context: String)
+    fun update(upID: Long, context: String)
 
-    fun getContext(upID: Int): String
+    fun getContext(upID: Long): String
 }

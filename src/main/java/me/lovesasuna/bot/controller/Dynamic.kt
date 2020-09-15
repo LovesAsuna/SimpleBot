@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.entity.BotData
-import me.lovesasuna.bot.entity.pushError
+import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.DynamicService
 import me.lovesasuna.bot.service.LinkService
@@ -32,20 +32,20 @@ class Dynamic : FunctionListener {
         if (message.startsWith("/subscribe ")) {
             when (message.split(" ")[1]) {
                 "list" -> {
-                    event.reply("当前订阅的up: ${linkService.getUPByGroup(event.group.id.toInt())}")
+                    event.reply("当前订阅的up: ${linkService.getUPByGroup(event.group.id)}")
                 }
                 "add" -> {
-                    val upID = message.split(" ")[2].toInt()
-                    linkService.addLink(upID, event.group.id.toInt())
+                    val upID = message.split(" ")[2].toLong()
+                    linkService.addLink(upID, event.group.id)
                     event.reply("up动态订阅成功!")
                 }
                 "remove" -> {
-                    val upID = message.split(" ")[2].toInt()
-                    linkService.deleteUp(upID, event.group.id.toInt())
+                    val upID = message.split(" ")[2].toLong()
+                    linkService.deleteUp(upID, event.group.id)
                     event.reply("up动态取消订阅成功!")
                 }
                 "test" -> {
-                    val upID = message.split(" ")[2].toInt()
+                    val upID = message.split(" ")[2].toLong()
                     val num = message.split(" ")[3].toInt()
                     read(upID, num)
                 }
@@ -129,7 +129,7 @@ class Dynamic : FunctionListener {
             }, 0, 1, TimeUnit.MINUTES).first
         }
 
-        private suspend fun read(uid: Int, num: Int, push: Boolean = false) {
+        private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
             val reader = NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {

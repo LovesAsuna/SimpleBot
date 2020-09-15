@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity
+package me.lovesasuna.bot.data
 
 data class ConfigData(var protocol: String = "ANDROID_PAD",
                       var account: Long = 0,

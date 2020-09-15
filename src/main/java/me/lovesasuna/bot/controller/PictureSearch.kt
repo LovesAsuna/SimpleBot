@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.entity.BotData
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.pictureSearchUtil.Ascii2d
 import me.lovesasuna.bot.util.interfaces.FunctionListener

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity
+package me.lovesasuna.bot.data
 
 import me.lovesasuna.lanzou.Lanzou
 

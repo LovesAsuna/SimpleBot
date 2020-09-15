@@ -14,7 +14,7 @@ data class LinkEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int? = null,
         @Column(name = "groups")
-        var groupID: Int? = null,
+        var groupID: Long? = null,
         @Column(name = "ups")
-        var upID: Int? = null
+        var upID: Long? = null
 )

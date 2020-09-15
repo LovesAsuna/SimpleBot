@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.service
 
-import org.hibernate.SessionFactory
+import org.hibernate.Session
 
 interface Service {
-    val factory: SessionFactory
+    val session: Session
 }

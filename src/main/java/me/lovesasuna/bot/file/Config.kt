@@ -1,8 +1,8 @@
 package me.lovesasuna.bot.file
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.entity.BotData
-import me.lovesasuna.bot.entity.ConfigData
+import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.ConfigData
 import me.lovesasuna.bot.util.BasicUtil
 import net.mamoe.mirai.utils.BotConfiguration
 
