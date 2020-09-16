@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.interfaces
+package me.lovesasuna.bot.controller.photo.source
 
 interface PhotoSource {
     /**

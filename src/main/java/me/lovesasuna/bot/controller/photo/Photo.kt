@@ -7,7 +7,7 @@ import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.FunctionListener
-import me.lovesasuna.bot.util.interfaces.PhotoSource
+import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

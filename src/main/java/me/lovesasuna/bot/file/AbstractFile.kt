@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.file
 
-import me.lovesasuna.bot.util.interfaces.file.FileManipulate
 import java.io.File
 
 /**

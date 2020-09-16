@@ -1,6 +1,5 @@
 package me.lovesasuna.bot.dao
 
-import me.lovesasuna.bot.util.interfaces.dao.HibernateDao
 import org.hibernate.Session
 import org.hibernate.query.Query
 

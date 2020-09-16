@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.interfaces.dao
+package me.lovesasuna.bot.dao
 
 interface HibernateDao<T> {
     fun queryEntity(queryString: String, resultType: Class<T>, vararg prams: Any): List<T>

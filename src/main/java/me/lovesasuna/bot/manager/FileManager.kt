@@ -2,7 +2,7 @@ package me.lovesasuna.bot.manager
 
 import me.lovesasuna.bot.file.*
 import me.lovesasuna.bot.util.exceptions.AccountNotFoundException
-import me.lovesasuna.bot.util.interfaces.file.FileManipulate
+import me.lovesasuna.bot.file.FileManipulate
 
 object FileManager : AbstractFile() {
     private val fileList = setOf(

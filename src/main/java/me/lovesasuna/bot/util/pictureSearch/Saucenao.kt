@@ -1,8 +1,7 @@
-package me.lovesasuna.bot.util.pictureSearchUtil
+package me.lovesasuna.bot.util.pictureSearch
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.PictureSearchSource
 import me.lovesasuna.lanzou.util.NetWorkUtil
 
 object Saucenao : PictureSearchSource {

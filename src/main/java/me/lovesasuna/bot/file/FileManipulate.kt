@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.interfaces.file
+package me.lovesasuna.bot.file
 
 import java.io.File
 

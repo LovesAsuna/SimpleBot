@@ -1,6 +1,5 @@
-package me.lovesasuna.bot.util.pictureSearchUtil
+package me.lovesasuna.bot.util.pictureSearch
 
-import me.lovesasuna.bot.util.interfaces.PictureSearchSource
 import org.jsoup.Jsoup
 
 object Ascii2d : PictureSearchSource {
