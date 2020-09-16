@@ -1,12 +1,21 @@
 package me.lovesasuna.bot;
 
+import sun.misc.Unsafe;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
+
 /**
  * @author LovesAsuna
  * @date 2020/7/12 19:04
  */
 
 public final class Agent {
-    /*
     private static final Unsafe UNSAFE;
     private static final MethodHandles.Lookup LOOKUP;
     private static final MethodType METHODTYPE;
@@ -45,6 +54,5 @@ public final class Agent {
             e.printStackTrace();
         }
     }
-    */
 }
 

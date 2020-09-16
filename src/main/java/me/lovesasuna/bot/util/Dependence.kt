@@ -2,7 +2,10 @@ package me.lovesasuna.bot.util
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import me.lovesasuna.bot.Agent
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
@@ -130,7 +133,7 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                 }
 
                 for (dependence in dependencies) {
-//                    Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
+                    Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
                 }
                 BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
                 progressBar.index = 100.0
