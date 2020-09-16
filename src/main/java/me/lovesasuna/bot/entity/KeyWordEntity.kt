@@ -11,6 +11,7 @@ data class KeyWordEntity(
         @Column(name = "groups")
         var groupID: Long? = null,
         var wordRegex: String = "",
+        @Lob
         var reply: String = "",
         var chance: Int? = null
 )
