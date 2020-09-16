@@ -11,11 +11,12 @@ import org.hibernate.Session
  **/
 class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntity>(session) {
     fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {
-        return queryField("select distinct e.message from NoticeEntity as e where groupID = $groupID and targetID = 1", String::class.java).let {
+        return queryField("select distinct e.message from NoticeEntity as e where groupID = ?1 and targetID = ?2", String::class.java, groupID, targetID).let {
             if (it.isEmpty()) {
                 null
             } else {
-                BotData.objectMapper.readValue(it[0], MessageChain::class.java)
+                val c = Class.forName("net.mamoe.mirai.message.data.MessageChainImplByCollection")
+                BotData.objectMapper.readValue(it[0],c) as MessageChain
             }
         }
     }

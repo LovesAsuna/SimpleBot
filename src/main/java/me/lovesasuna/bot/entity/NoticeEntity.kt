@@ -15,5 +15,6 @@ data class NoticeEntity(
         var groupID: Long? = null,
         @Column(name = "targets")
         var targetID: Long? = null,
+        @Lob
         var message: String = ""
 )

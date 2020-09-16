@@ -12,6 +12,7 @@ class Notice : FunctionListener {
     private val calendar = Calendar.getInstance()
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+        TODO("MessageChain反序列化暂时未找到方法")
         event as GroupMessageEvent
         val groupID = event.group.id
         val senderID = event.sender.id

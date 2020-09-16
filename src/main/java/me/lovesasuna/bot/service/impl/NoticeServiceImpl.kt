@@ -15,6 +15,7 @@ object NoticeServiceImpl : NoticeService {
 
     override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {
         session.beginTransaction()
+        println(message::class.java)
         val messageChain = BotData.objectMapper.writeValueAsString(message)
         NoticeDao(session).addNotice(NoticeEntity(null, groupID, targetID, messageChain))
         session.transaction.commit()
