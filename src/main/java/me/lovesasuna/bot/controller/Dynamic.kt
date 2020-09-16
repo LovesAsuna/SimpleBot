@@ -150,13 +150,12 @@ class Dynamic : FunctionListener {
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
             if (push || dynamicService.getContext(uid).isEmpty() || StringUtil.getSimilarityRatio(dynamicService.getContext(uid), card.toString().substring(50..100)) < 90) {
-                println("更新$uid 动态")
                 dynamicService.update(uid, card.toString().substring(50..100))
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
                         val group = Bot.botInstances[0].getGroup(it.toLong())
-//                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-//                        parse(group, card)
+                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
+                        parse(group, card)
                         1
                     }
                 }

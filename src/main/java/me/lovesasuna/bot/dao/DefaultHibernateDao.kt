@@ -24,7 +24,7 @@ open class DefaultHibernateDao<T>(open val session: Session) : HibernateDao<T> {
     private fun <T> setPrams(queryString: String, resultType: Class<T>, vararg prams: Any): Query<T> {
         val query = session.createQuery(queryString, resultType)
         for ((index, pram) in prams.withIndex()) {
-            query.setParameter(index, pram)
+            query.setParameter(index + 1, pram)
         }
         return query
     }
