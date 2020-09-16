@@ -1,7 +1,6 @@
 package me.lovesasuna.bot.dao
 
 import me.lovesasuna.bot.entity.dynamic.LinkEntity
-import me.lovesasuna.bot.util.JL
 import org.hibernate.Session
 
 /**
@@ -10,11 +9,11 @@ import org.hibernate.Session
  **/
 class LinkDao(override val session: Session) : DefaultHibernateDao<LinkEntity>(session) {
     fun getUPByGroup(groupID: Long): List<Long> {
-        return queryField("select distinct e.upID from LinkEntity as e where groupID = $groupID", JL::class.java) as List<Long>
+        return queryField("select distinct e.upID from LinkEntity as e where groupID = $groupID", Long::class.javaObjectType)
     }
 
     fun getGroupByUp(upID: Long): List<Long> {
-        return queryField("select distinct e.groupID from LinkEntity as e where upID = $upID", JL::class.java) as List<Long>
+        return queryField("select distinct e.groupID from LinkEntity as e where upID = $upID", Long::class.javaObjectType)
     }
 
     fun deleteUp(upID: Long, groupID: Long): Int {
@@ -26,10 +25,10 @@ class LinkDao(override val session: Session) : DefaultHibernateDao<LinkEntity>(s
     }
 
     fun getGroups(): List<Long> {
-        return queryField("select distinct e.groupID from LinkEntity as e", JL::class.java) as List<Long>
+        return queryField("select distinct e.groupID from LinkEntity as e", Long::class.javaObjectType)
     }
 
     fun getUps(): List<Long> {
-        return queryField("select distinct e.upID from LinkEntity as e", JL::class.java) as List<Long>
+        return queryField("select distinct e.upID from LinkEntity as e", Long::class.javaObjectType)
     }
 }
