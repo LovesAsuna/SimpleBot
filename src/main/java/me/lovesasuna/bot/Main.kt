@@ -4,7 +4,6 @@ import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
-import me.lovesasuna.bot.manager.FileManager
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
@@ -30,7 +29,7 @@ suspend fun main() {
     Main.botConfig = BotConfiguration.Default.also {
         it.randomDeviceInfo()
     }
-    FileManager.readValue()
+    Config.writeDefault()
     Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
     Main.bot = Bot(Config.data.account,
             Config.data.password,
@@ -44,7 +43,6 @@ suspend fun main() {
 
     Runtime.getRuntime().addShutdownHook(Thread {
         Logger.log(Logger.Messages.BOT_SHUTDOWN, Logger.LogLevel.CONSOLE)
-        FileManager.writeValue()
     })
     Main.bot.join()
 }
