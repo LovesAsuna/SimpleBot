@@ -13,7 +13,7 @@ import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 
-object GroupMessageListener : EventListener{
+object GroupMessageListener : EventListener {
     private val listeners = ArrayList<FunctionListener>()
 
     init {
@@ -23,8 +23,8 @@ object GroupMessageListener : EventListener{
                 Admin::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
                 PictureSearch::class.java, PixivCat::class.java,
-                Notice::class.java, Danmu::class.java, Photo::class.java,
-                Dynamic::class.java, Baike::class.java, Nbnhhsh::class.java
+                Danmu::class.java, Photo::class.java, Dynamic::class.java,
+                Baike::class.java, Nbnhhsh::class.java
         )
         listenersClass.filter {
             !Config.data.disableFunction.contains(it.simpleName)
@@ -36,7 +36,7 @@ object GroupMessageListener : EventListener{
 
     override fun onAction() {
         Main.bot.subscribeAlways(GroupMessageEvent::class) {
-           listeners.forEach {
+            listeners.forEach {
                 Main.scheduler.asyncTask {
                     it.execute(this, this.message.contentToString(), this.message[Image], this.message[Face])
                 }
