@@ -1,5 +1,6 @@
 package me.lovesasuna.bot
 
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -17,6 +18,7 @@ import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.logging.Level
+import java.util.logging.LogManager
 import java.util.logging.Logger.getLogger
 
 /**
@@ -24,7 +26,7 @@ import java.util.logging.Logger.getLogger
  * @date 2020/7/3 21:54
  */
 suspend fun main() {
-    getLogger("org.hibernate").level = Level.OFF
+    getLogger("").level = Level.OFF
     Main.printSystemInfo()
     Main.botConfig = BotConfiguration.Default.also {
         it.randomDeviceInfo()
