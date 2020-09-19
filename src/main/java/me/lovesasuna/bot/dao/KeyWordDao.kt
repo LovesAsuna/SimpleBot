@@ -20,8 +20,8 @@ class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEnt
         session.saveOrUpdate(entity)
     }
 
-    fun removeKeyWord(id: Int) {
-        update("delete from KeyWordEntity where id = ?", id)
+    fun removeKeyWord(entity: KeyWordEntity) {
+        update("delete from KeyWordEntity where id = ?", entity.id!!)
     }
 
     fun getKeyWordsByGroup(groupID: Long): List<KeyWordEntity> {

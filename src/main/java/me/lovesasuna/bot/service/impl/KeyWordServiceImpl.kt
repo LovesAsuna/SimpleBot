@@ -31,9 +31,9 @@ object KeyWordServiceImpl : KeyWordService {
             session.transaction.commit()
             false
         } else {
-            dao.removeKeyWord(id)
+            dao.removeKeyWord(KeyWordEntity(id))
             session.transaction.commit()
-            false
+            true
         }
     }
 
