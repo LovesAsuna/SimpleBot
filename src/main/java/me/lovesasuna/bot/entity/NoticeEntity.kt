@@ -2,6 +2,7 @@ package me.lovesasuna.bot.entity
 
 import net.mamoe.mirai.message.data.MessageChain
 import java.io.Serializable
+import java.sql.Blob
 import java.util.ArrayList
 import javax.persistence.*
 
@@ -16,5 +17,5 @@ data class NoticeEntity(
         @Column(name = "targets")
         var targetID: Long? = null,
         @Lob
-        var message: String = ""
+        var message: String? = null
 )
