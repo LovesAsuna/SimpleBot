@@ -6,20 +6,14 @@ import me.lovesasuna.bot.entity.NoticeEntity
 import me.lovesasuna.bot.service.NoticeService
 import net.mamoe.mirai.message.code.parseMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.messageChainOf
-import org.hibernate.Hibernate
 import org.hibernate.Session
-import org.omg.CORBA.Object
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
 
 object NoticeServiceImpl : NoticeService {
 
     override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
 
     override fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {
-        return NoticeDao(session).getMatchMessage(groupID, targetID)?.parseMiraiCode()
+        return NoticeDao(session).getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID))?.parseMiraiCode()
     }
 
     override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {
@@ -27,5 +21,19 @@ object NoticeServiceImpl : NoticeService {
         NoticeDao(session).addNotice(NoticeEntity(null, groupID, targetID, message.toString()))
         session.transaction.commit()
     }
+
+    override fun removeNotice(groupID: Long, targetID: Long): Boolean {
+        session.beginTransaction()
+        val dao = NoticeDao(session)
+        return if (dao.getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID)) == null) {
+            session.transaction.commit()
+            false
+        } else {
+            dao.removeNotice(NoticeEntity(groupID = groupID, targetID = targetID))
+            session.transaction.commit()
+            true
+        }
+    }
+
 
 }
