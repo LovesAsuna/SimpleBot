@@ -9,11 +9,11 @@ import org.hibernate.Session
  **/
 class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEntity>(session) {
     fun checkKeyWordExist(groupID: Long, wordRegex: String): Boolean {
-        return queryEntity("from KeyWordEntity where groupID = ? and wordRegex = ?", KeyWordEntity::class.java, groupID, wordRegex).isNotEmpty()
+        return queryEntity("from KeyWordEntity where groupID = ?1 and wordRegex = ?2", KeyWordEntity::class.java, groupID, wordRegex).isNotEmpty()
     }
 
     fun checkKeyWordExist(id: Int): Boolean {
-        return queryEntity("from KeyWordEntity where id = ?", KeyWordEntity::class.java, id).isNotEmpty()
+        return queryEntity("from KeyWordEntity where id = ?1", KeyWordEntity::class.java, id).isNotEmpty()
     }
 
     fun addKeyWord(entity: KeyWordEntity) {
@@ -21,7 +21,7 @@ class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEnt
     }
 
     fun removeKeyWord(entity: KeyWordEntity) {
-        update("delete from KeyWordEntity where id = ?", entity.id!!)
+        update("delete from KeyWordEntity where id = ?1", entity.id!!)
     }
 
     fun getKeyWordsByGroup(groupID: Long): List<KeyWordEntity> {
