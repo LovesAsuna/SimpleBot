@@ -23,6 +23,6 @@ class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntit
     }
 
     fun removeNotice(entity: NoticeEntity) {
-        update("delete from NoticeEntity where id = ?", entity.id!!)
+        update("delete from NoticeEntity where groupID = ?1 and targetID = ?2", entity.groupID!!,entity.targetID!!)
     }
 }

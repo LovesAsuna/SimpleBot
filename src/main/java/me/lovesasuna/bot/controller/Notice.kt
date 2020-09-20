@@ -18,6 +18,7 @@ class Notice : FunctionListener {
         val senderID = event.sender.id
         noticeService.getMatchMessage(groupID, senderID)?.let {
             event.reply(it)
+            noticeService.removeNotice(groupID, senderID)
             return true
         }
 
