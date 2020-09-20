@@ -70,8 +70,8 @@ class KeyWord : FunctionListener {
                 return true
             }
             message.startsWith("/keyword add ") && senderID == Config.data.admin -> {
-                val parms = message.split(" ")
-                keyWordService.addKeyWord(groupID, parms[2], parms[3], BasicUtil.extractInt(parms[4])).also {
+                val prams = message.split(" ")
+                keyWordService.addKeyWord(groupID, prams[2], prams[3], BasicUtil.extractInt(prams[4])).also {
                     if (it) {
                         event.reply("关键词添加成功")
                     } else {
