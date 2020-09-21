@@ -23,6 +23,7 @@ class PictureSearch : FunctionListener {
         if (message.startsWith("/搜图 ") && !map.contains(senderID)) {
             map[senderID] = BasicUtil.extractInt(message.split(" ")[1], 1)
             event.reply(at + "请发送图片")
+            return true
         }
 
         if (map[senderID] != null && image != null) {
