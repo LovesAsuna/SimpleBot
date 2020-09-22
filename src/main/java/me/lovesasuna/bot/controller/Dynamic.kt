@@ -153,7 +153,7 @@ class Dynamic : FunctionListener {
                 dynamicService.update(uid, card.toString().substring(50..100))
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
-                        val group = Bot.botInstances[0].getGroup(it.toLong())
+                        val group = Bot.botInstances[0].getGroup(it)
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                         parse(group, card)
                         1

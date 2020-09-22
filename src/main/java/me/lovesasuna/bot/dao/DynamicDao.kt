@@ -10,7 +10,7 @@ class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEnt
     }
 
     fun getContext(upID: Long): String {
-        return queryField("select distinct e.context from DynamicEntity as e where upID = ?", String::class.java, upID).let {
+        return queryField("select distinct e.context from DynamicEntity as e where upID = ?1", String::class.java, upID).let {
             if (it.isEmpty()) {
                 ""
             } else {
@@ -20,7 +20,7 @@ class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEnt
     }
 
     fun getID(upID: Long): Int? {
-        return queryField("select distinct e.id from DynamicEntity as e where upID = ?", Int::class.javaObjectType, upID).let {
+        return queryField("select distinct e.id from DynamicEntity as e where upID = ?1", Int::class.javaObjectType, upID).let {
             if (it.isEmpty()) {
                 null
             } else {
