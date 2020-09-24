@@ -117,7 +117,7 @@ class Dynamic : FunctionListener {
                             } catch (e: TimeoutException) {
                                 e.pushError()
                                 linkService.getGroupByUp(it).forEach {
-                                    val group = Bot.botInstances[0].getGroup(it.toLong())
+                                    val group = Bot.botInstances[0].getGroup(it)
                                     group.sendMessage("查询${this}动态时超时!")
                                 }
                             }
