@@ -30,7 +30,6 @@ class Card : FunctionListener {
             when (map[senderID]) {
                 Type.MakeCard -> {
                     map.remove(senderID)
-                    event.reply(message)
                     event.reply(LightApp(message))
                 }
                 Type.ParseCard -> {
