@@ -5,7 +5,6 @@ import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.entity.dynamic.DynamicEntity
 import me.lovesasuna.bot.service.DynamicService
 import org.hibernate.Session
-import org.hibernate.SessionFactory
 
 object DynamicServiceImpl : DynamicService {
 
