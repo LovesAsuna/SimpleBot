@@ -154,9 +154,8 @@ class Dynamic : FunctionListener {
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
                         val group = Bot.botInstances[0].getGroup(it)
-//                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        println("往群${group.id}发送消息")
-//                        parse(group, card)
+                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
+                        parse(group, card)
                         1
                     }
                 }
