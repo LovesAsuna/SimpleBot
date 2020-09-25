@@ -12,7 +12,7 @@ object KeyWordServiceImpl : KeyWordService {
     override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
 
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
-        session.beginTransaction()
+        session.transaction.begin()
         val dao = KeyWordDao(session)
         return if (dao.checkKeyWordExist(groupID, wordRegex)) {
             session.transaction.commit()
@@ -25,7 +25,7 @@ object KeyWordServiceImpl : KeyWordService {
     }
 
     override fun removeKeyWord(id: Int): Boolean {
-        session.beginTransaction()
+        session.transaction.begin()
         val dao = KeyWordDao(session)
         return if (!dao.checkKeyWordExist(id)) {
             session.transaction.commit()

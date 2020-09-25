@@ -17,13 +17,13 @@ object NoticeServiceImpl : NoticeService {
     }
 
     override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {
-        session.beginTransaction()
+        session.transaction.begin()
         NoticeDao(session).addNotice(NoticeEntity(null, groupID, targetID, message.toString()))
         session.transaction.commit()
     }
 
     override fun removeNotice(groupID: Long, targetID: Long): Boolean {
-        session.beginTransaction()
+        session.transaction.begin()
         val dao = NoticeDao(session)
         return if (dao.getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID)) == null) {
             session.transaction.commit()

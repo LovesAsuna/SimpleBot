@@ -12,7 +12,7 @@ object LinkServiceImpl : LinkService {
     override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
 
     override fun addLink(upID: Long, groupID: Long) {
-        session.beginTransaction()
+        session.transaction.begin()
         LinkDao(session).addLink(LinkEntity(null, groupID, upID))
         session.transaction.commit()
     }
@@ -23,7 +23,7 @@ object LinkServiceImpl : LinkService {
     override fun getGroupByUp(upID: Long) = LinkDao(session).getGroupByUp(upID)
 
     override fun deleteUp(upID: Long, groupID: Long): Int {
-        session.beginTransaction()
+        session.transaction.begin()
         require(getUps().contains(upID))
         val i = LinkDao(session).deleteUp(upID, groupID)
         session.transaction.commit()
