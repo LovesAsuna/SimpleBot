@@ -2,7 +2,6 @@ package me.lovesasuna.bot.service.impl
 
 import me.lovesasuna.bot.dao.DynamicDao
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.dynamic.DynamicEntity
 import me.lovesasuna.bot.service.DynamicService
 import org.hibernate.Session
 
@@ -11,10 +10,13 @@ object DynamicServiceImpl : DynamicService {
     override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
 
     override fun update(upID: Long, context: String) {
-        session.beginTransaction()
+        session.transaction.begin()
         val dao = DynamicDao(session)
-        val id = dao.getID(upID)
-        DynamicDao(session).updateDynamic(DynamicEntity(id, upID, context))
+        val entity = dao.getEntity(upID)
+        entity?.let {
+            it.context = context
+            dao.updateDynamic(it)
+        }
         session.transaction.commit()
     }
 
