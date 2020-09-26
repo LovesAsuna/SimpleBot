@@ -31,8 +31,8 @@ suspend fun main() {
     }
     Config.writeDefault()
     Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
-    Main.bot = Bot(Config.data.account,
-            Config.data.password,
+    Main.bot = Bot(Config.data.Account,
+            Config.data.Password,
             Main.botConfig
     ).also {
         it.login()

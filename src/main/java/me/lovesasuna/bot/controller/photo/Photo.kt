@@ -54,7 +54,7 @@ class Photo : FunctionListener {
     }
 
     private fun changeBanStatus(event: MessageEvent, message: String) {
-        if (event.sender.id == Config.data.admin) {
+        if (Config.data.Admin.contains(event.sender.id)) {
             GlobalScope.async {
                 when (message.split(" ")[2]) {
                     "pixiv" -> {

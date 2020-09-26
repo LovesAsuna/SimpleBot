@@ -35,9 +35,9 @@ class Sort : FunctionListener {
     }
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val sender = event.sender.id
+        val senderID = event.sender.id
         event as FriendMessageEvent
-        if (sender == Config.data.admin) {
+        if (Config.data.Admin.contains(senderID)) {
             when {
                 message == "/photoinit" -> {
                     DownloadImage.init()

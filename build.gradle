@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.4.10"
 }
 
 description('一个基于Mirai的机器人')
@@ -39,6 +40,7 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2"
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha6'
+    implementation 'com.charleskorn.kaml:kaml:0.23.0'
 }
 
 tasks.withType(JavaCompile) {

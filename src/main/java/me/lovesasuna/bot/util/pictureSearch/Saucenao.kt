@@ -5,7 +5,7 @@ import me.lovesasuna.bot.file.Config
 import me.lovesasuna.lanzou.util.NetWorkUtil
 
 object Saucenao : PictureSearchSource {
-    private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.data.pictureSearchAPI}&numres=16&url="
+    private val api = "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.data.API["SauceNaoAPI"]?.get(0)}&numres=16&url="
     private val mapper = ObjectMapper()
 
     override fun search(url: String): List<Result> {

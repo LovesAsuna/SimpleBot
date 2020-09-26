@@ -61,7 +61,7 @@ object PacketManager {
         conn.requestMethod = "POST"
         conn.setRequestProperty("origin", "https://live.bilibili.com")
         conn.setRequestProperty("referer", "https://live.bilibili.com/$roomID")
-        conn.setRequestProperty("cookie", Config.data.bilibiliCookie)
+        conn.setRequestProperty("cookie", Config.data.BilibiliCookie)
         conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36")
         conn.doOutput = true
         conn.connect()

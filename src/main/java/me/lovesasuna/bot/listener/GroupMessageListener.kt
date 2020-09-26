@@ -29,7 +29,7 @@ object GroupMessageListener : EventListener {
                 Card::class.java
         )
         listenersClass.filter {
-            !Config.data.disableFunction.contains(it.simpleName)
+            !Config.data.DisableFunction.contains(it.simpleName)
         }.forEach {
             listeners.add(it.getConstructor().newInstance() as FunctionListener)
             Logger.log("注册功能: ${it.simpleName}", Logger.LogLevel.INFO)

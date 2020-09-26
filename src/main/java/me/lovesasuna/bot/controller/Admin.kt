@@ -16,7 +16,7 @@ class Admin : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
         val senderID = event.sender.id
-        if (senderID == Config.data.admin) {
+        if (Config.data.Admin.contains(senderID)) {
             if (message == "/quit" && !confim) {
                 event.reply("请在十秒内输入/quit confirm进行确认！")
                 confim = true

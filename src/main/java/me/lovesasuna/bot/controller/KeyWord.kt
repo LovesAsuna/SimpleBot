@@ -41,7 +41,7 @@ class KeyWord : FunctionListener {
                 BotData.debug = !BotData.debug
                 return true
             }
-            message == "/keyword list" && senderID == Config.data.admin -> {
+            message == "/keyword list" && Config.data.Admin.contains(senderID) -> {
                 val builder = StringBuilder()
                 builder.append("匹配规则  |  回复词  |  几率\n")
                 builder.append("======================\n")
@@ -58,7 +58,7 @@ class KeyWord : FunctionListener {
                 event.reply(builder.toString())
                 return true
             }
-            message.startsWith("/keyword remove ") && senderID == Config.data.admin -> {
+            message.startsWith("/keyword remove ") && Config.data.Admin.contains(senderID) -> {
                 val id = BasicUtil.extractInt(message)
                 keyWordService.removeKeyWord(id).also {
                     if (it) {
@@ -69,7 +69,7 @@ class KeyWord : FunctionListener {
                 }
                 return true
             }
-            message.startsWith("/keyword add ") && senderID == Config.data.admin -> {
+            message.startsWith("/keyword add ") && Config.data.Admin.contains(senderID) -> {
                 val prams = message.split(" ")
                 keyWordService.addKeyWord(groupID, prams[2], prams[3], BasicUtil.extractInt(prams[4])).also {
                     if (it) {

@@ -50,7 +50,7 @@ class Dynamic : FunctionListener {
                     read(upID, num)
                 }
                 "debug" -> {
-                    if (event.sender.id == Config.data.admin) {
+                    if (Config.data.Admin.contains(event.sender.id)) {
                         event.reply("开始收集信息...")
                         val builder = StringBuilder()
                         builder.append("Task状态: \n")

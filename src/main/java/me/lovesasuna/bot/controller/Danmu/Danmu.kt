@@ -44,7 +44,7 @@ class Danmu : FunctionListener {
                 scheduledFuture.cancel(true)
                 event.reply("与直播间主动断开连接!")
             }
-            message.startsWith("/直播 send ") && event.sender.id == Config.data.admin -> {
+            message.startsWith("/直播 send ") && Config.data.Admin.contains(event.sender.id) -> {
                 val roomID = message.split(" ")[2].toInt()
                 PacketManager.sendDanmu(roomID, message.replaceFirst("/直播 send $roomID ", ""))
                 event.reply("弹幕发送成功!")

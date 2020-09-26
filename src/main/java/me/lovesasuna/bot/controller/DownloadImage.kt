@@ -92,7 +92,7 @@ class DownloadImage : FunctionListener {
                     GlobalScope.launch {
                         val time = SimpleDateFormat("MM月dd日HH时mm分").format(Date())
                         FileUtil.toZip(path, BasicUtil.getLocation("Bot${File.separator}$time.zip").path)
-                        val user = User(Config.data.lanzouCookie)
+                        val user = User(Config.data.LanzouCookie)
                         val file = BasicUtil.getLocation("Bot${File.separator}$time.zip")
                         val fileAdapter = FileAdapter(user, file)
                         fileAdapter.upload()

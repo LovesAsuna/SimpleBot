@@ -2,6 +2,7 @@ package me.lovesasuna.bot.controller.photo.source
 
 import me.lovesasuna.bot.data.BotData.objectMapper
 import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.IOException
 
@@ -11,8 +12,7 @@ import java.io.IOException
  */
 class Pixiv : PhotoSource {
     override fun fetchData(): String? {
-        // 备用976835505edf70ff564238
-        val source = "https://api.lolicon.app/setu/?apikey=560424975e992113ed5977"
+        val source = "https://api.lolicon.app/setu/?apikey=${Config.data.API["LoliconAPI"]?.random()}"
         val result = NetWorkUtil[source]
         return try {
             val inputStream = result!!.second

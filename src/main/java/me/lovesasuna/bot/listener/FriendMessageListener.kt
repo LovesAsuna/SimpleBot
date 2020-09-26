@@ -24,7 +24,7 @@ object FriendMessageListener : EventListener{
     override fun onAction() {
         Main.bot.subscribeAlways(FriendMessageEvent::class) {
             val senderID = sender.id
-            if (senderID != Config.data.admin) {
+            if (Config.data.Admin.contains(senderID)) {
                 return@subscribeAlways
             }
             listeners.forEach {
