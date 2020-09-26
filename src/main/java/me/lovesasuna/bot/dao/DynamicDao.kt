@@ -6,6 +6,7 @@ import org.hibernate.Session
 class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEntity>(session) {
 
     fun updateDynamic(entity: DynamicEntity) {
+        println("更新数据库")
         session.saveOrUpdate(entity)
     }
 
@@ -30,7 +31,7 @@ class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEnt
     }
 
     fun getEntity(upID: Long): DynamicEntity? {
-        return queryEntity("from DynamicEntity as e where e.upID = ?1", DynamicEntity::class.java, 1).let {
+        return queryEntity("from DynamicEntity as e where e.upID = ?1", DynamicEntity::class.java, upID).let {
             if (it.isEmpty()) {
                 null
             } else {
