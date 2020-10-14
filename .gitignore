@@ -32,3 +32,4 @@ src/test
 build
 .gradle
 db
+out/
