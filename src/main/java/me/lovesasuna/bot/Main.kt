@@ -23,30 +23,6 @@ import java.util.logging.Logger.getLogger
  * @author LovesAsuna
  * @date 2020/7/3 21:54
  */
-suspend fun main() {
-    getLogger("").level = Level.OFF
-    Main.printSystemInfo()
-    Main.botConfig = BotConfiguration.Default.also {
-        it.randomDeviceInfo()
-    }
-    Config.writeDefault()
-    Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
-    Main.bot = Bot(Config.data.Account,
-            Config.data.Password,
-            Main.botConfig
-    ).also {
-        it.login()
-        Main.logger = it.logger
-    }
-
-    Main.initListener()
-
-    Runtime.getRuntime().addShutdownHook(Thread {
-        Logger.log(Logger.Messages.BOT_SHUTDOWN, Logger.LogLevel.CONSOLE)
-    })
-    Main.bot.join()
-}
-
 object Main {
     lateinit var bot: Bot
     lateinit var botConfig: BotConfiguration
@@ -55,14 +31,14 @@ object Main {
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
             .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI())) }
 
-    fun initListener() {
+    private fun initListener() {
         val listenerList = listOf(
                 GroupMessageListener, FriendMessageListener, MemberLeaveListener
         )
         listenerList.forEach(EventListener::onAction)
     }
 
-    fun printSystemInfo() {
+    private fun printSystemInfo() {
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
         val osMX = ManagementFactory.getOperatingSystemMXBean()
         if (runtimeMX != null && osMX != null) {
@@ -72,5 +48,30 @@ object Main {
         } else {
             println("Unable to read system info")
         }
+    }
+
+    @JvmStatic
+    suspend fun main(vararg args: String) {
+        getLogger("").level = Level.OFF
+        printSystemInfo()
+        botConfig = BotConfiguration.Default.also {
+            it.randomDeviceInfo()
+        }
+        Config.writeDefault()
+        Logger.log("登陆协议: ${botConfig.protocol}", Logger.LogLevel.CONSOLE)
+        bot = Bot(Config.data.Account,
+                Config.data.Password,
+                botConfig
+        ).also {
+            it.login()
+            logger = it.logger
+        }
+
+        initListener()
+
+        Runtime.getRuntime().addShutdownHook(Thread {
+            Logger.log(Logger.Messages.BOT_SHUTDOWN, Logger.LogLevel.CONSOLE)
+        })
+        bot.join()
     }
 }
