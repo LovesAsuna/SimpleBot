@@ -6,7 +6,6 @@ import org.hibernate.Session
 class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEntity>(session) {
 
     fun updateDynamic(entity: DynamicEntity) {
-        println("更新数据库")
         session.saveOrUpdate(entity)
     }
 
