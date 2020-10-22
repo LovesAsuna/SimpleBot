@@ -1,7 +1,6 @@
 package me.lovesasuna.bot.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
@@ -11,15 +10,18 @@ import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 class PixivCat : FunctionListener {
+
+
     @ExperimentalCoroutinesApi
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         when {
             message.startsWith("/pixiv work ") -> {
                 val ID = BasicUtil.extractInt(message.split(" ")[2])
-                val reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.second.bufferedReader()
-                val root = ObjectMapper().readTree(reader.readLine())
+                var reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.second.bufferedReader()
+                var root = BotData.objectMapper.readTree(reader.readLine())
                 val status = root["status"].asText()
                 if (BotData.debug) event.reply("R级检测响应: $status")
                 var count = 1
@@ -35,34 +37,35 @@ class PixivCat : FunctionListener {
                     }
                 }
 
-                val result = NetWorkUtil.get("https://pixiv.cat/$ID.jpg")
-                val originInputStream = result!!.second
-                val responseCode = result.first
                 event.reply("获取中,请稍后..")
-                if (responseCode != 404) {
+                reader = NetWorkUtil.post("https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray())!!.second.bufferedReader()
+                root = BotData.objectMapper.readTree(reader.readLine())
+                val list = root.get("original_url") ?: root.get("original_urls")
+                if (list == null) {
+                    event.reply("该作品不存在或已被删除!")
+                    return false
+                }
+                val size = list.size()
+                var originInputStream: InputStream? = null
+                if (size == 1) {
                     if (BotData.debug) event.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
-                        if (BotData.debug) event.reply("计时1分钟")
-                        val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
-                        if (BotData.debug) event.reply("IO流复制完成，开始上传图片!")
-                        val uploadImage = event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray()))
+                        originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
+                        // if (BotData.debug) event.reply("计时1分钟")
+                        // val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream!!)
+                        // if (BotData.debug) event.reply("IO流复制完成，开始上传图片!")
+                        // val uploadImage = event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray()))
+                        val uploadImage = event.uploadImage(originInputStream!!)
                         event.reply(uploadImage)
                         event.reply("获取完成!")
-                        byteArrayOutputStream
                     }, 60 * 1000) {
                         event.reply("图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者")
                     }
                 } else {
-                    val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream)
-                    val string = ByteArrayInputStream(byteArrayOutputStream!!.toByteArray()).bufferedReader().lineSequence().joinToString()
-                    if (string.contains("這個作品ID中")) {
-                        event.reply("该作品共有${count}张图片")
-                        repeat(count) {
-                            val inputStream = NetWorkUtil.get("https://pixiv.cat/$ID-${it + 1}.jpg")!!.second
-                            event.reply(event.uploadImage(inputStream))
-                        }
-                    } else {
-                        event.reply("该作品不存在或已被删除!")
+                    event.reply("该作品共有${count}张图片")
+                    repeat(size) {
+                        originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"]!!.second
+                        event.reply(event.uploadImage(originInputStream!!))
                     }
                 }
             }
