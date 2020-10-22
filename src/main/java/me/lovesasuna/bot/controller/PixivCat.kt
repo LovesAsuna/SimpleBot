@@ -46,7 +46,7 @@ class PixivCat : FunctionListener {
                     return false
                 }
                 val size = list.size()
-                var originInputStream: InputStream? = null
+                var originInputStream: InputStream?
                 if (size == 1) {
                     if (BotData.debug) event.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
