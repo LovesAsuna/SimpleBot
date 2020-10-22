@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.service
 
-interface LinkService : Service {
+interface LinkService : DBService {
     fun addLink(upID: Long, groupID: Long)
 
     fun getUPByGroup(groupID: Long): List<Long>

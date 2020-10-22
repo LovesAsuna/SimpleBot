@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.dao
 
-import me.lovesasuna.bot.entity.dynamic.LinkEntity
+import me.lovesasuna.bot.entity.database.dynamic.LinkEntity
 import org.hibernate.Session
 
 /**

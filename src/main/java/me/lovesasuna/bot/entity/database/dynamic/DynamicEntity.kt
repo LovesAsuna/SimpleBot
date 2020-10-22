@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity.dynamic
+package me.lovesasuna.bot.entity.database.dynamic
 
 import javax.persistence.*
 

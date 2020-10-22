@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.service
 
-interface DynamicService : Service {
+interface DynamicService : DBService {
 
     fun update(upID: Long, context: String)
 

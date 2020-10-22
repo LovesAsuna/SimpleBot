@@ -1,20 +1,17 @@
-package me.lovesasuna.bot.entity.dynamic
+package me.lovesasuna.bot.entity.database
 
 import javax.persistence.*
 
-/**
- * @author LovesAsuna
- * @date 2020/9/12 18:03
- **/
-
 @Entity
-@Table(name = "link")
-data class LinkEntity(
+@Table(name = "keyword")
+data class KeyWordEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int? = null,
         @Column(name = "groups")
         var groupID: Long? = null,
-        @Column(name = "ups")
-        var upID: Long? = null
+        var wordRegex: String = "",
+        @Lob
+        var reply: String = "",
+        var chance: Int? = null
 )

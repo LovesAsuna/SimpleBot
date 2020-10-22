@@ -1,17 +1,17 @@
-package me.lovesasuna.bot.entity
+package me.lovesasuna.bot.entity.database
 
 import javax.persistence.*
 
 @Entity
-@Table(name = "keyword")
-data class KeyWordEntity(
+@Table(name = "notice")
+data class NoticeEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int? = null,
         @Column(name = "groups")
         var groupID: Long? = null,
-        var wordRegex: String = "",
+        @Column(name = "targets")
+        var targetID: Long? = null,
         @Lob
-        var reply: String = "",
-        var chance: Int? = null
+        var message: String? = null
 )

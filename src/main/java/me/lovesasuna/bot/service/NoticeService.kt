@@ -2,7 +2,7 @@ package me.lovesasuna.bot.service
 
 import net.mamoe.mirai.message.data.MessageChain
 
-interface NoticeService : Service {
+interface NoticeService : DBService {
 
     fun getMatchMessage(groupID: Long, targetID: Long): MessageChain?
 
