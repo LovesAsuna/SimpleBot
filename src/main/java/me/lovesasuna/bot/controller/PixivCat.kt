@@ -38,7 +38,8 @@ class PixivCat : FunctionListener {
                 }
 
                 event.reply("获取中,请稍后..")
-                reader = NetWorkUtil.post("https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray())!!.second.bufferedReader()
+                reader = NetWorkUtil.post("https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray(),
+                        arrayOf("content-type", "application/x-www-form-urlencoded; charset=UTF-8"))!!.second.bufferedReader()
                 root = BotData.objectMapper.readTree(reader.readLine())
                 val list = root.get("original_url") ?: root.get("original_urls")
                 if (list == null) {
@@ -47,7 +48,7 @@ class PixivCat : FunctionListener {
                 }
                 val size = list.size()
                 var originInputStream: InputStream?
-                if (size == 1) {
+                if (size == 0) {
                     if (BotData.debug) event.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
                         originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
@@ -67,6 +68,7 @@ class PixivCat : FunctionListener {
                         originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"]!!.second
                         event.reply(event.uploadImage(originInputStream!!))
                     }
+                    event.reply("获取完成!")
                 }
             }
             message.contains("i.pximg.net") -> {

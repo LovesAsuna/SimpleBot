@@ -37,7 +37,7 @@ suspend fun main() {
             Config.data.Password,
             Main.botConfig
     ).also {
-        // it.login()
+        it.login()
         Main.logger = it.logger
     }
 
