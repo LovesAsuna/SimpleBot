@@ -1,12 +1,12 @@
 package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.controller.*
 import me.lovesasuna.bot.controller.Danmu.Danmu
 import me.lovesasuna.bot.controller.photo.Photo
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.EventListener
+import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.GroupMessageEvent
@@ -18,14 +18,13 @@ object GroupMessageListener : EventListener {
 
     init {
         val listenersClass = arrayOf<Class<*>>(
-                KeyWord::class.java, McQuery::class.java,
-                Bilibili::class.java, Hitokoto::class.java,
-                Admin::class.java, DownloadImage::class.java,
-                RainbowSix::class.java, RepeatDetect::class.java,
-                PictureSearch::class.java, PixivGetter::class.java,
-                Danmu::class.java, Photo::class.java, Dynamic::class.java,
-                Baike::class.java, Nbnhhsh::class.java, Notice::class.java,
-                Card::class.java
+            KeyWord::class.java, McQuery::class.java,
+            Bilibili::class.java, Hitokoto::class.java,
+            Admin::class.java, RainbowSix::class.java,
+            RepeatDetect::class.java, PictureSearch::class.java,
+            PixivGetter::class.java, Danmu::class.java, Photo::class.java,
+            Dynamic::class.java, Baike::class.java, Nbnhhsh::class.java,
+            Notice::class.java, Card::class.java
         )
         listenersClass.filter {
             !Config.data.DisableFunction.contains(it.simpleName)

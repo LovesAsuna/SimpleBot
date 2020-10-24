@@ -2,7 +2,6 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.controller.Sort
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.bot.util.interfaces.EventListener
 import net.mamoe.mirai.event.subscribeAlways
@@ -15,7 +14,7 @@ object FriendMessageListener : EventListener{
 
     init {
         val listenersClass = arrayOf<Class<*>>(
-                Sort::class.java
+
         )
 
         listenersClass.forEach { c -> listeners.add(c.getConstructor().newInstance() as FunctionListener) }
