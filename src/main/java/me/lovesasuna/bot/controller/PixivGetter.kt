@@ -12,7 +12,7 @@ import net.mamoe.mirai.message.data.Image
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
-class PixivCat : FunctionListener {
+class PixivGetter : FunctionListener {
 
 
     @ExperimentalCoroutinesApi
@@ -52,10 +52,6 @@ class PixivCat : FunctionListener {
                     if (BotData.debug) event.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
                         originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
-                        // if (BotData.debug) event.reply("计时1分钟")
-                        // val byteArrayOutputStream = NetWorkUtil.inputStreamClone(originInputStream!!)
-                        // if (BotData.debug) event.reply("IO流复制完成，开始上传图片!")
-                        // val uploadImage = event.uploadImage(ByteArrayInputStream(byteArrayOutputStream?.toByteArray()))
                         val uploadImage = event.uploadImage(originInputStream!!)
                         event.reply(uploadImage)
                         event.reply("获取完成!")

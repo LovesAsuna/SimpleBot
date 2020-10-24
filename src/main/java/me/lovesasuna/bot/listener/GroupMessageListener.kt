@@ -10,7 +10,6 @@ import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.code.CodableMessage
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 
@@ -23,7 +22,7 @@ object GroupMessageListener : EventListener {
                 Bilibili::class.java, Hitokoto::class.java,
                 Admin::class.java, DownloadImage::class.java,
                 RainbowSix::class.java, RepeatDetect::class.java,
-                PictureSearch::class.java, PixivCat::class.java,
+                PictureSearch::class.java, PixivGetter::class.java,
                 Danmu::class.java, Photo::class.java, Dynamic::class.java,
                 Baike::class.java, Nbnhhsh::class.java, Notice::class.java,
                 Card::class.java
