@@ -9,7 +9,6 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
-import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 class PixivGetter : FunctionListener {
