@@ -33,3 +33,4 @@ build
 .gradle
 db
 out/
+/src/main/resources/rebel.xml
