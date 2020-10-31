@@ -15,7 +15,6 @@ import kotlin.system.measureTimeMillis
 
 /**
  * @author LovesAsuna
- * @date 2020/4/19 20:17
  */
 class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()

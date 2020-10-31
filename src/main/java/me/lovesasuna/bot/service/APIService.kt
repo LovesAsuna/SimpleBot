@@ -6,7 +6,6 @@ import retrofit2.http.*
 
 /**
  * @author LovesAsuna
- * @date 2020/10/22 17:45
  **/
 interface APIService {
 

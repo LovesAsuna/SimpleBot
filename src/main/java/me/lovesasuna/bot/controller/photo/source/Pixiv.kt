@@ -8,7 +8,6 @@ import java.io.IOException
 
 /**
  * @author LovesAsuna
- * @date 2020/4/19 14:06
  */
 class Pixiv : PhotoSource {
     override fun fetchData(): String? {

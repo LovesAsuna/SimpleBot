@@ -4,7 +4,6 @@ import javax.persistence.*
 
 /**
  * @author LovesAsuna
- * @date 2020/9/12 18:03
  **/
 
 @Entity

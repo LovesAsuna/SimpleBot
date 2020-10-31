@@ -5,7 +5,6 @@ import org.hibernate.Session
 
 /**
  * @author LovesAsuna
- * @date 2020/9/13 21:02
  **/
 class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEntity>(session) {
     fun checkKeyWordExist(groupID: Long, wordRegex: String): Boolean {

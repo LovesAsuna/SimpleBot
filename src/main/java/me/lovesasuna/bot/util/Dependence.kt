@@ -25,7 +25,6 @@ import kotlin.system.exitProcess
 
 /**
  * @author LovesAsuna
- * @date 2020/5/2 14:59
  */
 @Deprecated("不再采用依赖注入而采取直接打包依赖")
 class Dependence constructor(private val fileName: String, val urlData: DependenceData.DependenceUrl, MD5Data: DependenceData.MD5) {

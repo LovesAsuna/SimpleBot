@@ -5,7 +5,6 @@ import org.hibernate.Session
 
 /**
  * @author LovesAsuna
- * @date 2020/9/13 20:27
  **/
 class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntity>(session) {
     fun getMatchMessage(entity: NoticeEntity): String? {

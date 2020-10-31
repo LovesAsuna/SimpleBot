@@ -12,7 +12,6 @@ import javax.imageio.ImageIO
 
 /**
  * @author LovesAsuna
- * @date 2020/4/22 23:50
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()

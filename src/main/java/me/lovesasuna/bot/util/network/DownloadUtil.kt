@@ -9,7 +9,6 @@ import java.net.URL
 
 /**
  * @author LovesAsuna
- * @date 2020/2/17 16:45
  */
 object DownloadUtil {
     /**

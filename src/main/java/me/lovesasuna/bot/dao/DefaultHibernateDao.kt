@@ -5,7 +5,6 @@ import org.hibernate.query.Query
 
 /**
  * @author LovesAsuna
- * @date 2020/9/11 21:48
  **/
 open class DefaultHibernateDao<T>(open val session: Session) : HibernateDao<T> {
 

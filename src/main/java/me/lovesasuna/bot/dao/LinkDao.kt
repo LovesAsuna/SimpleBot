@@ -5,7 +5,6 @@ import org.hibernate.Session
 
 /**
  * @author LovesAsuna
- * @date 2020/9/12 18:13
  **/
 class LinkDao(override val session: Session) : DefaultHibernateDao<LinkEntity>(session) {
     fun getUPByGroup(groupID: Long): List<Long> {

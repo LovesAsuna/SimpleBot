@@ -12,7 +12,6 @@ import java.util.regex.Pattern
 
 /**
  * @author LovesAsuna
- * @date 2020/4/19 14:05
  */
 object BasicUtil {
     fun extractInt(string: String, defaultValue: Int = 0): Int {
