@@ -5,7 +5,7 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.contact.Member

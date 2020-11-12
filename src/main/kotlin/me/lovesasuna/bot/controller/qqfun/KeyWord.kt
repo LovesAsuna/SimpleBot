@@ -6,7 +6,7 @@ import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

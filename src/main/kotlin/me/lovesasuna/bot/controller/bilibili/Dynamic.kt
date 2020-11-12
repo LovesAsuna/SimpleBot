@@ -12,7 +12,7 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot

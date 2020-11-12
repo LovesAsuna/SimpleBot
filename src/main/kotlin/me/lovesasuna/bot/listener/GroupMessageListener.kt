@@ -15,7 +15,7 @@ import me.lovesasuna.bot.controller.photo.PixivGetter
 import me.lovesasuna.bot.controller.qqfun.*
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.EventListener
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.GroupMessageEvent

@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.service.NoticeService
 import me.lovesasuna.bot.service.impl.NoticeServiceImpl
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*

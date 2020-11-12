@@ -2,7 +2,6 @@ package me.lovesasuna.bot.controller
 
 import kotlinx.coroutines.delay
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face

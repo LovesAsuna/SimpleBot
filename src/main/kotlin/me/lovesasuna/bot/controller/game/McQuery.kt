@@ -3,7 +3,7 @@ package me.lovesasuna.bot.controller.game
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.data.pushError
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import net.mamoe.mirai.message.MessageEvent

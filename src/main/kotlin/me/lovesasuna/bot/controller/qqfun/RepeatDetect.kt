@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.GroupMessageEvent

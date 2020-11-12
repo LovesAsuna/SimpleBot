@@ -2,7 +2,7 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.file.Config
-import me.lovesasuna.bot.util.interfaces.FunctionListener
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.interfaces.EventListener
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.FriendMessageEvent
