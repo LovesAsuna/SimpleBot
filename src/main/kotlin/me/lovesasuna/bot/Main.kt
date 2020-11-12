@@ -32,9 +32,10 @@ suspend fun main() {
     }
     Config.writeDefault()
     Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
-    Main.bot = Bot(Config.data.Account,
-            Config.data.Password,
-            Main.botConfig
+    Main.bot = Bot(
+        Config.data.Account,
+        Config.data.Password,
+        Main.botConfig
     ).also {
         it.login()
         Main.logger = it.logger
@@ -54,11 +55,11 @@ object Main {
     var logger: MiraiLogger? = null
     val scheduler = PluginScheduler()
     val dataFolder = File("${BasicUtil.getLocation(Main.javaClass).path}${File.separator}Bot")
-            .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI())) }
+        .also { if (!it.exists()) Files.createDirectories(Paths.get(it.toURI())) }
 
     fun initListener() {
         val listenerList = listOf(
-                GroupMessageListener, FriendMessageListener, MemberLeaveListener
+            GroupMessageListener, FriendMessageListener, MemberLeaveListener
         )
         listenerList.forEach(EventListener::onAction)
     }
