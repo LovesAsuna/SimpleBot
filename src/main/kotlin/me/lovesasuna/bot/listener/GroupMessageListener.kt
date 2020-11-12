@@ -2,8 +2,17 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.*
-import me.lovesasuna.bot.controller.Danmu.Danmu
+import me.lovesasuna.bot.controller.bilibili.Danmu.Danmu
+import me.lovesasuna.bot.controller.bilibili.Bilibili
+import me.lovesasuna.bot.controller.bilibili.Dynamic
+import me.lovesasuna.bot.controller.game.McQuery
+import me.lovesasuna.bot.controller.game.RainbowSix
+import me.lovesasuna.bot.controller.misc.Baike
+import me.lovesasuna.bot.controller.misc.Hitokoto
 import me.lovesasuna.bot.controller.photo.Photo
+import me.lovesasuna.bot.controller.photo.PictureSearch
+import me.lovesasuna.bot.controller.photo.PixivGetter
+import me.lovesasuna.bot.controller.qqfun.*
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.interfaces.FunctionListener

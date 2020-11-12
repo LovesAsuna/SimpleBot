@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import me.lovesasuna.lanzou.util.NetWorkUtil

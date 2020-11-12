@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.game
 
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.message.MessageEvent

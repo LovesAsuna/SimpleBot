@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.util.BasicUtil

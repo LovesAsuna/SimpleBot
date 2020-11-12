@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.photo
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.lovesasuna.bot.Main

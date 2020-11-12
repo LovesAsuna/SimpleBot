@@ -1,6 +1,5 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.interfaces.FunctionListener
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.MessageEvent

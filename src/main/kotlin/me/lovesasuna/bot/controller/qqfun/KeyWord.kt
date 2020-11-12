@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller
+package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
