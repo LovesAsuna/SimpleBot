@@ -105,8 +105,10 @@ class Danmu : FunctionListener {
                 } while (read < payloadLength)
                 if (header.version == 2.toShort() && header.packetType == 5) {
                     try {
-                        InflaterInputStream(ByteArrayInputStream(buffer, 2, buffer.size - 2),
-                                Inflater(true)).use { inflater ->
+                        InflaterInputStream(
+                            ByteArrayInputStream(buffer, 2, buffer.size - 2),
+                            Inflater(true)
+                        ).use { inflater ->
                             val dataInputStream = DataInputStream(inflater)
                             header = PacketManager.Header(dataInputStream)
                             process(event, header.packetType, dataInputStream)
