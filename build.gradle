@@ -39,7 +39,7 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3"
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha6'
-    implementation 'com.charleskorn.kaml:kaml:0.23.0'
+    implementation 'com.charleskorn.kaml:kaml:0.26.0'
 }
 
 tasks.withType(JavaCompile) {
