@@ -25,7 +25,7 @@
 * P站图片获取
 * 复读机
 * 杂项
-* 还在开发中...
+* 还在开发中...(准备更新大量功能)
 
 ## ☑ To-Do 列表
 详见 [项目页面](https://github.com/LovesAsuna/Mirai-Bot/projects/1)
