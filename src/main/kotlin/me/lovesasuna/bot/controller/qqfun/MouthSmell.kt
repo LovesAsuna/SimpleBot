@@ -12,7 +12,7 @@ import net.mamoe.mirai.message.data.Image
  **/
 class MouthSmell : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        if (message == "/嘴臭" && message == "/祖安语录") {
+        if (message == "/嘴臭" || message == "/祖安语录") {
             val node = BotData.objectMapper.readTree(NetWorkUtil["https://s.nmsl8.club/getloveword?type=2"]!!.second)
             event.reply(node["content"].asText())
             return true
