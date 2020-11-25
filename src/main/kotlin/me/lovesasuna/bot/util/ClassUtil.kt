@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.util.annotations.processors
+package me.lovesasuna.bot.util
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.pushError
@@ -9,8 +9,9 @@ import java.net.URL
 import java.net.URLDecoder
 import java.util.*
 import java.util.jar.JarFile
+import kotlin.collections.HashSet
 
-class ProcessorHandler {
+class ClassUtil {
     private val jarFile = JarFile(Main::class.java.protectionDomain.codeSource.location.path)
 
     @Deprecated("不建议使用")
@@ -28,7 +29,11 @@ class ProcessorHandler {
 
     companion object {
         @JvmStatic
-        fun getClasses(packageName: String, annotationClass: Class<out Annotation>? = null): List<Class<*>> {
+        fun getClasses(
+            packageName: String,
+            annotationClass: Class<out Annotation>? = null,
+            superClass: Class<*>? = null
+        ): Set<Class<*>> {
             var packageNameClone = packageName
             val classes: MutableSet<Class<*>> = HashSet()
             val recursive = true
@@ -82,9 +87,12 @@ class ProcessorHandler {
             }
             return if (annotationClass != null) {
                 classes.filter { c ->
+
                     c.getAnnotation(annotationClass) != null
-                }
-            } else classes.toMutableList()
+
+
+                }.toSet()
+            } else classes
         }
 
         /**
@@ -95,7 +103,12 @@ class ProcessorHandler {
          * @param recursive 迭代
          * @param classes 类集合
          */
-        private fun findAndAddClassesInPackageByFile(packageName: String, packagePath: String, recursive: Boolean, classes: MutableSet<Class<*>>) {
+        private fun findAndAddClassesInPackageByFile(
+            packageName: String,
+            packagePath: String,
+            recursive: Boolean,
+            classes: MutableSet<Class<*>>
+        ) {
             val dir = File(packagePath)
             if (!dir.exists() || !dir.isDirectory) {
                 return
@@ -103,7 +116,12 @@ class ProcessorHandler {
             val dirFiles = dir.listFiles { file -> (recursive && file.isDirectory || file.name.endsWith(".class")) }
             for (file in dirFiles) {
                 if (file.isDirectory) {
-                    findAndAddClassesInPackageByFile(packageName + "." + file.name, file.absolutePath, recursive, classes)
+                    findAndAddClassesInPackageByFile(
+                        packageName + "." + file.name,
+                        file.absolutePath,
+                        recursive,
+                        classes
+                    )
                 } else {
                     val className = file.name.substring(0, file.name.length - 6)
                     try {
@@ -114,6 +132,23 @@ class ProcessorHandler {
                     }
                 }
             }
+        }
+
+        /**
+         * 返回该类实现的接口和直接继承的类
+         * @param c 类
+         * @return 该类实现的接口和直接继承的类
+         */
+        @JvmStatic
+        fun getSuperClass(c: Class<*>): Set<Class<*>> {
+            val classSet = HashSet<Class<*>>()
+            val superClass = c.superclass
+            val superInterface = c.interfaces
+            if (superInterface.isNotEmpty()) {
+                classSet.addAll(superInterface)
+            }
+            classSet.add(superClass)
+            return classSet
         }
     }
 
