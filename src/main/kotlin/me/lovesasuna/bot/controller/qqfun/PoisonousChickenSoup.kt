@@ -12,7 +12,7 @@ import net.mamoe.mirai.message.data.Image
  **/
 class PoisonousChickenSoup : FunctionListener {
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        if (message != "毒鸡汤") {
+        if (message != "/毒鸡汤") {
             return false
         }
         val response = NetWorkUtil["https://v1.alapi.cn/api/soul"]

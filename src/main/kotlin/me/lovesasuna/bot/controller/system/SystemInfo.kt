@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit
  **/
 class SystemInfo : FunctionListener {
     private val systemInfo = SystemInfo()
+    val startTime = LocalDateTime.now()
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
         if (message != "/统计" && message != "/运行状态") {
             return false
         }
-        val startTime = LocalDateTime.now();
         val processor = systemInfo.hardware.processor
         val prevTicks = processor.systemCpuLoadTicks
         // 睡眠1s
