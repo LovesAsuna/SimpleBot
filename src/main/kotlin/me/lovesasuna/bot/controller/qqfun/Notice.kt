@@ -25,8 +25,9 @@ class Notice : FunctionListener {
             val at = event.message[At]
             if (at != null) {
                 var messageChain = messageChainOf(PlainText(event.message[3].contentToString().replaceFirst(" ", "")))
-                event.message.listIterator(4).forEach {
-                    messageChain += it
+                val listIterator = event.message.listIterator(4)
+                while (listIterator.hasNext()) {
+                    messageChain += listIterator.next()
                 }
                 noticeService.addNotice(groupID, at.target, at + PlainText("\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${getTime(Calendar.SECOND)}\n") + messageChain)
                 event.reply(At(event.group[senderID]) + "此留言将在该用户下次说话时发送！")
