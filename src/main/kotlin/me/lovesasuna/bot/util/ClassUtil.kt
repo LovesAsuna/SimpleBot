@@ -2,6 +2,7 @@ package me.lovesasuna.bot.util
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.pushError
+import me.lovesasuna.bot.util.plugin.Logger
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
@@ -31,8 +32,7 @@ class ClassUtil {
         @JvmStatic
         fun getClasses(
             packageName: String,
-            annotationClass: Class<out Annotation>? = null,
-            superClass: Class<*>? = null
+            annotationClass: Class<out Annotation>? = null
         ): Set<Class<*>> {
             var packageNameClone = packageName
             val classes: MutableSet<Class<*>> = HashSet()
@@ -68,7 +68,11 @@ class ClassUtil {
                                             val className = name.substring(packageNameClone.length + 1, name.length - 6)
                                             try {
                                                 classes.add(Class.forName("$packageNameClone.$className"))
-                                            } catch (e: ClassNotFoundException) {
+                                            } catch (e: Throwable) {
+                                                Logger.log(
+                                                    "Error occurs while adding class [$packageNameClone.$className]",
+                                                    Logger.LogLevel.ERROR
+                                                )
                                                 e.printStackTrace()
                                             }
                                         }
@@ -87,10 +91,7 @@ class ClassUtil {
             }
             return if (annotationClass != null) {
                 classes.filter { c ->
-
                     c.getAnnotation(annotationClass) != null
-
-
                 }.toSet()
             } else classes
         }
