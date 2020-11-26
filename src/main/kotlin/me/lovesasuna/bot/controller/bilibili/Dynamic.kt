@@ -26,6 +26,9 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class Dynamic : FunctionListener {
+    init {
+        start = true
+    }
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
@@ -98,9 +101,13 @@ class Dynamic : FunctionListener {
         val linkService: LinkService = LinkServiceImpl
         var intercept = false
         var time = ""
+        var start = false
 
         init {
             task = BasicUtil.scheduleWithFixedDelay({
+                if (!start) {
+                    return@scheduleWithFixedDelay
+                }
                 linkService.getUps().forEach {
                     runBlocking {
                         with(it) {
