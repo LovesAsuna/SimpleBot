@@ -22,7 +22,7 @@ class SystemInfo : FunctionListener {
 
     override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
         event as GroupMessageEvent
-        if (message != "/统计" && message != "/运行状态") {
+        if (message != "/统计" || message != "/运行状态") {
             return false
         }
         val processor = systemInfo.hardware.processor
