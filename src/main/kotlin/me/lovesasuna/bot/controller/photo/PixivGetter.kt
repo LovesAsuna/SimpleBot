@@ -19,7 +19,7 @@ class PixivGetter : FunctionListener {
         when {
             message.startsWith("/pixiv work ") -> {
                 val ID = BasicUtil.extractInt(message.split(" ")[2])
-                var reader = NetWorkUtil.get("https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID")!!.second.bufferedReader()
+                var reader = NetWorkUtil["https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID"]!!.second.bufferedReader()
                 var root = BotData.objectMapper.readTree(reader.readLine())
                 val status = root["status"].asText()
                 if (BotData.debug) event.reply("R级检测响应: $status")
@@ -67,7 +67,7 @@ class PixivGetter : FunctionListener {
                 }
             }
             message.contains("i.pximg.net") -> {
-                event.reply(event.uploadImage(NetWorkUtil.get(message.replace("i.pximg.net", "/i.pixiv.cat"))!!.second))
+                event.reply(event.uploadImage(NetWorkUtil[message.replace("i.pximg.net", "/i.pixiv.cat")]!!.second))
             }
         }
         return true
