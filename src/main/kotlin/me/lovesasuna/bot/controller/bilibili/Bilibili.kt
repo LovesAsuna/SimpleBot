@@ -25,7 +25,7 @@ class Bilibili : FunctionListener {
         var inputStream: InputStream?
         if (message.toLowerCase().contains("av")) {
             av = BasicUtil.extractInt(message).toString()
-            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?aid=$av")?.second
+            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
         } else if (message.contains("BV")) {
             val matcher = pattern.matcher(message)
             bv = if (matcher.find()) {
@@ -33,7 +33,7 @@ class Bilibili : FunctionListener {
             } else {
                 return false
             }
-            inputStream = NetWorkUtil.get("https://api.bilibili.com/x/web-interface/view?bvid=$bv")?.second
+            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?bvid=$bv"]?.second
         } else {
             return false
         }
@@ -64,28 +64,28 @@ class Bilibili : FunctionListener {
         val desc = dataObject["desc"].asText()
         val builder = StringBuilder("\n" + title)
         builder.append("\nUP: ")
-                .append(UP)
-                .append("(https://space.bilibili.com/")
-                .append(uplink)
-                .append(")\n分区: ")
-                .append(zone)
-                .append("\n播放量: ")
-                .append(view)
-                .append(" 弹幕: ")
-                .append(Barrage)
-                .append(" 评论: ")
-                .append(reply)
-                .append("\n收藏: ")
-                .append(fav)
-                .append(" 投币: ")
-                .append(coin)
-                .append(" 分享: ")
-                .append(share)
-                .append(" 点赞: ")
-                .append(like)
-                .append("\n")
-                .append(desc)
-        event.reply(NetWorkUtil[pic]!!.second.uploadAsImage(event.sender) + builder.toString())
+            .append(UP)
+            .append("(https://space.bilibili.com/")
+            .append(uplink)
+            .append(")\n分区: ")
+            .append(zone)
+            .append("\n播放量: ")
+            .append(view)
+            .append(" 弹幕: ")
+            .append(Barrage)
+            .append(" 评论: ")
+            .append(reply)
+            .append("\n收藏: ")
+            .append(fav)
+            .append(" 投币: ")
+            .append(coin)
+            .append(" 分享: ")
+            .append(share)
+            .append(" 点赞: ")
+            .append(like)
+            .append("\n")
+            .append(desc)
+        event.reply(event.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
         return true
     }
 
