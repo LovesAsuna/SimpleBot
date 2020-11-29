@@ -5,7 +5,6 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.uploadAsImage
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
