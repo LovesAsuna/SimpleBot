@@ -5,7 +5,6 @@ import me.lovesasuna.bot.util.network.UrlUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
-import sun.net.util.URLUtil
 import java.net.URLEncoder
 import java.util.*
 
