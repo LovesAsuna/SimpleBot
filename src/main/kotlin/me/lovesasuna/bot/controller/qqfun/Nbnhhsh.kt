@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -12,8 +12,10 @@ class Nbnhhsh : FunctionListener {
         if (message.startsWith("/nbnhhsh ")) {
             val abbreviation = message.split(" ")[1]
             val text = BotData.objectMapper.createObjectNode().put("text", abbreviation)
-            val post = NetWorkUtil.post("https://lab.magiconch.com/api/nbnhhsh/guess", text.toString().toByteArray(),
-                    arrayOf("content-type", "application/json"))
+            val post = NetWorkUtil.post(
+                "https://lab.magiconch.com/api/nbnhhsh/guess", text.toString().toByteArray(),
+                arrayOf("content-type", "application/json")
+            )
             val result = post?.second?.bufferedReader()?.lineSequence()?.joinToString()
             if (result != null) {
                 event.reply("可能的结果: ${BotData.objectMapper.readTree(result)[0]["trans"] ?: "[]"}")

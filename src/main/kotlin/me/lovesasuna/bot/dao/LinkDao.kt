@@ -8,11 +8,17 @@ import org.hibernate.Session
  **/
 class LinkDao(override val session: Session) : DefaultHibernateDao<LinkEntity>(session) {
     fun getUPByGroup(groupID: Long): List<Long> {
-        return queryField("select distinct e.upID from LinkEntity as e where groupID = $groupID", Long::class.javaObjectType)
+        return queryField(
+            "select distinct e.upID from LinkEntity as e where groupID = $groupID",
+            Long::class.javaObjectType
+        )
     }
 
     fun getGroupByUp(upID: Long): List<Long> {
-        return queryField("select distinct e.groupID from LinkEntity as e where upID = $upID", Long::class.javaObjectType)
+        return queryField(
+            "select distinct e.groupID from LinkEntity as e where upID = $upID",
+            Long::class.javaObjectType
+        )
     }
 
     fun deleteUp(upID: Long, groupID: Long): Int {

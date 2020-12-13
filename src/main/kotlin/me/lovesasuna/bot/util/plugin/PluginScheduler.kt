@@ -1,10 +1,8 @@
 package me.lovesasuna.bot.util.plugin
 
 import kotlinx.coroutines.*
-import kotlinx.io.errors.IOException
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
-import kotlin.jvm.Throws
 
 class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalScope.coroutineContext) : CoroutineScope {
 

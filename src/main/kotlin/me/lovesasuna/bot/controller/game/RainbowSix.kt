@@ -90,18 +90,28 @@ class RainbowSix : FunctionListener {
             val won = statGeneral["won"].asText()
             val lost = statGeneral["lost"].asText()
             historyMaxMMR = if (historyMaxMMR.toDouble() > rankMMR.toDouble()) historyMaxMMR else rankMMR
-            builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n").append("UUID: ").append(uuid).append("\n")
+            builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n")
+                .append("UUID: ").append(uuid).append("\n")
             builder.append("------------------排位数据------------------\n")
             builder.append("历史最高MMR: ").append(historyMaxMMR).append(" ").append("MMR: ").append(rankMMR).append("\n")
-                    .append("击杀: ").append(rankKills).append(" ").append("死亡: ").append(rankDeaths).append(" ").append("K/D: ").append(String.format("%.4f", rankKills.toDouble() / rankDeaths.toDouble())).append("\n")
-                    .append("胜利: ").append(rankWon).append(" ").append("失败: ").append(rankLost).append(" ").append("W/L: ").append(String.format("%.4f", rankWon.toDouble() / rankLost.toDouble())).append("\n")
+                .append("击杀: ").append(rankKills).append(" ").append("死亡: ").append(rankDeaths).append(" ")
+                .append("K/D: ").append(String.format("%.4f", rankKills.toDouble() / rankDeaths.toDouble()))
+                .append("\n")
+                .append("胜利: ").append(rankWon).append(" ").append("失败: ").append(rankLost).append(" ").append("W/L: ")
+                .append(String.format("%.4f", rankWon.toDouble() / rankLost.toDouble())).append("\n")
             builder.append("------------------休闲数据------------------\n")
-            builder.append("击杀: ").append(casualKills).append(" ").append("死亡: ").append(casualDeaths).append("K/D: ").append(String.format("%.4f", casualKills.toDouble() / casualDeaths.toDouble())).append("\n")
-                    .append("胜利: ").append(casualWon).append(" ").append("失败: ").append(casualLost).append(" ").append("W/L: ").append(String.format("%.4f", casualWon.toDouble() / casualLost.toDouble())).append("\n")
+            builder.append("击杀: ").append(casualKills).append(" ").append("死亡: ").append(casualDeaths).append("K/D: ")
+                .append(String.format("%.4f", casualKills.toDouble() / casualDeaths.toDouble())).append("\n")
+                .append("胜利: ").append(casualWon).append(" ").append("失败: ").append(casualLost).append(" ")
+                .append("W/L: ").append(String.format("%.4f", casualWon.toDouble() / casualLost.toDouble()))
+                .append("\n")
             builder.append("------------------其他数据------------------\n")
-            builder.append("击杀: ").append(kills).append(" ").append("助攻: ").append(killAssists).append(" ").append("刀杀: ").append(meleeKills).append(" ").append("爆头: ").append(headshot).append("\n")
-                    .append("死亡: ").append(deaths).append(" ").append("被救起: ").append(revives).append(" ").append("K/D: ").append(String.format("%.4f", kills.toDouble() / deaths.toDouble())).append("\n")
-                    .append("胜利: ").append(won).append(" ").append("失败: ").append(lost).append(" ").append("W/L: ").append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
+            builder.append("击杀: ").append(kills).append(" ").append("助攻: ").append(killAssists).append(" ")
+                .append("刀杀: ").append(meleeKills).append(" ").append("爆头: ").append(headshot).append("\n")
+                .append("死亡: ").append(deaths).append(" ").append("被救起: ").append(revives).append(" ").append("K/D: ")
+                .append(String.format("%.4f", kills.toDouble() / deaths.toDouble())).append("\n")
+                .append("胜利: ").append(won).append(" ").append("失败: ").append(lost).append(" ").append("W/L: ")
+                .append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
 
         }
         event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", (time / 1000).toDouble())).toString())
@@ -126,7 +136,8 @@ class RainbowSix : FunctionListener {
             operators.add(opName)
         }
         val builder = StringBuilder()
-        val strings = operators.parallelStream().filter { s: String -> s.toLowerCase().startsWith(operatorName) }.toArray { arrayOfNulls<String>(size) }
+        val strings = operators.parallelStream().filter { s: String -> s.toLowerCase().startsWith(operatorName) }
+            .toArray { arrayOfNulls<String>(size) }
 
         val level = root["Basicstat"][0]["level"].asText()
         for (i in strings.indices) {
@@ -141,9 +152,12 @@ class RainbowSix : FunctionListener {
             val operatorLost = operator["lost"].asText()
             builder.append("用户名: ").append(username).append(" ").append("等级: ").append(level).append("\n")
             builder.append("-------------------------------------------\n")
-            builder.append("干员: ").append(strings[i]).append(" ").append("击杀: ").append(operatorKills).append(" ").append("死亡: ").append(operatorDeaths)
-                    .append(" ").append("K/D: ").append(String.format("%.4f", operatorKills.toDouble() / operatorDeaths.toDouble())).append("\n")
-                    .append("胜利: ").append(operatorWon).append(" ").append("失败: ").append(operatorLost).append(" ").append("W/L: ").append(String.format("%.4f", operatorWon.toDouble() / operatorLost.toDouble()))
+            builder.append("干员: ").append(strings[i]).append(" ").append("击杀: ").append(operatorKills).append(" ")
+                .append("死亡: ").append(operatorDeaths)
+                .append(" ").append("K/D: ")
+                .append(String.format("%.4f", operatorKills.toDouble() / operatorDeaths.toDouble())).append("\n")
+                .append("胜利: ").append(operatorWon).append(" ").append("失败: ").append(operatorLost).append(" ")
+                .append("W/L: ").append(String.format("%.4f", operatorWon.toDouble() / operatorLost.toDouble()))
             event.reply(builder.toString())
         }
         val end = System.currentTimeMillis()
@@ -155,7 +169,10 @@ class RainbowSix : FunctionListener {
     }
 
     private suspend fun getRoot(event: GroupMessageEvent, username: String): JsonNode {
-        val result = NetWorkUtil.get("https://www.r6s.cn/Stats?username=$username", arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username"))
+        val result = NetWorkUtil.get(
+            "https://www.r6s.cn/Stats?username=$username",
+            arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username")
+        )
         requireNotNull(result) {
             "连接超时".also {
                 event.reply(it)

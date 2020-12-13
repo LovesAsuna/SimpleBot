@@ -11,7 +11,8 @@ import java.util.*
  * @author LovesAsuna
  */
 object BotData {
-    var objectMapper: ObjectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
+    var objectMapper: ObjectMapper =
+        jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
 
     var debug: Boolean = false
 

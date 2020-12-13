@@ -8,7 +8,12 @@ import org.hibernate.Session
  **/
 class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEntity>(session) {
     fun checkKeyWordExist(groupID: Long, wordRegex: String): Boolean {
-        return queryEntity("from KeyWordEntity where groupID = ?1 and wordRegex = ?2", KeyWordEntity::class.java, groupID, wordRegex).isNotEmpty()
+        return queryEntity(
+            "from KeyWordEntity where groupID = ?1 and wordRegex = ?2",
+            KeyWordEntity::class.java,
+            groupID,
+            wordRegex
+        ).isNotEmpty()
     }
 
     fun checkKeyWordExist(id: Int): Boolean {

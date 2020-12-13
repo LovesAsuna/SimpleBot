@@ -2,9 +2,9 @@ package me.lovesasuna.bot.controller.photo
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -37,8 +37,10 @@ class PixivGetter : FunctionListener {
                 }
 
                 event.reply("获取中,请稍后..")
-                reader = NetWorkUtil.post("https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray(),
-                        arrayOf("content-type", "application/x-www-form-urlencoded; charset=UTF-8"))!!.second.bufferedReader()
+                reader = NetWorkUtil.post(
+                    "https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray(),
+                    arrayOf("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+                )!!.second.bufferedReader()
                 root = BotData.objectMapper.readTree(reader.readLine())
                 val list = root.get("original_url") ?: root.get("original_urls")
                 if (list == null) {
@@ -50,7 +52,8 @@ class PixivGetter : FunctionListener {
                 if (size == 0) {
                     if (BotData.debug) event.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
-                        originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
+                        originInputStream =
+                            NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
                         val uploadImage = event.uploadImage(originInputStream!!)
                         event.reply(uploadImage)
                         event.reply("获取完成!")
@@ -60,7 +63,8 @@ class PixivGetter : FunctionListener {
                 } else {
                     event.reply("该作品共有${count}张图片")
                     repeat(size) {
-                        originInputStream = NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"]!!.second
+                        originInputStream =
+                            NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"]!!.second
                         event.reply(event.uploadImage(originInputStream!!))
                     }
                     event.reply("获取完成!")

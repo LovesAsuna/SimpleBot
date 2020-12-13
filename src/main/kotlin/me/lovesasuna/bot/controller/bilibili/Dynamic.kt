@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
@@ -12,7 +13,6 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
@@ -137,7 +137,8 @@ class Dynamic : FunctionListener {
         }
 
         private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
-            val reader = NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
+            val reader =
+                NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
                 if (!intercept) {
@@ -156,7 +157,11 @@ class Dynamic : FunctionListener {
             intercept = false
             val cards = root["data"]["cards"]
             val card = dequate(cards[num]["card"])
-            if (push || dynamicService.getContext(uid).isEmpty() || StringUtil.getSimilarityRatio(dynamicService.getContext(uid), card.toString().substring(50..100)) < 90) {
+            if (push || dynamicService.getContext(uid).isEmpty() || StringUtil.getSimilarityRatio(
+                    dynamicService.getContext(uid),
+                    card.toString().substring(50..100)
+                ) < 90
+            ) {
                 dynamicService.update(uid, card.toString().substring(50..100))
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
@@ -212,15 +217,28 @@ class Dynamic : FunctionListener {
         }
 
         private fun videoParse(origin: JsonNode): Message {
-            return makeCard(origin["title"].asText(), origin["desc"].asText(), "哔哩哔哩视频", origin["jump_url"].asText(), origin["pic"].asText())
+            return makeCard(
+                origin["title"].asText(),
+                origin["desc"].asText(),
+                "哔哩哔哩视频",
+                origin["jump_url"].asText(),
+                origin["pic"].asText()
+            )
         }
 
         private fun articleParse(origin: JsonNode): Message {
-            return makeCard(origin["title"].asText(), origin["summary"].asText(), "哔哩哔哩专栏", "https://www.bilibili.com/read/cv${origin["id"].asText()}", origin["banner_url"].asText())
+            return makeCard(
+                origin["title"].asText(),
+                origin["summary"].asText(),
+                "哔哩哔哩专栏",
+                "https://www.bilibili.com/read/cv${origin["id"].asText()}",
+                origin["banner_url"].asText()
+            )
         }
 
         private fun makeCard(title: String, desc: String, tag: String, jumpURL: String, previewURL: String): LightApp {
-            val string = "{\"app\":\"com.tencent.structmsg\",\"desc\":\"自定义卡片\",\"view\":\"news\",\"ver\":\"0.0.0.1\",\"prompt\":\"自定义提示\",\"meta\":{\"news\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100951776,\"desc\":\"$desc\",\"jumpUrl\":\"$jumpURL\",\"preview\":\"$previewURL\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"$tag\",\"title\":\"$title\"}},\"config\":{\"autosize\":true,\"ctime\":1592374968,\"forward\":true,\"token\":\"deaf213724ea32ea9c94ed8efdc09c13\",\"type\":\"normal\"}}"
+            val string =
+                "{\"app\":\"com.tencent.structmsg\",\"desc\":\"自定义卡片\",\"view\":\"news\",\"ver\":\"0.0.0.1\",\"prompt\":\"自定义提示\",\"meta\":{\"news\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100951776,\"desc\":\"$desc\",\"jumpUrl\":\"$jumpURL\",\"preview\":\"$previewURL\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"$tag\",\"title\":\"$title\"}},\"config\":{\"autosize\":true,\"ctime\":1592374968,\"forward\":true,\"token\":\"deaf213724ea32ea9c94ed8efdc09c13\",\"type\":\"normal\"}}"
             return LightApp((string))
         }
 

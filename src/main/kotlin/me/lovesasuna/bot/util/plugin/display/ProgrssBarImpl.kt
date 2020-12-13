@@ -41,7 +41,12 @@ class ProgressBarImpl(val PROGRESS_SIZE: Int = 50) : ProgressBar {
         println()
     }
 
-    private fun printTarget(progress: Double, finished: String = finish, unFinished: String = unFinish, clear: () -> Unit) {
+    private fun printTarget(
+        progress: Double,
+        finished: String = finish,
+        unFinished: String = unFinish,
+        clear: () -> Unit
+    ) {
         val target = String.format(" %5.2f %%├%s%s┤", progress * 100, finished, unFinished)
         clear.invoke()
         print(target)

@@ -1,8 +1,8 @@
 package me.lovesasuna.bot.controller.qqfun
 
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.service.NoticeService
 import me.lovesasuna.bot.service.impl.NoticeServiceImpl
-import me.lovesasuna.bot.controller.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
@@ -29,7 +29,15 @@ class Notice : FunctionListener {
                 while (listIterator.hasNext()) {
                     messageChain += listIterator.next()
                 }
-                noticeService.addNotice(groupID, at.target, at + PlainText("\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${getTime(Calendar.SECOND)}\n") + messageChain)
+                noticeService.addNotice(
+                    groupID,
+                    at.target,
+                    at + PlainText(
+                        "\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${
+                            getTime(Calendar.SECOND)
+                        }\n"
+                    ) + messageChain
+                )
                 event.reply(At(event.group[senderID]) + "此留言将在该用户下次说话时发送！")
             }
             return true

@@ -2,15 +2,14 @@ package me.lovesasuna.bot.controller.game
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.Image
 import java.io.IOException
-import kotlin.jvm.Throws
 
 class McQuery : FunctionListener {
     @Throws(IOException::class)
@@ -116,7 +115,7 @@ class McQuery : FunctionListener {
                 """.trimIndent()
         }
         event.reply(
-                """
+            """
                     服务器IP:  $host:$port
                     是否使用SRV域名解析:  $SRV
                     服务器版本:  ${version["name"].asText()}
@@ -126,7 +125,8 @@ class McQuery : FunctionListener {
                     当前在线人数:  ${players["online"].asText()}
                     MOTD:
                     $texts$mods
-                    """.trimIndent())
+                    """.trimIndent()
+        )
         return true
     }
 

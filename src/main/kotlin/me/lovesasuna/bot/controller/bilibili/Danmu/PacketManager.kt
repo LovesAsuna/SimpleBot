@@ -17,11 +17,11 @@ object PacketManager {
     fun sendJoinChannel(event: MessageEvent, roomID: Int, out: DataOutputStream, key: String) {
         val mapper = ObjectMapper()
         val objectNode: ObjectNode = mapper.createObjectNode()
-                .put("roomid", roomID)
-                .put("uid", 0)
-                .put("key", key)
-                .put("platform", "MC BC M/P")
-                .put("protover", 2)
+            .put("roomid", roomID)
+            .put("uid", 0)
+            .put("key", key)
+            .put("platform", "MC BC M/P")
+            .put("protover", 2)
         sendPacket(out, 7, objectNode.toString())
         runBlocking { event.reply("成功连接直播间: $roomID") }
     }
@@ -37,8 +37,10 @@ object PacketManager {
     }
 
     @Throws(IOException::class)
-    fun sendPacket(out: DataOutputStream, originPacketLength: Int, packetHeadLength: Short, version: Short, packetType: Int,
-                   magic: Int, body: String) {
+    fun sendPacket(
+        out: DataOutputStream, originPacketLength: Int, packetHeadLength: Short, version: Short, packetType: Int,
+        magic: Int, body: String
+    ) {
         var packetLength = originPacketLength
         val bodyData = body.toByteArray(StandardCharsets.UTF_8)
         if (packetLength == 0) {
@@ -55,21 +57,25 @@ object PacketManager {
         out.flush()
     }
 
-    fun sendDanmu(roomID : Int, text: String) {
+    fun sendDanmu(roomID: Int, text: String) {
         val url = URL("https://api.live.bilibili.com/msg/send")
         val conn = url.openConnection() as HttpURLConnection
         conn.requestMethod = "POST"
         conn.setRequestProperty("origin", "https://live.bilibili.com")
         conn.setRequestProperty("referer", "https://live.bilibili.com/$roomID")
         conn.setRequestProperty("cookie", Config.data.BilibiliCookie)
-        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36")
+        conn.setRequestProperty(
+            "User-Agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"
+        )
         conn.doOutput = true
         conn.connect()
         val outputStream = conn.outputStream
 
 
         val dataOutputStream = DataOutputStream(outputStream)
-        val msg = "color=16777215&fontsize=25&mode=1&msg=${text}&rnd=1591590584&roomid=${roomID}&bubble=0&csrf_token=be130912bad65f05efa355ea02b67f7c&csrf=be130912bad65f05efa355ea02b67f7c"
+        val msg =
+            "color=16777215&fontsize=25&mode=1&msg=${text}&rnd=1591590584&roomid=${roomID}&bubble=0&csrf_token=be130912bad65f05efa355ea02b67f7c&csrf=be130912bad65f05efa355ea02b67f7c"
         val bytes = msg.toByteArray(StandardCharsets.UTF_8)
         dataOutputStream.write(bytes)
         dataOutputStream.flush()

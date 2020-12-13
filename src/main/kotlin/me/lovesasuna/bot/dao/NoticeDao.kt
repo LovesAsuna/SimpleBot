@@ -8,7 +8,12 @@ import org.hibernate.Session
  **/
 class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntity>(session) {
     fun getMatchMessage(entity: NoticeEntity): String? {
-        return queryField("select distinct e.message from NoticeEntity as e where groupID = ?1 and targetID = ?2", String::class.java, entity.groupID!!, entity.targetID!!).let {
+        return queryField(
+            "select distinct e.message from NoticeEntity as e where groupID = ?1 and targetID = ?2",
+            String::class.java,
+            entity.groupID!!,
+            entity.targetID!!
+        ).let {
             if (it.isEmpty()) {
                 null
             } else {
@@ -22,6 +27,6 @@ class NoticeDao(override val session: Session) : DefaultHibernateDao<NoticeEntit
     }
 
     fun removeNotice(entity: NoticeEntity) {
-        update("delete from NoticeEntity where groupID = ?1 and targetID = ?2", entity.groupID!!,entity.targetID!!)
+        update("delete from NoticeEntity where groupID = ?1 and targetID = ?2", entity.groupID!!, entity.targetID!!)
     }
 }

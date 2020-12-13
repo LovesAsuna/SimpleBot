@@ -1,12 +1,12 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.controller.FunctionListener
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Face
@@ -31,13 +31,15 @@ class KeyWord : FunctionListener {
         val groupID = event.group.id
         when {
             message == "/debug" -> {
-                event.reply("调试模式${
-                    if (BotData.debug) {
-                        "关闭"
-                    } else {
-                        "开启"
-                    }
-                }")
+                event.reply(
+                    "调试模式${
+                        if (BotData.debug) {
+                            "关闭"
+                        } else {
+                            "开启"
+                        }
+                    }"
+                )
                 BotData.debug = !BotData.debug
                 return true
             }
@@ -46,13 +48,17 @@ class KeyWord : FunctionListener {
                 builder.append("匹配规则  |  回复词  |  几率\n")
                 builder.append("======================\n")
                 keyWordService.getKeyWordsByGroup(groupID).forEach {
-                    builder.append("${it.id}. ${it.wordRegex} | ${
-                        it.reply.subSequence(0, if (it.reply.length >= 10) {
-                            10
-                        } else {
-                            it.reply.length
-                        })
-                    } | ${it.chance}\n")
+                    builder.append(
+                        "${it.id}. ${it.wordRegex} | ${
+                            it.reply.subSequence(
+                                0, if (it.reply.length >= 10) {
+                                    10
+                                } else {
+                                    it.reply.length
+                                }
+                            )
+                        } | ${it.chance}\n"
+                    )
                 }
 
                 event.reply(builder.toString())

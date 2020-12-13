@@ -2,16 +2,15 @@ package me.lovesasuna.bot.controller.photo
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
-import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
-import java.lang.StringBuilder
 
 class PictureSearch : FunctionListener {
     private val map = HashMap<Long, Int>()
@@ -56,11 +55,23 @@ class PictureSearch : FunctionListener {
                 }
                 Main.scheduler.withTimeOut(suspend {
                     val uploadImage = event.uploadImage(NetWorkUtil.get(result.thumbnail)!!.second) as Message
-                    event.reply(uploadImage + PlainText("\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                    event.reply(
+                        uploadImage + PlainText(
+                            "\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${
+                                builder.toString().replace(Regex("\n$"), "")
+                            }"
+                        )
+                    )
                     uploadImage
                 }, 7500) {
                     event.reply("缩略图上传超时")
-                    event.reply(PlainText("空图像(上传失败)\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${builder.toString().replace(Regex("\n$"), "")}"))
+                    event.reply(
+                        PlainText(
+                            "空图像(上传失败)\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${
+                                builder.toString().replace(Regex("\n$"), "")
+                            }"
+                        )
+                    )
                 }
 
             }

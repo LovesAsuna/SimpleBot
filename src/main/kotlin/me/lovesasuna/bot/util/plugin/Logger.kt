@@ -12,6 +12,7 @@ object Logger {
             LogLevel.CONSOLE -> println("[Console] $message")
         }
     }
+
     fun log(message: Messages, level: LogLevel) {
         log(message.message, level)
     }

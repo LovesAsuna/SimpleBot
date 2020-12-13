@@ -4,7 +4,7 @@ import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import java.io.*
+import java.io.File
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
@@ -32,7 +32,12 @@ object BasicUtil {
      * @param command 任务
      * @param delay 延迟(单位:秒)
      */
-    fun scheduleWithFixedDelay(command: Runnable, initialDelay: Long, delay: Long, unit: TimeUnit): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
+    fun scheduleWithFixedDelay(
+        command: Runnable,
+        initialDelay: Long,
+        delay: Long,
+        unit: TimeUnit
+    ): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         val receipt = PluginScheduler.RepeatTaskReceipt()
         val job = GlobalScope.launch {
             delay(unit.toMillis(initialDelay))
@@ -47,16 +52,18 @@ object BasicUtil {
     }
 
     fun debug(message: String): String {
-        val reader = NetWorkUtil.post("https://paste.ubuntu.com/",
-                "poster=Bot&syntax=text&expiration=day&content=$message".toByteArray(Charsets.UTF_8),
-                arrayOf("Content-Type", "application/x-www-form-urlencoded"),
-                arrayOf("host", "paste.ubuntu.com")
+        val reader = NetWorkUtil.post(
+            "https://paste.ubuntu.com/",
+            "poster=Bot&syntax=text&expiration=day&content=$message".toByteArray(Charsets.UTF_8),
+            arrayOf("Content-Type", "application/x-www-form-urlencoded"),
+            arrayOf("host", "paste.ubuntu.com")
         )!!.second.bufferedReader()
         val builder = StringBuilder()
         reader.lines().skip(25).parallel().forEach {
             builder.append(it)
         }
-        val s = Regex("<a class=\"pturl\" href=\"/p/([0-9]|[a-z]|[A-Z])+/plain/\">Download as text</a>").find(builder.toString())!!.value
+        val s =
+            Regex("<a class=\"pturl\" href=\"/p/([0-9]|[a-z]|[A-Z])+/plain/\">Download as text</a>").find(builder.toString())!!.value
         return "https://paste.ubuntu.com" + s.substringAfter("href=\"").substringBefore("/plain")
     }
 

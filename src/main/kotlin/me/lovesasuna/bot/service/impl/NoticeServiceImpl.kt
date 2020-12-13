@@ -13,7 +13,8 @@ object NoticeServiceImpl : NoticeService {
     override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
 
     override fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {
-        return NoticeDao(session).getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID))?.parseMiraiCode()
+        return NoticeDao(session).getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID))
+            ?.parseMiraiCode()
     }
 
     override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {

@@ -11,6 +11,7 @@
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai-Bot?include_prereleases)](https://github.com/LovesAsuna/Mirai-Bot/releases)
 
 ## 🎉 它能干什么?
+
 * 以图搜图
 * 彩虹六号战绩查询
 * bilibili UP主信息订阅
@@ -28,6 +29,7 @@
 * 还在开发中...(准备更新大量功能)
 
 ## ☑ To-Do 列表
+
 详见 [项目页面](https://github.com/LovesAsuna/Mirai-Bot/projects/1)
 
 ## 💽 如何使用
@@ -48,11 +50,13 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 (你可以在 `/build/libs` 下找到构建好的 jar 文件)
 
 ### 直接下载
+
 1. 到 [蓝奏云](https://wwa.lanzous.com/b0epzhmba) 下载最新版本的 jar
 2. 使用 cmd 启动 Bot, 然后去 config.json修改api
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
-## 📜 协议 
+## 📜 协议
+
 [AGPLv3 with Mamoe Exceptions](https://github.com/mamoe/mirai/blob/master/LICENSE)
 
 机器人采用的部分技术如果侵权，请直接联系邮箱[qq625924077@gmail.com](mailto:qq625924077@gmail.com)

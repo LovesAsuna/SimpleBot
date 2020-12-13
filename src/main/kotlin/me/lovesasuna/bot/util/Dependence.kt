@@ -27,7 +27,11 @@ import kotlin.system.exitProcess
  * @author LovesAsuna
  */
 @Deprecated("不再采用依赖注入而采取直接打包依赖")
-class Dependence constructor(private val fileName: String, val urlData: DependenceData.DependenceUrl, MD5Data: DependenceData.MD5) {
+class Dependence constructor(
+    private val fileName: String,
+    val urlData: DependenceData.DependenceUrl,
+    MD5Data: DependenceData.MD5
+) {
     val MD5: String = MD5Data.data
     lateinit var conn: AtomicReference<HttpURLConnection>
     var needDownload = false
@@ -96,11 +100,41 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
             GlobalScope.launch {
                 val dependencies = ArrayList<Dependence>()
                 dependencies.apply {
-                    add(Dependence("jackson-databind-2.11.1.jar", DependenceData.Maven.JACKSON_DATABIND, DependenceData.MD5.JACKSON_DATABIND))
-                    add(Dependence("jackson-core-2.11.1.jar", DependenceData.Maven.JACKSON_CORE, DependenceData.MD5.JACKSON_CORE))
-                    add(Dependence("jackson-annotations-2.11.1.jar", DependenceData.Maven.JACKSON_ANNOTATIONS, DependenceData.MD5.JACKSON_ANNOTATIONS))
-                    add(Dependence("jackson-module-kotlin-2.11.1.jar", DependenceData.Maven.JACKSON_MODULE, DependenceData.MD5.JACKSON_MODULE))
-                    add(Dependence("custom-core-1.2.1.jar", DependenceData.Lanzous.CUSTOMCORE, DependenceData.MD5.CUSTOMCORE))
+                    add(
+                        Dependence(
+                            "jackson-databind-2.11.1.jar",
+                            DependenceData.Maven.JACKSON_DATABIND,
+                            DependenceData.MD5.JACKSON_DATABIND
+                        )
+                    )
+                    add(
+                        Dependence(
+                            "jackson-core-2.11.1.jar",
+                            DependenceData.Maven.JACKSON_CORE,
+                            DependenceData.MD5.JACKSON_CORE
+                        )
+                    )
+                    add(
+                        Dependence(
+                            "jackson-annotations-2.11.1.jar",
+                            DependenceData.Maven.JACKSON_ANNOTATIONS,
+                            DependenceData.MD5.JACKSON_ANNOTATIONS
+                        )
+                    )
+                    add(
+                        Dependence(
+                            "jackson-module-kotlin-2.11.1.jar",
+                            DependenceData.Maven.JACKSON_MODULE,
+                            DependenceData.MD5.JACKSON_MODULE
+                        )
+                    )
+                    add(
+                        Dependence(
+                            "custom-core-1.2.1.jar",
+                            DependenceData.Lanzous.CUSTOMCORE,
+                            DependenceData.MD5.CUSTOMCORE
+                        )
+                    )
                     add(Dependence("jsoup-1.13.1.jar", DependenceData.Maven.JSOUP, DependenceData.MD5.JSOUP))
                     add(Dependence("dnsjava-3.2.2.jar", DependenceData.Maven.DNSJAVA, DependenceData.MD5.DNSJAVA))
                     add(Dependence("h2-1.4.200.jar", DependenceData.Maven.H2, DependenceData.MD5.H2))
@@ -134,7 +168,8 @@ class Dependence constructor(private val fileName: String, val urlData: Dependen
                 for (dependence in dependencies) {
                     Agent.addToClassPath(Paths.get(dependence.fileURL.toURI()))
                 }
-                BotData.objectMapper = jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
+                BotData.objectMapper =
+                    jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
                 progressBar.index = 100.0
             }
             progressBar.print()

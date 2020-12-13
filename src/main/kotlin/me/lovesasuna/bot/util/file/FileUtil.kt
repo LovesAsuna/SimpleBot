@@ -83,7 +83,7 @@ object FileUtil {
         }
     }
 
-    fun delete(file : File) {
+    fun delete(file: File) {
         if (file.isDirectory) {
             file.listFiles().forEach {
                 delete(it)

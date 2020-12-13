@@ -13,9 +13,9 @@ object ServiceGenerator {
         val clientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         interceptor?.let { clientBuilder.addInterceptor(it) }
         return retrofitBuilder
-                .baseUrl(baseurl)
-                .client(clientBuilder.build())
-                .addConverterFactory(JacksonConverterFactory.create(BotData.objectMapper))
-                .build().create(api)
+            .baseUrl(baseurl)
+            .client(clientBuilder.build())
+            .addConverterFactory(JacksonConverterFactory.create(BotData.objectMapper))
+            .build().create(api)
     }
 }

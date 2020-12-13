@@ -13,10 +13,10 @@ fun main() {
     val builder = StringBuilder()
 
     val map = hashMapOf(
-            "app_id" to "2149521182",
-            "time_stamp" to time,
-            "nonce_str" to "none",
-            "image_url" to URLEncoder.encode(url, "UTF-8")
+        "app_id" to "2149521182",
+        "time_stamp" to time,
+        "nonce_str" to "none",
+        "image_url" to URLEncoder.encode(url, "UTF-8")
     )
 
     map.apply {
@@ -41,7 +41,11 @@ fun main() {
     origin = builder.toString().replace(Regex("&$"), "")
     println(origin)
     val api = "https://api.ai.qq.com/fcgi-bin/vision/vision_porn"
-    val reader = NetWorkUtil.post(api, origin.toByteArray(), arrayOf("Content-Type", "application/x-www-form-urlencoded"))!!.second.bufferedReader()
+    val reader = NetWorkUtil.post(
+        api,
+        origin.toByteArray(),
+        arrayOf("Content-Type", "application/x-www-form-urlencoded")
+    )!!.second.bufferedReader()
     var line: String?
     while (reader.readLine().also { line = it } != null) {
         println(line)

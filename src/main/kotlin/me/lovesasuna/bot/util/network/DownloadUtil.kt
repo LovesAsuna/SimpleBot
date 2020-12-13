@@ -18,7 +18,13 @@ object DownloadUtil {
      * @param consumer 消费者函数，对下载时的字节长度进行处理
      * @param heads 请求头
      */
-    fun download(urlString: String?, fileName: String, savePath: String, consumer: (Int) -> Unit = {}, vararg heads: Array<String>): Boolean {
+    fun download(
+        urlString: String?,
+        fileName: String,
+        savePath: String,
+        consumer: (Int) -> Unit = {},
+        vararg heads: Array<String>
+    ): Boolean {
         return try {
             val url = URL(urlString)
             val conn = url.openConnection() as HttpURLConnection

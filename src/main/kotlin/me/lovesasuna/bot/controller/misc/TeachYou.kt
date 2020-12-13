@@ -45,7 +45,7 @@ class TeachYou : FunctionListener {
         return true
     }
 
-    private fun getSuffix(message : String) : String{
+    private fun getSuffix(message: String): String {
         val content = message.split(" ")[1]
         return URLEncoder.encode(Base64.getEncoder().encodeToString(content.toByteArray()), "UTF-8")
     }
