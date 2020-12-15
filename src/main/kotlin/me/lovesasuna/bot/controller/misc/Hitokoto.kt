@@ -1,12 +1,9 @@
 package me.lovesasuna.bot.controller.misc
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -15,20 +12,19 @@ import java.nio.charset.StandardCharsets
 
 class Hitokoto : FunctionListener {
     @Throws(IOException::class)
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         if (message.startsWith("/一言")) {
-            var reader: BufferedReader
             val strings = message.split(" ").toTypedArray()
-            val mapper = ObjectMapper()
             /*如果不带参数,默认全部获取*/
             if (strings.size == 1) {
                 val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return false
-                inputStreamToResult(inputStream, event)
+                inputStreamToResult(inputStream, box)
             }
             /*如果长度为2*/
             if (strings.size == 2) {
                 if ("help".equals(strings[1], ignoreCase = true)) {
-                    event.reply(
+                    box.reply(
                         """
      一言参数: 
      a	Anime - 动画
@@ -43,14 +39,14 @@ class Hitokoto : FunctionListener {
                     )
                 } else {
                     val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + strings[1]]?.second ?: return false
-                    inputStreamToResult(inputStream, event)
+                    inputStreamToResult(inputStream, box)
                 }
             }
         }
         return true
     }
 
-    private suspend fun inputStreamToResult(inputStream: InputStream, event: MessageEvent) {
+    private suspend fun inputStreamToResult(inputStream: InputStream, box: MessageBox) {
         val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
         var string: String?
         var text: String? = ""
@@ -60,6 +56,6 @@ class Hitokoto : FunctionListener {
         val `object` = BotData.objectMapper.readTree(text)
         val hitokoto = `object`["hitokoto"].asText()
         val from = `object`["from"].asText()
-        event.reply("『 $hitokoto 』- 「$from」")
+        box.reply("『 $hitokoto 』- 「$from」")
     }
 }

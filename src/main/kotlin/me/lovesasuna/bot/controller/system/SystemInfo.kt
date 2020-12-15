@@ -1,10 +1,7 @@
 package me.lovesasuna.bot.controller.system
 
 import me.lovesasuna.bot.controller.FunctionListener
-import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
+import me.lovesasuna.bot.data.MessageBox
 import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
 import java.text.DecimalFormat
@@ -20,8 +17,8 @@ class SystemInfo : FunctionListener {
     private val systemInfo = SystemInfo()
     val startTime = LocalDateTime.now()
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        event as GroupMessageEvent
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         if (message != "/统计" && message != "/运行状态") {
             return false
         }
@@ -83,7 +80,7 @@ class SystemInfo : FunctionListener {
         jvm已使用内存：${formatByte(jvmTotalMemoryByte - freeMemoryByte)}
         java版本：$jdkVersion
         """.trimIndent()
-        event.reply(info)
+        box.reply(info)
         return true
     }
 

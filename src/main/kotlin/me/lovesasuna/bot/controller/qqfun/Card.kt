@@ -1,25 +1,26 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import net.mamoe.mirai.contact.Member
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.LightApp
 
 class Card : FunctionListener {
     private val map = HashMap<Long, Type>()
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val senderID = event.sender.id
-        val at = At(event.sender as Member)
+    override suspend fun execute(box: MessageBox): Boolean {
+        val senderID = box.sender.id
+        val at = At(box.sender as Member)
         if (!map.contains(senderID)) {
-            when (message) {
+            when (box.message()) {
                 "/makecard" -> {
                     map[senderID] = Type.MakeCard
-                    event.reply(at + "请发送Json")
+                    box.reply(at + "请发送Json")
                 }
                 "/parsecard" -> {
                     map[senderID] = Type.ParseCard
-                    event.reply(at + "请发送卡片")
+                    box.reply(at + "请发送卡片")
                 }
             }
             return true
@@ -29,16 +30,12 @@ class Card : FunctionListener {
             when (map[senderID]) {
                 Type.MakeCard -> {
                     map.remove(senderID)
-                    event.reply(LightApp(message))
+                    box.reply(LightApp(box.message()))
                 }
                 Type.ParseCard -> {
                     map.remove(senderID)
-                    val app = event.message[RichMessage]
-                    if (app == null) {
-                        event.reply("无法解析!")
-                    } else {
-                        event.reply(app.content)
-                    }
+                    val app = box.richMessage()
+                    box.reply(app.content)
                 }
             }
         }

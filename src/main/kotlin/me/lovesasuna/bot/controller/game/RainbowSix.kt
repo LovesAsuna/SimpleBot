@@ -3,11 +3,9 @@ package me.lovesasuna.bot.controller.game
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -18,28 +16,28 @@ import kotlin.system.measureTimeMillis
  */
 class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        event as GroupMessageEvent
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         if (!message.startsWith("R6 ") && !message.startsWith("r6 ")) {
             return false
         }
         val strings = message.split(" ").toTypedArray()
         if (strings.size == 2) {
             val username = strings[1]
-            normalCheck(event, username)
+            normalCheck(box, username)
             return true
         } else if (strings.size == 4 && "op" == strings[2]) {
             val username = strings[1]
             val operatorName = strings[3]
-            operatorCheck(event, username, operatorName)
+            operatorCheck(box, username, operatorName)
         }
         return false
     }
 
-    private suspend fun normalCheck(event: GroupMessageEvent, username: String) {
+    private suspend fun normalCheck(box: MessageBox, username: String) {
         val builder = StringBuilder()
         val time = measureTimeMillis {
-            val root = getRoot(event, username)
+            val root = getRoot(box, username)
             val basicStat = root["Basicstat"][0]
             val level = basicStat["level"].asText()
             var historyMaxMMR = basicStat["max_mmr"].asText()
@@ -114,12 +112,13 @@ class RainbowSix : FunctionListener {
                 .append(String.format("%.4f", won.toDouble() / lost.toDouble())).append("\n")
 
         }
-        event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", (time / 1000).toDouble())).toString())
+        box.event as GroupMessageEvent
+        box.event.group.sendMessage(builder.append(String.format("查询耗时%.2f秒", (time / 1000).toDouble())).toString())
     }
 
-    private suspend fun operatorCheck(event: GroupMessageEvent, username: String, operatorName: String) {
+    private suspend fun operatorCheck(box: MessageBox, username: String, operatorName: String) {
         val start = System.currentTimeMillis()
-        val root = getRoot(event, username)
+        val root = getRoot(box, username)
         val statOperator = root["StatOperator"]
         val size = statOperator.size()
         val operators: MutableList<String> = ArrayList()
@@ -158,24 +157,24 @@ class RainbowSix : FunctionListener {
                 .append(String.format("%.4f", operatorKills.toDouble() / operatorDeaths.toDouble())).append("\n")
                 .append("胜利: ").append(operatorWon).append(" ").append("失败: ").append(operatorLost).append(" ")
                 .append("W/L: ").append(String.format("%.4f", operatorWon.toDouble() / operatorLost.toDouble()))
-            event.reply(builder.toString())
+            box.reply(builder.toString())
         }
         val end = System.currentTimeMillis()
         builder.setLength(0)
         if (strings.isEmpty()) {
             builder.append("数据不存在").append("\n")
         }
-        event.reply(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
+        box.reply(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
     }
 
-    private suspend fun getRoot(event: GroupMessageEvent, username: String): JsonNode {
+    private suspend fun getRoot(box: MessageBox, username: String): JsonNode {
         val result = NetWorkUtil.get(
             "https://www.r6s.cn/Stats?username=$username",
             arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username")
         )
         requireNotNull(result) {
             "连接超时".also {
-                event.reply(it)
+                box.reply(it)
             }
         }
         val inputStream = result.second

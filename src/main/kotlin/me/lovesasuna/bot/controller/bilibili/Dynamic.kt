@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.DynamicService
@@ -18,7 +19,6 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.uploadAsImage
 import java.util.*
@@ -30,22 +30,23 @@ class Dynamic : FunctionListener {
         start = true
     }
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        event as GroupMessageEvent
+    override suspend fun execute(box: MessageBox): Boolean {
+        box.event as GroupMessageEvent
+        val message = box.message()
         if (message.startsWith("/subscribe ")) {
             when (message.split(" ")[1]) {
                 "list" -> {
-                    event.reply("当前订阅的up: ${linkService.getUPByGroup(event.group.id)}")
+                    box.reply("当前订阅的up: ${linkService.getUPByGroup(box.event.group.id)}")
                 }
                 "add" -> {
                     val upID = message.split(" ")[2].toLong()
-                    linkService.addLink(upID, event.group.id)
-                    event.reply("up动态订阅成功!")
+                    linkService.addLink(upID, box.event.group.id)
+                    box.reply("up动态订阅成功!")
                 }
                 "remove" -> {
                     val upID = message.split(" ")[2].toLong()
-                    linkService.deleteUp(upID, event.group.id)
-                    event.reply("up动态取消订阅成功!")
+                    linkService.deleteUp(upID, box.event.group.id)
+                    box.reply("up动态取消订阅成功!")
                 }
                 "test" -> {
                     val upID = message.split(" ")[2].toLong()
@@ -53,8 +54,8 @@ class Dynamic : FunctionListener {
                     read(upID, num)
                 }
                 "debug" -> {
-                    if (Config.data.Admin.contains(event.sender.id)) {
-                        event.reply("开始收集信息...")
+                    if (Config.data.Admin.contains(box.event.sender.id)) {
+                        box.reply("开始收集信息...")
                         val builder = StringBuilder()
                         builder.append("Task状态: \n")
                         builder.append("Active: ${task.isActive}\n")
@@ -73,11 +74,11 @@ class Dynamic : FunctionListener {
                             builder.append("UP=$it: 摘要=${dynamicService.getContext(it)}\n")
                         }
 
-                        event.reply("debug信息: ${BasicUtil.debug(builder.toString())}")
+                        box.reply("debug信息: ${BasicUtil.debug(builder.toString())}")
                     }
                 }
                 "push" -> {
-                    event.reply("开始往订阅群推送消息！")
+                    box.reply("开始往订阅群推送消息！")
                     Main.scheduler.asyncTask {
                         linkService.getUps().forEach {
                             runBlocking {
@@ -86,7 +87,7 @@ class Dynamic : FunctionListener {
                                 delay(15 * 1000)
                             }
                         }
-                        event.reply("推送完成")
+                        box.reply("推送完成")
                         this
                     }
                 }

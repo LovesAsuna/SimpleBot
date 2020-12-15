@@ -3,14 +3,11 @@ package me.lovesasuna.bot.controller.qqfun
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf
 import java.io.File
@@ -25,13 +22,13 @@ import kotlin.random.Random
 class KeyWord : FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        event as GroupMessageEvent
-        val senderID = event.sender.id
-        val groupID = event.group.id
+    override suspend fun execute(box: MessageBox): Boolean {
+        val senderID = box.sender.id
+        val groupID = box.group!!.id
+        val message = box.message()
         when {
             message == "/debug" -> {
-                event.reply(
+                box.reply(
                     "调试模式${
                         if (BotData.debug) {
                             "关闭"
@@ -61,16 +58,16 @@ class KeyWord : FunctionListener {
                     )
                 }
 
-                event.reply(builder.toString())
+                box.reply(builder.toString())
                 return true
             }
             message.startsWith("/keyword remove ") && Config.data.Admin.contains(senderID) -> {
                 val id = BasicUtil.extractInt(message)
                 keyWordService.removeKeyWord(id).also {
                     if (it) {
-                        event.reply("关键词删除成功")
+                        box.reply("关键词删除成功")
                     } else {
-                        event.reply("关键词删除失败")
+                        box.reply("关键词删除失败")
                     }
                 }
                 return true
@@ -79,9 +76,9 @@ class KeyWord : FunctionListener {
                 val prams = message.split(" ")
                 keyWordService.addKeyWord(groupID, prams[2], prams[3], BasicUtil.extractInt(prams[4])).also {
                     if (it) {
-                        event.reply("关键词添加成功")
+                        box.reply("关键词添加成功")
                     } else {
-                        event.reply("关键词添加失败")
+                        box.reply("关键词添加失败")
                     }
                 }
                 return true
@@ -100,11 +97,11 @@ class KeyWord : FunctionListener {
                     messageChain += PlainText(s)
                     result?.apply {
                         val value = this.value.replace("#{", "").replace("}", "")
-                        messageChain += event.uploadImage(File(imagePath((value))))
+                        messageChain += box.uploadImage(File(imagePath((value))).inputStream())
                         result = result?.next()
                     }
                 }
-                event.reply(messageChain)
+                box.reply(messageChain)
             }
         }
 

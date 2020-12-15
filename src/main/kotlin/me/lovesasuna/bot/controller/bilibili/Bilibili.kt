@@ -2,11 +2,9 @@ package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -16,17 +14,17 @@ import java.util.regex.Pattern
 class Bilibili : FunctionListener {
     private val pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
 
         var av: String?
         var bv: String?
         var reader: BufferedReader?
         var inputStream: InputStream?
-        if (message.toLowerCase().contains("av")) {
-            av = BasicUtil.extractInt(message).toString()
+        if (box.message().toLowerCase().contains("av")) {
+            av = BasicUtil.extractInt(box.message()).toString()
             inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
-        } else if (message.contains("BV")) {
-            val matcher = pattern.matcher(message)
+        } else if (box.message().contains("BV")) {
+            val matcher = pattern.matcher(box.message())
             bv = if (matcher.find()) {
                 matcher.group()
             } else {
@@ -84,7 +82,7 @@ class Bilibili : FunctionListener {
             .append(like)
             .append("\n")
             .append(desc)
-        event.reply(event.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
+        box.reply(box.event.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
         return true
     }
 

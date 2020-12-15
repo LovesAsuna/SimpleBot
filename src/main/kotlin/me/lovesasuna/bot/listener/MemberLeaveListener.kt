@@ -1,7 +1,6 @@
 package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.util.interfaces.EventListener
 import net.mamoe.mirai.event.events.MemberLeaveEvent
 import net.mamoe.mirai.event.subscribeAlways
 

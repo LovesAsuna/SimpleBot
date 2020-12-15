@@ -3,17 +3,17 @@ package me.lovesasuna.bot.controller.game
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.io.IOException
 
 class McQuery : FunctionListener {
     @Throws(IOException::class)
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         if (message.startsWith("/mcquery ")) {
             val strings = message.split(" ").toTypedArray()
             val ipAndport = strings[1]
@@ -21,16 +21,16 @@ class McQuery : FunctionListener {
 
             /*如果不含:则默认为srv记录*/
             if (!ipAndport.contains(":")) {
-                status = query(event, "$ipAndport:25565", false)
+                status = query(box.event, "$ipAndport:25565", false)
                 if (!status) {
-                    event.reply("正在尝试SRV解析")
-                    status = query(event, ipAndport, true)
+                    box.reply("正在尝试SRV解析")
+                    status = query(box.event, ipAndport, true)
                 }
             } else {
-                status = query(event, ipAndport, false)
+                status = query(box.event, ipAndport, false)
             }
             if (!status) {
-                event.reply("ip地址不正确或无法直接获取结果!")
+                box.reply("ip地址不正确或无法直接获取结果!")
             }
             return true
         }

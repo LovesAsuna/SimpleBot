@@ -1,10 +1,8 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.network.UrlUtil
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.net.URLEncoder
 import java.util.*
 
@@ -12,7 +10,8 @@ import java.util.*
  * @author LovesAsuna
  **/
 class TeachYou : FunctionListener {
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         val msg: String
         val url: String
         val sequence = message.split(" ")
@@ -36,7 +35,7 @@ class TeachYou : FunctionListener {
             else -> return false
         }
 
-        event.reply(
+        box.reply(
             """
             点击以下链接即可教您使用${msg}搜索“${sequence[1]}“
             ${UrlUtil.shortUrl(url)}

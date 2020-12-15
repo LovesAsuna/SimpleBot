@@ -5,12 +5,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -30,24 +29,25 @@ class Danmu : FunctionListener {
     lateinit var socket: Socket
     lateinit var scheduledFuture: ScheduledFuture<*>
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         when {
             message.startsWith("/直播 connect ") -> {
                 closed = false
                 roomID = message.split(" ")[2].toInt()
                 GlobalScope.launch {
-                    connect(event)
+                    connect(box.event)
                 }
             }
             message.startsWith("/直播 disconnect") -> {
                 closed = true
                 scheduledFuture.cancel(true)
-                event.reply("与直播间主动断开连接!")
+                box.reply("与直播间主动断开连接!")
             }
-            message.startsWith("/直播 send ") && Config.data.Admin.contains(event.sender.id) -> {
+            message.startsWith("/直播 send ") && Config.data.Admin.contains(box.event.sender.id) -> {
                 val roomID = message.split(" ")[2].toInt()
                 PacketManager.sendDanmu(roomID, message.replaceFirst("/直播 send $roomID ", ""))
-                event.reply("弹幕发送成功!")
+                box.reply("弹幕发送成功!")
             }
         }
         return true

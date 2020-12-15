@@ -1,11 +1,11 @@
 package me.lovesasuna.bot
 
 import me.lovesasuna.bot.file.Config
+import me.lovesasuna.bot.listener.EventListener
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.interfaces.EventListener
 import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot

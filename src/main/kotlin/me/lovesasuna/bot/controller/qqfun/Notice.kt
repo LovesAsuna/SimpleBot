@@ -1,45 +1,44 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.service.NoticeService
 import me.lovesasuna.bot.service.impl.NoticeServiceImpl
-import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.messageChainOf
 import java.util.*
 
 class Notice : FunctionListener {
     private val calendar = Calendar.getInstance()
 
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        event as GroupMessageEvent
-        val groupID = event.group.id
-        val senderID = event.sender.id
+    override suspend fun execute(box: MessageBox): Boolean {
+        val groupID = box.group!!.id
+        val senderID = box.sender.id
         noticeService.getMatchMessage(groupID, senderID)?.let {
-            event.reply(it)
+            box.reply(it)
             noticeService.removeNotice(groupID, senderID)
             return true
         }
 
-        if (message.startsWith("/notice @")) {
-            val at = event.message[At]
-            if (at != null) {
-                var messageChain = messageChainOf(PlainText(event.message[3].contentToString().replaceFirst(" ", "")))
-                val listIterator = event.message.listIterator(4)
-                while (listIterator.hasNext()) {
-                    messageChain += listIterator.next()
-                }
-                noticeService.addNotice(
-                    groupID,
-                    at.target,
-                    at + PlainText(
-                        "\n${event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${
-                            getTime(Calendar.SECOND)
-                        }\n"
-                    ) + messageChain
-                )
-                event.reply(At(event.group[senderID]) + "此留言将在该用户下次说话时发送！")
+        val plainTextSequence = box.exportMessage()[PlainText::class.java]!!
+        if (plainTextSequence[0].contentToString().startsWith("/notice @")) {
+            val at = box.at()
+            var messageChain = messageChainOf(PlainText(box.event.message[3].contentToString().replaceFirst(" ", "")))
+            val listIterator = box.event.message.listIterator(4)
+            while (listIterator.hasNext()) {
+                messageChain += listIterator.next()
             }
+            noticeService.addNotice(
+                groupID,
+                at.target,
+                at + PlainText(
+                    "\n${box.event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${
+                        getTime(Calendar.SECOND)
+                    }\n"
+                ) + messageChain
+            )
+            box.reply(At(box.group!![senderID]) + "此留言将在该用户下次说话时发送！")
             return true
         }
         return false

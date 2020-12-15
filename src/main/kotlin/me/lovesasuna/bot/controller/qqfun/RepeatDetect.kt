@@ -2,11 +2,14 @@ package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.queryUrl
 import java.util.*
 import javax.imageio.ImageIO
 
@@ -15,8 +18,8 @@ import javax.imageio.ImageIO
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        val groupID = (event as GroupMessageEvent).group.id
+    override suspend fun execute(box: MessageBox): Boolean {
+        val groupID = box.group!!.id
         maps.putIfAbsent(groupID, ArrayList())
         val messageList = maps[groupID]!!
 
@@ -24,7 +27,7 @@ class RepeatDetect : FunctionListener {
             messageList.removeAt(0)
         }
 
-        operate(event, messageList)
+        operate(box.event, messageList)
 
         if (messageList.size < 3) {
             return false
@@ -33,23 +36,23 @@ class RepeatDetect : FunctionListener {
         if (isRepeat(messageList)) {
             Main.scheduler.asyncTask {
 
-                val messageChain = event.message
+                val messageChain = box.event.message
                 when (messageChain.size) {
                     2 -> {
                         when (messageChain[1]) {
                             is PlainText -> {
                                 ArrayList<Char>().apply {
-                                    message.forEach {
+                                    box.event.message.contentToString().forEach {
                                         this.add(it)
                                     }
                                     this.shuffle()
                                     val builder = StringBuilder()
                                     this.forEach { builder.append(it) }
-                                    event.reply(builder.toString())
+                                    box.reply(builder.toString())
                                 }
                             }
                             is Image -> {
-                                val bufferedImage = ImageIO.read(NetWorkUtil[image!!.queryUrl()]?.second).let {
+                                val bufferedImage = ImageIO.read(NetWorkUtil[box.event.message[Image]!!.queryUrl()]?.second).let {
                                     when (Random().nextInt(4)) {
                                         0 -> ImageUtil.rotateImage(it, 180)
                                         1 -> ImageUtil.mirrorImage(it)
@@ -58,12 +61,12 @@ class RepeatDetect : FunctionListener {
                                         else -> it
                                     }
                                 }
-                                event.reply(event.uploadImage(bufferedImage))
+                                box.reply(box.uploadImage(bufferedImage))
                             }
-                            else -> event.reply(messageList[2])
+                            else -> box.reply(messageList[2])
                         }
                     }
-                    else -> event.reply(messageList[2])
+                    else -> box.reply(messageList[2])
                 }
 
                 messageList.clear()

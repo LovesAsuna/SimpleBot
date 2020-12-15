@@ -1,14 +1,13 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 import java.net.URLEncoder
 
 class Baike : FunctionListener {
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
+        val message = box.message()
         if (message.startsWith("/baike ")) {
             val string = message.split(" ")[1]
             val url = "https://baike.baidu.com/item/${URLEncoder.encode(string, "UTF-8")}"
@@ -17,9 +16,9 @@ class Baike : FunctionListener {
             val desc = reader.readLine()
             val args = desc.split("\"")
             if (args.size > 1) {
-                event.reply(args[3].replace(Regex("...$"), ""))
+                box.reply(args[3].replace(Regex("...$"), ""))
             } else {
-                event.reply("百度百科未收录此词条!")
+                box.reply("百度百科未收录此词条!")
             }
             return true
         }

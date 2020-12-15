@@ -2,15 +2,13 @@ package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
 
 class Nbnhhsh : FunctionListener {
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
-        if (message.startsWith("/nbnhhsh ")) {
-            val abbreviation = message.split(" ")[1]
+    override suspend fun execute(box: MessageBox): Boolean {
+        if (box.message().startsWith("/nbnhhsh ")) {
+            val abbreviation = box.message().split(" ")[1]
             val text = BotData.objectMapper.createObjectNode().put("text", abbreviation)
             val post = NetWorkUtil.post(
                 "https://lab.magiconch.com/api/nbnhhsh/guess", text.toString().toByteArray(),
@@ -18,8 +16,7 @@ class Nbnhhsh : FunctionListener {
             )
             val result = post?.second?.bufferedReader()?.lineSequence()?.joinToString()
             if (result != null) {
-                event.reply("可能的结果: ${BotData.objectMapper.readTree(result)[0]["trans"] ?: "[]"}")
-
+                box.reply("可能的结果: ${BotData.objectMapper.readTree(result)[0]["trans"] ?: "[]"}")
             }
             return true
         }

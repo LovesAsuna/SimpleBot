@@ -1,15 +1,13 @@
 package me.lovesasuna.bot.controller.game
 
 import me.lovesasuna.bot.controller.FunctionListener
-import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.Face
-import net.mamoe.mirai.message.data.Image
+import me.lovesasuna.bot.data.MessageBox
 
 /**
  * @author LovesAsuna
  **/
 class YuanShen : FunctionListener {
-    override suspend fun execute(event: MessageEvent, message: String, image: Image?, face: Face?): Boolean {
+    override suspend fun execute(box: MessageBox): Boolean {
         return true
     }
 }
