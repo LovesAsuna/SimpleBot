@@ -31,12 +31,12 @@ class MessageBox(val event: MessageEvent) : Iterable<SingleMessage> {
     }
 
     fun exportMessage(): HashMap<Class<out SingleMessage>, ArrayList<SingleMessage>> {
+        //TODO 解决类型匹配问题
         if (messageMap.isEmpty()) {
             forEach {
-                if (messageMap[it::class.java] == null) {
-                    messageMap[it::class.java] = ArrayList()
+                if (messageMap[it] == null) {
+                    messageMap[it::class.java] = ArrayList<SingleMessage>().apply { this.add(it) }
                 }
-                messageMap[it::class.java]!!.add(it)
             }
         }
         return messageMap
@@ -47,7 +47,7 @@ class MessageBox(val event: MessageEvent) : Iterable<SingleMessage> {
     suspend fun reply(plain: String) = event.reply(plain)
 
     fun isSingleMessage(): Boolean {
-        return sequence.size == 1
+        return sequence.size == 2
     }
 
     suspend fun uploadImage(image: InputStream) = event.uploadImage(image)
@@ -56,28 +56,28 @@ class MessageBox(val event: MessageEvent) : Iterable<SingleMessage> {
 
     suspend fun uploadImage(image: BufferedImage) = event.uploadImage(image)
 
-    private fun <T : SingleMessage> getMessage(c: Class<T>): T {
+    private fun <T : SingleMessage> getFirstMessage(c: Class<T>): T? {
         exportMessage()
-        if (messageMap[c] == null) {
-            throw UnsupportedOperationException("该消息类型不存在！")
+        return if (messageMap[c] == null) {
+            null
         } else {
             when (messageMap[c]!!.size) {
                 0 -> throw IllegalArgumentException()
-                1 -> return c.cast(messageMap[c]!![0])
-                else -> throw MessageTypeNotSingeException()
+                1 -> c.cast(messageMap[c]!![0])
+                else -> throw MessageTypeNotSingeException(c)
             }
         }
     }
 
-    fun message() = getMessage(PlainText::class.java).content
+    fun message() = getFirstMessage(PlainText::class.java)?.content ?: ""
 
-    fun image() = getMessage(Image::class.java)
+    fun image() = getFirstMessage(Image::class.java)
 
-    fun face() = getMessage(Face::class.java)
+    fun face() = getFirstMessage(Face::class.java)
 
-    fun richMessage() = getMessage(RichMessage::class.java)
+    fun richMessage() = getFirstMessage(RichMessage::class.java)
 
-    fun at() = getMessage(At::class.java)
+    fun at() = getFirstMessage(At::class.java)
 
-    override fun iterator() = sequence.iterator()
+    override fun iterator() = sequence.listIterator(1)
 }

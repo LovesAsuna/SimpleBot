@@ -35,7 +35,7 @@ class Card : FunctionListener {
                 Type.ParseCard -> {
                     map.remove(senderID)
                     val app = box.richMessage()
-                    box.reply(app.content)
+                    box.reply(app!!.content)
                 }
             }
         }

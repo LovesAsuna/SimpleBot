@@ -42,7 +42,7 @@ class PictureSearch : FunctionListener {
                 }
                 else -> Saucenao
             }
-            val imgUrl = box.image().queryUrl()
+            val imgUrl = box.image()!!.queryUrl()
             if (BotData.debug) box.reply("图片URL: $imgUrl")
             val results = source.search(imgUrl)
             if (results.isEmpty()) {

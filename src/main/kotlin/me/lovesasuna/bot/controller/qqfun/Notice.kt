@@ -21,7 +21,7 @@ class Notice : FunctionListener {
             return true
         }
 
-        val plainTextSequence = box.exportMessage()[PlainText::class.java]!!
+        val plainTextSequence = box.exportMessage()[PlainText::class.java] ?: return false
         if (plainTextSequence[0].contentToString().startsWith("/notice @")) {
             val at = box.at()
             var messageChain = messageChainOf(PlainText(box.event.message[3].contentToString().replaceFirst(" ", "")))
@@ -31,7 +31,7 @@ class Notice : FunctionListener {
             }
             noticeService.addNotice(
                 groupID,
-                at.target,
+                at!!.target,
                 at + PlainText(
                     "\n${box.event.senderName}($senderID) ${getTime(Calendar.HOUR_OF_DAY)}:${getTime(Calendar.MINUTE)}:${
                         getTime(Calendar.SECOND)
