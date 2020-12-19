@@ -32,7 +32,7 @@ class Dynamic : FunctionListener {
 
     override suspend fun execute(box: MessageBox): Boolean {
         box.event as GroupMessageEvent
-        val message = box.message()
+        val message = box.text()
         if (message.startsWith("/subscribe ")) {
             when (message.split(" ")[1]) {
                 "list" -> {

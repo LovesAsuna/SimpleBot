@@ -5,6 +5,7 @@ import me.lovesasuna.bot.data.MessageBox
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.LightApp
+import net.mamoe.mirai.message.data.RichMessage
 
 class Card : FunctionListener {
     private val map = HashMap<Long, Type>()
@@ -13,7 +14,7 @@ class Card : FunctionListener {
         val senderID = box.sender.id
         val at = At(box.sender as Member)
         if (!map.contains(senderID)) {
-            when (box.message()) {
+            when (box.text()) {
                 "/makecard" -> {
                     map[senderID] = Type.MakeCard
                     box.reply(at + "请发送Json")
@@ -30,11 +31,11 @@ class Card : FunctionListener {
             when (map[senderID]) {
                 Type.MakeCard -> {
                     map.remove(senderID)
-                    box.reply(LightApp(box.message()))
+                    box.reply(LightApp(box.text()))
                 }
                 Type.ParseCard -> {
                     map.remove(senderID)
-                    val app = box.richMessage()
+                    val app = box.message(RichMessage)
                     box.reply(app!!.content)
                 }
             }

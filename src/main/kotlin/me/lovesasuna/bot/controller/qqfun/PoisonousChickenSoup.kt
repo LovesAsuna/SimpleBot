@@ -10,7 +10,7 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
  **/
 class PoisonousChickenSoup : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        if (box.message() != "/毒鸡汤") {
+        if (box.text() != "/毒鸡汤") {
             return false
         }
         val response = NetWorkUtil["https://v1.alapi.cn/api/soul"]

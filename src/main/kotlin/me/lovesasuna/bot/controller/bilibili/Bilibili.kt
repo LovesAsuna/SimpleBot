@@ -20,11 +20,11 @@ class Bilibili : FunctionListener {
         var bv: String?
         var reader: BufferedReader?
         var inputStream: InputStream?
-        if (box.message().toLowerCase().contains("av")) {
-            av = BasicUtil.extractInt(box.message()).toString()
+        if (box.text().toLowerCase().contains("av")) {
+            av = BasicUtil.extractInt(box.text()).toString()
             inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
-        } else if (box.message().contains("BV")) {
-            val matcher = pattern.matcher(box.message())
+        } else if (box.text().contains("BV")) {
+            val matcher = pattern.matcher(box.text())
             bv = if (matcher.find()) {
                 matcher.group()
             } else {

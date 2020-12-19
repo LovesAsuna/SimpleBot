@@ -11,7 +11,7 @@ import java.util.*
  **/
 class TeachYou : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         val msg: String
         val url: String
         val sequence = message.split(" ")

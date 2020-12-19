@@ -30,7 +30,7 @@ class Danmu : FunctionListener {
     lateinit var scheduledFuture: ScheduledFuture<*>
 
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         when {
             message.startsWith("/直播 connect ") -> {
                 closed = false

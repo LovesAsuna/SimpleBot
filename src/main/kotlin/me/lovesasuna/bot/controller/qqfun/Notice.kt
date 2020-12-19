@@ -21,9 +21,8 @@ class Notice : FunctionListener {
             return true
         }
 
-        val plainTextSequence = box.exportMessage()[PlainText::class.java] ?: return false
-        if (plainTextSequence[0].contentToString().startsWith("/notice @")) {
-            val at = box.at()
+        if (box.text().startsWith("/notice @")) {
+            val at = box.message(At)
             var messageChain = messageChainOf(PlainText(box.event.message[3].contentToString().replaceFirst(" ", "")))
             val listIterator = box.event.message.listIterator(4)
             while (listIterator.hasNext()) {

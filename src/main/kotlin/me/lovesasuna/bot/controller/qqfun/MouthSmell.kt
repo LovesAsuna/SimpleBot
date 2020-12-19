@@ -10,7 +10,7 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
  **/
 class MouthSmell : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (message == "/嘴臭" || message == "/祖安语录") {
             val node = BotData.objectMapper.readTree(NetWorkUtil["https://s.nmsl8.club/getloveword?type=2"]!!.second)
             box.reply(node["content"].asText())

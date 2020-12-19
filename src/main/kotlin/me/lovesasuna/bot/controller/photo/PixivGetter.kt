@@ -15,8 +15,8 @@ class PixivGetter : FunctionListener {
     @ExperimentalCoroutinesApi
     override suspend fun execute(box: MessageBox): Boolean {
         when {
-            box.message().startsWith("/pixiv work ") -> {
-                val ID = BasicUtil.extractInt(box.message().split(" ")[2])
+            box.text().startsWith("/pixiv work ") -> {
+                val ID = BasicUtil.extractInt(box.text().split(" ")[2])
                 var reader = NetWorkUtil["https://api.imjad.cn/pixiv/v1/?type=illust&id=$ID"]!!.second.bufferedReader()
                 var root = BotData.objectMapper.readTree(reader.readLine())
                 val status = root["status"].asText()
@@ -68,8 +68,8 @@ class PixivGetter : FunctionListener {
                     box.reply("获取完成!")
                 }
             }
-            box.message().contains("i.pximg.net") -> {
-                box.reply(box.uploadImage(NetWorkUtil[box.message().replace("i.pximg.net", "/i.pixiv.cat")]!!.second))
+            box.text().contains("i.pximg.net") -> {
+                box.reply(box.uploadImage(NetWorkUtil[box.text().replace("i.pximg.net", "/i.pixiv.cat")]!!.second))
             }
         }
         return true

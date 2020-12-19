@@ -18,8 +18,8 @@ class Photo : FunctionListener {
     var pixiv = true
     override suspend fun execute(box: MessageBox): Boolean {
         val bannotice = { Main.scheduler.asyncTask { box.reply("该图源已被禁用！") } }
-        if (box.message().startsWith("/色图")) {
-            when (box.message().split(" ")[1]) {
+        if (box.text().startsWith("/色图")) {
+            when (box.text().split(" ")[1]) {
                 "pixiv" -> {
                     if (pixiv) {
                         photoSource = Pixiv()
@@ -54,7 +54,7 @@ class Photo : FunctionListener {
     private fun changeBanStatus(box: MessageBox) {
         if (Config.data.Admin.contains(box.event.sender.id)) {
             GlobalScope.async {
-                when (box.message().split(" ")[2]) {
+                when (box.text().split(" ")[2]) {
                     "pixiv" -> {
                         box.reply("已${if (pixiv) "禁用" else "解禁"}pixiv图源")
                         pixiv = !pixiv

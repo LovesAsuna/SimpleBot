@@ -11,7 +11,7 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
  **/
 class DogLicking : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        if (box.message() != "/舔狗日记") {
+        if (box.text() != "/舔狗日记") {
             return false
         }
         val node = BotData.objectMapper.readTree(NetWorkUtil["http://api.yyhy.me/tg.php?type=api"]!!.second)

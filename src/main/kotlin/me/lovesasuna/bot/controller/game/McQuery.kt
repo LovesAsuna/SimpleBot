@@ -13,7 +13,7 @@ import java.io.IOException
 class McQuery : FunctionListener {
     @Throws(IOException::class)
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (message.startsWith("/mcquery ")) {
             val strings = message.split(" ").toTypedArray()
             val ipAndport = strings[1]

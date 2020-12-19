@@ -17,7 +17,7 @@ import kotlin.system.measureTimeMillis
 class RainbowSix : FunctionListener {
     private val mapper = ObjectMapper()
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (!message.startsWith("R6 ") && !message.startsWith("r6 ")) {
             return false
         }

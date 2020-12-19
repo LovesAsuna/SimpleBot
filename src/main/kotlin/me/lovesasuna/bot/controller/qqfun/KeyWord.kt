@@ -25,7 +25,7 @@ class KeyWord : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
         val senderID = box.sender.id
         val groupID = box.group!!.id
-        val message = box.message()
+        val message = box.text()
         when {
             message == "/debug" -> {
                 box.reply(

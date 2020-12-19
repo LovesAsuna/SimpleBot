@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets
 class Hitokoto : FunctionListener {
     @Throws(IOException::class)
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (message.startsWith("/一言")) {
             val strings = message.split(" ").toTypedArray()
             /*如果不带参数,默认全部获取*/

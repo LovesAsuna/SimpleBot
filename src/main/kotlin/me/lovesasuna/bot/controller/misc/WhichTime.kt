@@ -13,7 +13,7 @@ class WhichTime : FunctionListener {
     val formatter = DateTimeFormatter.ofPattern("HH-mm")
 
     override suspend fun execute(box: MessageBox): Boolean {
-        if (box.message() != "几点了") {
+        if (box.text() != "几点了") {
             return false
         }
         val time = formatter.format(LocalDateTime.now())

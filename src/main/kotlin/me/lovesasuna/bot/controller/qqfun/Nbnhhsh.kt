@@ -7,8 +7,8 @@ import me.lovesasuna.lanzou.util.NetWorkUtil
 
 class Nbnhhsh : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        if (box.message().startsWith("/nbnhhsh ")) {
-            val abbreviation = box.message().split(" ")[1]
+        if (box.text().startsWith("/nbnhhsh ")) {
+            val abbreviation = box.text().split(" ")[1]
             val text = BotData.objectMapper.createObjectNode().put("text", abbreviation)
             val post = NetWorkUtil.post(
                 "https://lab.magiconch.com/api/nbnhhsh/guess", text.toString().toByteArray(),

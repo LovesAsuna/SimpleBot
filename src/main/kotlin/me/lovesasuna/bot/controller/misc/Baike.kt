@@ -7,7 +7,7 @@ import java.net.URLEncoder
 
 class Baike : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (message.startsWith("/baike ")) {
             val string = message.split(" ")[1]
             val url = "https://baike.baidu.com/item/${URLEncoder.encode(string, "UTF-8")}"

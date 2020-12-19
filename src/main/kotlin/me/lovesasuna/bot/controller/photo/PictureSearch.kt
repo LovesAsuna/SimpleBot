@@ -22,8 +22,8 @@ class PictureSearch : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
         val senderID = box.sender.id
         val at = At(box.sender as Member)
-        if (box.message().startsWith("/搜图 ") && !map.contains(senderID)) {
-            map[senderID] = BasicUtil.extractInt(box.message().split(" ")[1], 1)
+        if (box.text().startsWith("/搜图 ") && !map.contains(senderID)) {
+            map[senderID] = BasicUtil.extractInt(box.text().split(" ")[1], 1)
             box.reply(at + "请发送图片")
             return true
         }

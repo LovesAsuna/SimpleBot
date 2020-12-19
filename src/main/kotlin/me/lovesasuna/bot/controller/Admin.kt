@@ -14,11 +14,11 @@ class Admin : FunctionListener {
         box.event as GroupMessageEvent
         val senderID = box.event.sender.id
         if (Config.data.Admin.contains(senderID)) {
-            if (box.message() == "/quit" && !confim) {
+            if (box.text() == "/quit" && !confim) {
                 box.reply("请在十秒内输入/quit confirm进行确认！")
                 confim = true
                 delay(10 * 1000)
-            } else if (box.message() == "/quit confirm" && confim) {
+            } else if (box.text() == "/quit confirm" && confim) {
                 box.reply("退群成功,感谢陪伴!")
                 box.event.group.quit()
             }

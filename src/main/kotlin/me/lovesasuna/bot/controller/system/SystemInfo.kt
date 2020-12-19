@@ -18,7 +18,7 @@ class SystemInfo : FunctionListener {
     val startTime = LocalDateTime.now()
 
     override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.message()
+        val message = box.text()
         if (message != "/统计" && message != "/运行状态") {
             return false
         }
