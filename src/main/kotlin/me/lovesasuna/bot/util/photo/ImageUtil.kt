@@ -1,8 +1,14 @@
 package me.lovesasuna.bot.util.photo
 
+import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.awt.Dimension
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
+import javax.imageio.ImageIO
 
 object ImageUtil {
     /**
@@ -119,4 +125,16 @@ object ImageUtil {
         }
         return bufferedImage
     }
+
+    /**
+     * 当多次使用时务必传递输入流的副本
+     */
+    fun getImageType(`in` : InputStream): String? {
+        val readers = ImageIO.getImageReaders(ImageIO.createImageInputStream(`in`))
+        return if (readers.hasNext()) {
+            readers.next().formatName
+        } else null
+    }
+
+    fun getImageType(file : File) = getImageType(FileInputStream(file))
 }

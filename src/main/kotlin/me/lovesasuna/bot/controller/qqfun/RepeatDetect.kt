@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.controller.qqfun
 
+import com.sun.imageio.plugins.gif.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
@@ -10,14 +11,22 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.queryUrl
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.*
+import javax.imageio.IIOImage
 import javax.imageio.ImageIO
+import javax.imageio.stream.MemoryCacheImageInputStream
+import javax.imageio.stream.MemoryCacheImageOutputStream
 
 /**
  * @author LovesAsuna
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
+    private val gifReader = GIFImageReaderSpi().createReaderInstance() as GIFImageReader
+    private val gifWriter = GIFImageWriterSpi().createWriterInstance() as GIFImageWriter
+
     override suspend fun execute(box: MessageBox): Boolean {
         val groupID = box.group!!.id
         maps.putIfAbsent(groupID, ArrayList())
@@ -52,16 +61,41 @@ class RepeatDetect : FunctionListener {
                                 }
                             }
                             is Image -> {
-                                val bufferedImage = ImageIO.read(NetWorkUtil[box.event.message[Image]!!.queryUrl()]?.second).let {
-                                    when (Random().nextInt(4)) {
-                                        0 -> ImageUtil.rotateImage(it, 180)
-                                        1 -> ImageUtil.mirrorImage(it)
-                                        2 -> ImageUtil.reverseImage(it, 1)
-                                        3 -> ImageUtil.reverseImage(it, 2)
-                                        else -> it
+                                val url = box.event.message[Image]!!.queryUrl()
+                                val cloneInputStream = NetWorkUtil.inputStreamClone(NetWorkUtil[url]?.second!!)!!
+                                when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
+                                    "gif" -> {
+                                        val out = ByteArrayOutputStream()
+                                        gifWriter.output = MemoryCacheImageOutputStream(out)
+                                        gifReader.input = MemoryCacheImageInputStream(ByteArrayInputStream(cloneInputStream.toByteArray()))
+                                        gifWriter.prepareWriteSequence(null)
+                                        val num = gifReader.getNumImages(true)
+                                        for (i in 0 until num) {
+                                            try {
+                                                val image = ImageUtil.rotateImage(gifReader.read(i), 90)
+                                                val metadata = gifReader.getImageMetadata(1) as GIFImageMetadata
+                                                gifWriter.writeToSequence(IIOImage(image, null, metadata), null)
+                                            } catch (e: Exception) {
+                                                box.reply("处理第$i($num)帧时出错, 跳过处理该帧: \n${e.javaClass.typeName}")
+                                            }
+                                        }
+                                        gifWriter.endWriteSequence()
+                                        (gifWriter.output as MemoryCacheImageOutputStream).flush()
+                                        box.reply(box.uploadImage(ByteArrayInputStream(out.toByteArray())))
+                                    }
+                                    else -> {
+                                        val bufferedImage = ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())).let {
+                                            when (Random().nextInt(4)) {
+                                                0 -> ImageUtil.rotateImage(it, 180)
+                                                1 -> ImageUtil.mirrorImage(it)
+                                                2 -> ImageUtil.reverseImage(it, 1)
+                                                3 -> ImageUtil.reverseImage(it, 2)
+                                                else -> it
+                                            }
+                                        }
+                                        box.reply(box.uploadImage(bufferedImage))
                                     }
                                 }
-                                box.reply(box.uploadImage(bufferedImage))
                             }
                             else -> box.reply(messageList[2])
                         }
