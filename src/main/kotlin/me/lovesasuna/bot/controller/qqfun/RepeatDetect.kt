@@ -11,6 +11,7 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.queryUrl
+import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -67,12 +68,13 @@ class RepeatDetect : FunctionListener {
                                     "gif" -> {
                                         val out = ByteArrayOutputStream()
                                         gifWriter.output = MemoryCacheImageOutputStream(out)
-                                        gifReader.input = MemoryCacheImageInputStream(ByteArrayInputStream(cloneInputStream.toByteArray()))
+                                        gifReader.input =
+                                            MemoryCacheImageInputStream(ByteArrayInputStream(cloneInputStream.toByteArray()))
                                         gifWriter.prepareWriteSequence(null)
                                         val num = gifReader.getNumImages(true)
                                         for (i in 0 until num) {
                                             try {
-                                                val image = ImageUtil.rotateImage(gifReader.read(i), 90)
+                                                val image = getOperatedImage(gifReader.read(i))
                                                 val metadata = gifReader.getImageMetadata(1) as GIFImageMetadata
                                                 gifWriter.writeToSequence(IIOImage(image, null, metadata), null)
                                             } catch (e: Exception) {
@@ -84,15 +86,8 @@ class RepeatDetect : FunctionListener {
                                         box.reply(box.uploadImage(ByteArrayInputStream(out.toByteArray())))
                                     }
                                     else -> {
-                                        val bufferedImage = ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())).let {
-                                            when (Random().nextInt(4)) {
-                                                0 -> ImageUtil.rotateImage(it, 180)
-                                                1 -> ImageUtil.mirrorImage(it)
-                                                2 -> ImageUtil.reverseImage(it, 1)
-                                                3 -> ImageUtil.reverseImage(it, 2)
-                                                else -> it
-                                            }
-                                        }
+                                        val bufferedImage =
+                                            getOperatedImage(ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())))
                                         box.reply(box.uploadImage(bufferedImage))
                                     }
                                 }
@@ -108,6 +103,18 @@ class RepeatDetect : FunctionListener {
             }
         }
         return true
+    }
+
+    private fun getOperatedImage(image: BufferedImage): BufferedImage {
+        return image.let {
+            when (Random().nextInt(4)) {
+                0 -> ImageUtil.rotateImage(it, 180)
+                1 -> ImageUtil.mirrorImage(it)
+                2 -> ImageUtil.reverseImage(it, 1)
+                3 -> ImageUtil.reverseImage(it, 2)
+                else -> it
+            }
+        }
     }
 
     private fun operate(event: MessageEvent, messageList: MutableList<MessageChain>) {
