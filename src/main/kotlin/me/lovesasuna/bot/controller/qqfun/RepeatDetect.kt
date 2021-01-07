@@ -27,6 +27,7 @@ class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
     private val gifReader = GIFImageReaderSpi().createReaderInstance() as GIFImageReader
     private val gifWriter = GIFImageWriterSpi().createWriterInstance() as GIFImageWriter
+    private val random = Random()
 
     override suspend fun execute(box: MessageBox): Boolean {
         val groupID = box.group!!.id
@@ -65,17 +66,19 @@ class RepeatDetect : FunctionListener {
                                 val url = box.event.message[Image]!!.queryUrl()
                                 val cloneInputStream = NetWorkUtil.inputStreamClone(NetWorkUtil[url]?.second!!)!!
                                 when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
-                                    "gif" -> {
+                                    // 暂时移除对gif的支持
+                                    "gif/unsupported" -> {
                                         val out = ByteArrayOutputStream()
                                         gifWriter.output = MemoryCacheImageOutputStream(out)
                                         gifReader.input =
                                             MemoryCacheImageInputStream(ByteArrayInputStream(cloneInputStream.toByteArray()))
                                         gifWriter.prepareWriteSequence(null)
                                         val num = gifReader.getNumImages(true)
+                                        val type = random.nextInt(4)
                                         for (i in 0 until num) {
                                             try {
-                                                val image = getOperatedImage(gifReader.read(i))
-                                                val metadata = gifReader.getImageMetadata(1) as GIFImageMetadata
+                                                val image = getOperatedImageByType(gifReader.read(i), type)
+                                                val metadata = gifReader.getImageMetadata(0) as GIFImageMetadata
                                                 gifWriter.writeToSequence(IIOImage(image, null, metadata), null)
                                             } catch (e: Exception) {
                                                 box.reply("处理第$i($num)帧时出错, 跳过处理该帧: \n${e.javaClass.typeName}")
@@ -105,9 +108,14 @@ class RepeatDetect : FunctionListener {
         return true
     }
 
-    private fun getOperatedImage(image: BufferedImage): BufferedImage {
+    /**
+     * @param image 图片
+     * @param type 指定的处理类型
+     * @return 返回随机处理后的图片
+     */
+    private fun getOperatedImageByType(image: BufferedImage, type: Int): BufferedImage {
         return image.let {
-            when (Random().nextInt(4)) {
+            when (type) {
                 0 -> ImageUtil.rotateImage(it, 180)
                 1 -> ImageUtil.mirrorImage(it)
                 2 -> ImageUtil.reverseImage(it, 1)
@@ -116,6 +124,13 @@ class RepeatDetect : FunctionListener {
             }
         }
     }
+
+
+    /**
+     * @param image 图片
+     * @return 返回随机处理后的图片
+     */
+    private fun getOperatedImage(image: BufferedImage) = getOperatedImageByType(image, random.nextInt(4))
 
     private fun operate(event: MessageEvent, messageList: MutableList<MessageChain>) {
         messageList.add(event.message)
