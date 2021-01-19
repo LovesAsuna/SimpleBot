@@ -15,17 +15,17 @@ class Hitokoto : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
         val message = box.text()
         if (message.startsWith("/一言")) {
-            val strings = message.split(" ").toTypedArray()
-            /*如果不带参数,默认全部获取*/
-            if (strings.size == 1) {
-                val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return false
-                inputStreamToResult(inputStream, box)
-            }
-            /*如果长度为2*/
-            if (strings.size == 2) {
-                if ("help".equals(strings[1], ignoreCase = true)) {
-                    box.reply(
-                        """
+            val strings = message.split(" ")
+            when (strings.size) {
+                1 -> {
+                    // 如果不带参数,默认全部获取
+                    val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return false
+                    inputStreamToResult(inputStream, box)
+                }
+                2 -> {
+                    if ("help".equals(strings[1], ignoreCase = true)) {
+                        box.reply(
+                            """
      一言参数: 
      a	Anime - 动画
      b	Comic – 漫画
@@ -36,10 +36,11 @@ class Hitokoto : FunctionListener {
      g	Other – 其他
      不填 - 随机
      """.trimIndent()
-                    )
-                } else {
-                    val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + strings[1]]?.second ?: return false
-                    inputStreamToResult(inputStream, box)
+                        )
+                    } else {
+                        val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + strings[1]]?.second ?: return false
+                        inputStreamToResult(inputStream, box)
+                    }
                 }
             }
         }
