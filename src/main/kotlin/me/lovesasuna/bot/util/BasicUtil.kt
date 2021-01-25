@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.File
@@ -76,7 +76,7 @@ object BasicUtil {
     }
 
     fun getLocation(fileName: String): File {
-        return File("${getLocation(Main::class.java).path}${File.separator}$fileName")
+        return File("${getLocation(OriginMain::class.java).path}${File.separator}$fileName")
     }
 
 }

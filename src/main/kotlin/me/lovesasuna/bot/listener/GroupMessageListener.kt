@@ -1,12 +1,11 @@
 package me.lovesasuna.bot.listener
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.ClassUtil
 import me.lovesasuna.bot.util.plugin.Logger
-import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
 object GroupMessageListener : EventListener {
@@ -24,9 +23,9 @@ object GroupMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.eventChannel.subscribeAlways(GroupMessageEvent::class) {
+        OriginMain.bot.eventChannel.subscribeAlways(GroupMessageEvent::class) {
             listeners.forEach {
-                Main.scheduler.asyncTask {
+                OriginMain.scheduler.asyncTask {
                     it.execute(MessageBox(this))
                 }
             }

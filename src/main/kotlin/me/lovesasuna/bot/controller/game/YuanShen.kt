@@ -1,13 +1,16 @@
 package me.lovesasuna.bot.controller.game
 
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.Main
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
 
 /**
  * @author LovesAsuna
  **/
-class YuanShen : FunctionListener {
-    override suspend fun execute(box: MessageBox): Boolean {
-        return true
-    }
+object YuanShen : SimpleCommand(
+    owner = Main,
+    primaryName = "yuanshen"
+) {
+    @Handler
+    suspend fun CommandSender.handle() {}
 }

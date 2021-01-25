@@ -1,10 +1,10 @@
 package me.lovesasuna.bot.util.plugin
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 
 object Logger {
     fun log(message: String, level: LogLevel) {
-        val logger = Main.logger
+        val logger = OriginMain.logger
         when (level) {
             LogLevel.INFO -> logger?.info(message)
             LogLevel.WARNING -> logger?.warning(message)

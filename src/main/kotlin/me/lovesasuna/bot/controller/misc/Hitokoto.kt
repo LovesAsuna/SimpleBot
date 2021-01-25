@@ -1,30 +1,32 @@
 package me.lovesasuna.bot.controller.misc
 
-import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.lanzou.util.NetWorkUtil
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.RawCommand
+import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.content
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-class Hitokoto : FunctionListener {
-    @Throws(IOException::class)
-    override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.text()
-        if (message.startsWith("/一言")) {
-            val strings = message.split(" ")
-            when (strings.size) {
-                1 -> {
-                    // 如果不带参数,默认全部获取
-                    val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return false
-                    inputStreamToResult(inputStream, box)
-                }
-                2 -> {
-                    if ("help".equals(strings[1], ignoreCase = true)) {
-                        box.reply(
+object Hitokoto : RawCommand(
+    owner = Main,
+    primaryName = "一言"
+) {
+    override suspend fun CommandSender.onCommand(args: MessageChain) {
+        when (args.size) {
+            0 -> {
+                // 如果不带参数,默认全部获取
+                val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return
+                inputStreamToResult(inputStream, this)
+            }
+            1 -> {
+                when (args[0].content) {
+                    "help" -> {
+                        sendMessage(
                             """
      一言参数: 
      a	Anime - 动画
@@ -37,17 +39,17 @@ class Hitokoto : FunctionListener {
      不填 - 随机
      """.trimIndent()
                         )
-                    } else {
-                        val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + strings[1]]?.second ?: return false
-                        inputStreamToResult(inputStream, box)
+                    }
+                    else -> {
+                        val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + args[0]]?.second ?: return
+                        inputStreamToResult(inputStream, this)
                     }
                 }
             }
         }
-        return true
     }
 
-    private suspend fun inputStreamToResult(inputStream: InputStream, box: MessageBox) {
+    private suspend fun inputStreamToResult(inputStream: InputStream, sender: CommandSender) {
         val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
         var string: String?
         var text: String? = ""
@@ -57,6 +59,6 @@ class Hitokoto : FunctionListener {
         val `object` = BotData.objectMapper.readTree(text)
         val hitokoto = `object`["hitokoto"].asText()
         val from = `object`["from"].asText()
-        box.reply("『 $hitokoto 』- 「$from」")
+        sender.sendMessage("『 $hitokoto 』- 「$from」")
     }
 }

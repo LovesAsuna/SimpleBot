@@ -1,47 +1,53 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.contact.Contact.Companion.uploadImage
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.RawCommand
+import net.mamoe.mirai.console.command.getGroupOrNull
+import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
-class Bilibili : FunctionListener {
+object Bilibili : RawCommand(
+    owner = Main,
+    primaryName = "/converse",
+    description = "B站视频解析",
+) {
     private val pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
-    override suspend fun execute(box: MessageBox): Boolean {
+    override suspend fun CommandSender.onCommand(args: MessageChain) {
+        lateinit var av: String
+        lateinit var bv: String
+        lateinit var reader: BufferedReader
+        var inputStream: InputStream? = null
 
-        var av: String?
-        var bv: String?
-        var reader: BufferedReader?
-        var inputStream: InputStream?
-        if (box.text().toLowerCase().contains("av")) {
-            av = BasicUtil.extractInt(box.text()).toString()
-            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
-        } else if (box.text().contains("BV")) {
-            val matcher = pattern.matcher(box.text())
-            bv = if (matcher.find()) {
-                matcher.group()
-            } else {
-                return false
+        when {
+            args.contentToString().toLowerCase().contains("av") -> {
+                av = BasicUtil.extractInt(args.content).toString()
+                inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
             }
-            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?bvid=$bv"]?.second
-        } else {
-            return false
-        }
-        if (inputStream == null) {
-            return false
+            args.contentToString().contains("BV") -> {
+                val matcher = pattern.matcher(args.content)
+                bv = if (matcher.find()) {
+                    matcher.group()
+                } else {
+                    return
+                }
+                inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?bvid=$bv"]?.second
+            }
         }
         reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
         val line = reader.readLine()
         if (!line.startsWith("{\"code\":0")) {
-            return false
+            return
         }
         val mapper = ObjectMapper()
         val jsonNode = mapper.readTree(line)
@@ -83,8 +89,6 @@ class Bilibili : FunctionListener {
             .append(like)
             .append("\n")
             .append(desc)
-        box.reply(box.event.subject.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
-        return true
+        sendMessage(NetWorkUtil[pic]!!.second.uploadAsImage(getGroupOrNull()!!) + builder.toString())
     }
-
 }

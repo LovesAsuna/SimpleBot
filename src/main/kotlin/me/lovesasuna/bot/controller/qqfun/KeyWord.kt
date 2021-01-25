@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
@@ -20,7 +20,7 @@ import kotlin.random.Random
  * @author LovesAsuna
  */
 class KeyWord : FunctionListener {
-    private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
+    private val imagePath = "${OriginMain.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
     override suspend fun execute(box: MessageBox): Boolean {
         val senderID = box.sender.id

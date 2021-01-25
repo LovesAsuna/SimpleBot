@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.Agent
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
 import me.lovesasuna.bot.util.file.FileUtil
@@ -51,7 +51,7 @@ class Dependence constructor(
         }
 
         private fun getFile(dependence: Dependence): File {
-            return File("${Main.dataFolder.path}${File.separator}Dependencies${File.separator}${dependence.fileName}")
+            return File("${OriginMain.dataFolder.path}${File.separator}Dependencies${File.separator}${dependence.fileName}")
         }
 
         private fun getResource(dependence: Dependence) {
@@ -176,7 +176,7 @@ class Dependence constructor(
         }
 
         init {
-            depenDir = File("${Main.dataFolder.path}${File.separator}Dependencies").also {
+            depenDir = File("${OriginMain.dataFolder.path}${File.separator}Dependencies").also {
                 if (!it.exists()) {
                     Files.createDirectories(Paths.get(it.toURI()))
                 }

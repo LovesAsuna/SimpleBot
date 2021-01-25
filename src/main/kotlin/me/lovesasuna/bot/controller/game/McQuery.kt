@@ -2,39 +2,35 @@ package me.lovesasuna.bot.controller.game
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
-import net.mamoe.mirai.event.events.MessageEvent
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
 import java.io.IOException
 
-class McQuery : FunctionListener {
-    @Throws(IOException::class)
-    override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.text()
-        if (message.startsWith("/mcquery ")) {
-            val strings = message.split(" ").toTypedArray()
-            val ipAndport = strings[1]
-            var status: Boolean
+object McQuery : SimpleCommand(
+    owner = Main,
+    primaryName = "mcquery"
+) {
+    @Handler
+    suspend fun CommandSender.handle(ip: String) {
+        var status: Boolean
 
-            /*如果不含:则默认为srv记录*/
-            if (!ipAndport.contains(":")) {
-                status = query(box.event, "$ipAndport:25565", false)
-                if (!status) {
-                    box.reply("正在尝试SRV解析")
-                    status = query(box.event, ipAndport, true)
-                }
-            } else {
-                status = query(box.event, ipAndport, false)
-            }
+        /*如果不含:则默认为srv记录*/
+        if (!ip.contains(":")) {
+            status = query(this, "$ip:25565", false)
             if (!status) {
-                box.reply("ip地址不正确或无法直接获取结果!")
+                sendMessage("正在尝试SRV解析")
+                status = query(this, ip, true)
             }
-            return true
+        } else {
+            status = query(this, ip, false)
         }
-        return true
+        if (!status) {
+            sendMessage("ip地址不正确或无法直接获取结果!")
+        }
     }
 
     private fun nodeProcess(node: JsonNode): String {
@@ -66,7 +62,7 @@ class McQuery : FunctionListener {
     }
 
     @Throws(IOException::class)
-    private suspend fun query(event: MessageEvent, ipAndport: String, SRV: Boolean): Boolean {
+    private suspend fun query(sender: CommandSender, ipAndport: String, SRV: Boolean): Boolean {
         val host: String
         val port: Int
         if (SRV) {
@@ -114,7 +110,7 @@ class McQuery : FunctionListener {
                 服务器Mod类型: ${type.asText()}${modeProcess(modList)}
                 """.trimIndent()
         }
-        event.subject.sendMessage(
+        sender.sendMessage(
             """
                     服务器IP:  $host:$port
                     是否使用SRV域名解析:  $SRV
@@ -133,7 +129,7 @@ class McQuery : FunctionListener {
     private fun modeProcess(modList: JsonNode): String {
         val size = modList.size()
         var mod = "(总计共" + (size - 1) + "个Mod)"
-        for (i in 0..size - 1) {
+        for (i in 0 until size) {
             val node = modList[i]
             val modid = node["modid"].asText()
             val version = node["version"].asText()

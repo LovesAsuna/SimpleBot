@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.util
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.plugin.Logger
 import java.io.File
@@ -13,7 +13,7 @@ import java.util.jar.JarFile
 import kotlin.collections.HashSet
 
 class ClassUtil {
-    private val jarFile = JarFile(Main::class.java.protectionDomain.codeSource.location.path)
+    private val jarFile = JarFile(OriginMain::class.java.protectionDomain.codeSource.location.path)
 
     @Deprecated("不建议使用")
     fun getFunctions(): List<String> {

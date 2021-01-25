@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import javax.script.ScriptEngineManager
@@ -18,7 +18,7 @@ class AbstractWord : FunctionListener {
             return false
         }
         try {
-            val str =  Main.javaClass.classLoader.getResourceAsStream("chouxianghua.js").bufferedReader().readText()
+            val str =  OriginMain.javaClass.classLoader.getResourceAsStream("chouxianghua.js").bufferedReader().readText()
             se.eval(str)
             val o = se.eval("chouxiang(\"" + message.split(" ")[1] + "\")")
             box.reply(o.toString())

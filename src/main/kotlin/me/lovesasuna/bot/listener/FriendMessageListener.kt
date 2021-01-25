@@ -1,10 +1,9 @@
 package me.lovesasuna.bot.listener
 
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
-import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.events.FriendMessageEvent
 
 object FriendMessageListener : EventListener {
@@ -19,13 +18,13 @@ object FriendMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.eventChannel.subscribeAlways(FriendMessageEvent::class) {
+        OriginMain.bot.eventChannel.subscribeAlways(FriendMessageEvent::class) {
             val senderID = sender.id
             if (Config.data.Admin.contains(senderID)) {
                 return@subscribeAlways
             }
             listeners.forEach {
-                Main.scheduler.asyncTask {
+                OriginMain.scheduler.asyncTask {
                     it.execute(MessageBox(this))
                 }
             }

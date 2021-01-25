@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.file
 
 import com.charleskorn.kaml.Yaml
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.ConfigData
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.exceptions.AccountNotFoundException
@@ -21,7 +21,7 @@ object Config {
 
     private fun readValue() {
         data = Yaml.default.decodeFromString(ConfigData.serializer(), file.readText())
-        Main.botConfig.protocol = when (data.Protocol.toUpperCase()) {
+        OriginMain.botConfig.protocol = when (data.Protocol.toUpperCase()) {
             ANDROID_PAD.name -> ANDROID_PAD
             ANDROID_PHONE.name -> ANDROID_PHONE
             ANDROID_WATCH.name -> ANDROID_WATCH

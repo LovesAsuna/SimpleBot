@@ -3,6 +3,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id "org.jetbrains.kotlin.plugin.serialization" version "1.4.10"
+    id "org.jetbrains.kotlin.kapt" version "1.4.30-RC"
 }
 
 description('一个基于Mirai的机器人')
@@ -10,7 +11,7 @@ group 'me.lovesasuna'
 version '3.1.0'
 
 ext {
-    workDir = 'E:\\work\\Mirai'
+    workDir = 'E:\\work\\Mirai-Console\\plugins'
 }
 
 sourceCompatibility = 8
@@ -31,6 +32,7 @@ shadowJar {
 
 dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'net.mamoe:mirai-console:2.0.0'
     implementation 'net.mamoe:mirai-core:2.1.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
     implementation 'me.lovesasuna:Lanzou:1.3.7'
@@ -42,7 +44,9 @@ dependencies {
     implementation 'com.github.oshi:oshi-core:5.3.6'
     implementation 'net.java.dev.jna:jna:5.6.0'
     implementation 'net.java.dev.jna:jna-platform:5.6.0'
+    implementation 'com.google.auto.service:auto-service:1.0-rc7'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    kapt 'com.google.auto.service:auto-service:1.0-rc7'
 }
 
 compileKotlin {
