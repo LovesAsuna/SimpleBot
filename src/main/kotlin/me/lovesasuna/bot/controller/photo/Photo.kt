@@ -3,7 +3,6 @@ package me.lovesasuna.bot.controller.photo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
@@ -22,7 +21,7 @@ object Photo : CompositeCommand(
 ) {
     lateinit var photoSource: PhotoSource
     val bannotice = { sender: CommandSender ->
-        OriginMain.scheduler.asyncTask {
+        Main.scheduler.asyncTask {
             sender.sendMessage("该图源已被禁用！")
             this
         }

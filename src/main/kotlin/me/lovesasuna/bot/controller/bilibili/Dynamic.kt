@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.service.DynamicService
@@ -98,7 +97,7 @@ object Dynamic : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.push() {
         sendMessage("开始往订阅群推送消息！")
-        OriginMain.scheduler.asyncTask {
+        Main.scheduler.asyncTask {
             linkService.getUps().forEach {
                 runBlocking {
                     read(it, 0, true)
@@ -142,9 +141,9 @@ object Dynamic : CompositeCommand(
         val root = ObjectMapper().readTree(reader.readLine())
         if (root.toString().contains("拦截")) {
             if (!intercept) {
-                OriginMain.logger!!.error("B站动态api请求被拦截")
+                Main.logger.error("B站动态api请求被拦截")
                 linkService.getGroupByUp(uid).forEach {
-                    OriginMain.scheduler.asyncTask {
+                    Main.scheduler.asyncTask {
                         val group = Bot.instances[0].getGroup(it)
                         group?.sendMessage("B站动态api请求被拦截，请联系管理员!")
                         this
@@ -164,7 +163,7 @@ object Dynamic : CompositeCommand(
         ) {
             dynamicService.update(uid, card.toString().substring(50..100))
             linkService.getGroupByUp(uid).forEach {
-                OriginMain.scheduler.asyncTask {
+                Main.scheduler.asyncTask {
                     val group = Bot.instances[0].getGroup(it)!!
                     group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                     parse(group, card)
