@@ -22,7 +22,7 @@ class Notice : FunctionListener {
         }
 
         if (box.text().startsWith("/notice @")) {
-            val at = box.message(At)
+            val at = box.message(At::class.java)
             var messageChain = messageChainOf(PlainText(box.event.message[3].contentToString().replaceFirst(" ", "")))
             val listIterator = box.event.message.listIterator(4)
             while (listIterator.hasNext()) {
@@ -37,7 +37,7 @@ class Notice : FunctionListener {
                     }\n"
                 ) + messageChain
             )
-            box.reply(At(box.group!![senderID]) + "此留言将在该用户下次说话时发送！")
+            box.reply(At(box.group!![senderID]!!) + "此留言将在该用户下次说话时发送！")
             return true
         }
         return false

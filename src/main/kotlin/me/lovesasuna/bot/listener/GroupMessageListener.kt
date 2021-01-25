@@ -7,7 +7,7 @@ import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.ClassUtil
 import me.lovesasuna.bot.util.plugin.Logger
 import net.mamoe.mirai.event.subscribeAlways
-import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
 
 object GroupMessageListener : EventListener {
     private val listeners = ArrayList<FunctionListener>()
@@ -24,7 +24,7 @@ object GroupMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.subscribeAlways(GroupMessageEvent::class) {
+        Main.bot.eventChannel.subscribeAlways(GroupMessageEvent::class) {
             listeners.forEach {
                 Main.scheduler.asyncTask {
                     it.execute(MessageBox(this))

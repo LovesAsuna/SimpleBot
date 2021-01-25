@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.file.Config
-import net.mamoe.mirai.message.MessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -23,7 +23,7 @@ object PacketManager {
             .put("platform", "MC BC M/P")
             .put("protover", 2)
         sendPacket(out, 7, objectNode.toString())
-        runBlocking { event.reply("成功连接直播间: $roomID") }
+        runBlocking { event.subject.sendMessage("成功连接直播间: $roomID") }
     }
 
     @Throws(IOException::class)

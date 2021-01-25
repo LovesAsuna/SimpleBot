@@ -5,7 +5,7 @@ import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
 import net.mamoe.mirai.event.subscribeAlways
-import net.mamoe.mirai.message.FriendMessageEvent
+import net.mamoe.mirai.event.events.FriendMessageEvent
 
 object FriendMessageListener : EventListener {
     private val listeners: MutableList<FunctionListener> = ArrayList()
@@ -19,7 +19,7 @@ object FriendMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.subscribeAlways(FriendMessageEvent::class) {
+        Main.bot.eventChannel.subscribeAlways(FriendMessageEvent::class) {
             val senderID = sender.id
             if (Config.data.Admin.contains(senderID)) {
                 return@subscribeAlways

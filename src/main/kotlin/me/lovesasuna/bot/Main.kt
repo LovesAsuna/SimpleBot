@@ -9,7 +9,7 @@ import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.join
+import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.MiraiLogger
 import java.io.File
@@ -32,7 +32,7 @@ suspend fun main() {
     }
     Config.writeDefault()
     Logger.log("登陆协议: ${Main.botConfig.protocol}", Logger.LogLevel.CONSOLE)
-    Main.bot = Bot(
+    Main.bot = BotFactory.newBot(
         Config.data.Account,
         Config.data.Password,
         Main.botConfig

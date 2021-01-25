@@ -5,6 +5,7 @@ import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -82,7 +83,7 @@ class Bilibili : FunctionListener {
             .append(like)
             .append("\n")
             .append(desc)
-        box.reply(box.event.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
+        box.reply(box.event.subject.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
         return true
     }
 

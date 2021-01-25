@@ -6,11 +6,11 @@ import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.message.MessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.PlainText
-import net.mamoe.mirai.message.data.queryUrl
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -63,7 +63,7 @@ class RepeatDetect : FunctionListener {
                                 }
                             }
                             is Image -> {
-                                val url = box.event.message[Image]!!.queryUrl()
+                                val url = box.message(Image::class.java)!!.queryUrl()
                                 val cloneInputStream = NetWorkUtil.inputStreamClone(NetWorkUtil[url]?.second!!)!!
                                 when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
                                     // 暂时移除对gif的支持

@@ -7,7 +7,7 @@ import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
-import net.mamoe.mirai.message.MessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import java.io.IOException
 
 class McQuery : FunctionListener {
@@ -114,7 +114,7 @@ class McQuery : FunctionListener {
                 服务器Mod类型: ${type.asText()}${modeProcess(modList)}
                 """.trimIndent()
         }
-        event.reply(
+        event.subject.sendMessage(
             """
                     服务器IP:  $host:$port
                     是否使用SRV域名解析:  $SRV

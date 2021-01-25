@@ -10,6 +10,7 @@ import me.lovesasuna.bot.controller.photo.source.Random
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.lanzou.util.NetWorkUtil
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.data.PlainText
 
 class Photo : FunctionListener {
@@ -29,7 +30,7 @@ class Photo : FunctionListener {
                             box.reply("达到每日调用额度限制")
                         } else {
                             val url = data.split("|")[0]
-                            box.reply(box.event.uploadImage(NetWorkUtil[url]!!.second) + PlainText("\n剩余次数: $quota"))
+                            box.reply(box.event.subject.uploadImage(NetWorkUtil[url]!!.second) + PlainText("\n剩余次数: $quota"))
                         }
                     } else {
                         bannotice.invoke()
@@ -38,7 +39,7 @@ class Photo : FunctionListener {
                 "random" -> {
                     if (random) {
                         photoSource = Random()
-                        box.reply(box.event.uploadImage(photoSource.fetchData()?.let { NetWorkUtil[it] }!!.second))
+                        box.reply(box.event.subject.uploadImage(photoSource.fetchData()?.let { NetWorkUtil[it] }!!.second))
                     } else {
                         bannotice.invoke()
                     }

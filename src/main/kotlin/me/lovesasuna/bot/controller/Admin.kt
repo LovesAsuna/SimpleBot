@@ -3,7 +3,7 @@ package me.lovesasuna.bot.controller
 import kotlinx.coroutines.delay
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.file.Config
-import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
 import java.io.IOException
 
 class Admin : FunctionListener {

@@ -2,11 +2,10 @@ package me.lovesasuna.bot.listener
 
 import me.lovesasuna.bot.Main
 import net.mamoe.mirai.event.events.MessageRecallEvent
-import net.mamoe.mirai.event.subscribeAlways
 
 object GroupRecallListener : EventListener {
     override fun onAction() {
-        Main.bot.subscribeAlways(MessageRecallEvent::class) {
+        Main.bot.eventChannel.subscribeAlways(MessageRecallEvent::class) {
             TODO("撤回消息处理")
         }
     }

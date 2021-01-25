@@ -9,7 +9,7 @@ import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
-import net.mamoe.mirai.message.MessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -77,8 +77,8 @@ class Danmu : FunctionListener {
                 } else {
                     GlobalScope.launch {
                         when {
-                            socket.isClosed -> event.reply("socket is closed")
-                            closed -> event.reply("live is closed")
+                            socket.isClosed -> event.subject.sendMessage("socket is closed")
+                            closed -> event.subject.sendMessage("live is closed")
                         }
                     }
                 }
@@ -141,13 +141,13 @@ class Danmu : FunctionListener {
                         GlobalScope.launch {
                             when (bulletData.type) {
                                 DanmuData.COMMENT_TYPE -> {
-                                    event.reply(bulletData.toString())
+                                    event.subject.sendMessage(bulletData.toString())
                                 }
                                 DanmuData.LIVE_START_TYPE -> {
-                                    event.reply("${roomID}开启了直播")
+                                    event.subject.sendMessage("${roomID}开启了直播")
                                 }
                                 DanmuData.LIVE_STOP_TYPE -> {
-                                    event.reply("${roomID}关闭了直播")
+                                    event.subject.sendMessage("${roomID}关闭了直播")
                                 }
                             }
                         }

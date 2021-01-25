@@ -18,9 +18,9 @@ import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.message.data.*
-import net.mamoe.mirai.message.uploadAsImage
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -125,8 +125,8 @@ class Dynamic : FunctionListener {
                             } catch (e: TimeoutException) {
                                 e.pushError()
                                 linkService.getGroupByUp(it).forEach {
-                                    val group = Bot.botInstances[0].getGroup(it)
-                                    group.sendMessage("查询${this}动态时超时!")
+                                    val group = Bot.instances[0].getGroup(it)
+                                    group?.sendMessage("查询${this}动态时超时!")
                                 }
                             }
                             delay(15 * 1000)
@@ -146,8 +146,8 @@ class Dynamic : FunctionListener {
                     Main.logger!!.error("B站动态api请求被拦截")
                     linkService.getGroupByUp(uid).forEach {
                         Main.scheduler.asyncTask {
-                            val group = Bot.botInstances[0].getGroup(it)
-                            group.sendMessage("B站动态api请求被拦截，请联系管理员!")
+                            val group = Bot.instances[0].getGroup(it)
+                            group?.sendMessage("B站动态api请求被拦截，请联系管理员!")
                             this
                         }
                     }
@@ -166,7 +166,7 @@ class Dynamic : FunctionListener {
                 dynamicService.update(uid, card.toString().substring(50..100))
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
-                        val group = Bot.botInstances[0].getGroup(it)
+                        val group = Bot.instances[0].getGroup(it)!!
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                         parse(group, card)
                         1
