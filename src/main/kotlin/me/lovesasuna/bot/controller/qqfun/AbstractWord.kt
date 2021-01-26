@@ -1,31 +1,33 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.OriginMain
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.registerDefaultPermission
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
 import javax.script.ScriptEngineManager
 
 
 /**
  * @author LovesAsuna
  **/
-class AbstractWord : FunctionListener {
+object AbstractWord : SimpleCommand(
+    owner = Main,
+    primaryName = "抽象话",
+    description = "抽象话翻译",
+    parentPermission = registerDefaultPermission()
+) {
     val se = ScriptEngineManager().getEngineByName("JavaScript")
 
-    override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.text()
-        if (!message.startsWith("/抽象话 ")) {
-            return false
-        }
+    @Handler
+    suspend fun CommandSender.handle(text: String) {
         try {
-            val str =  OriginMain.javaClass.classLoader.getResourceAsStream("chouxianghua.js").bufferedReader().readText()
+            val str = Main.javaClass.classLoader.getResourceAsStream("chouxianghua.js").bufferedReader().readText()
             se.eval(str)
-            val o = se.eval("chouxiang(\"" + message.split(" ")[1] + "\")")
-            box.reply(o.toString())
+            val o = se.eval("chouxiang(\"" + text + "\")")
+            sendMessage(o.toString())
         } catch (e: Exception) {
             e.printStackTrace()
-            box.reply("生成失败，请重试！！")
+            sendMessage("生成失败，请重试！！")
         }
-        return true
     }
 }

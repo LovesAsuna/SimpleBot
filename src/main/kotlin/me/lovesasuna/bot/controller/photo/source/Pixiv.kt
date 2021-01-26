@@ -2,7 +2,6 @@ package me.lovesasuna.bot.controller.photo.source
 
 import me.lovesasuna.bot.data.BotData.objectMapper
 import me.lovesasuna.bot.data.pushError
-import me.lovesasuna.bot.file.Config
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.IOException
 
@@ -11,7 +10,8 @@ import java.io.IOException
  */
 class Pixiv : PhotoSource {
     override fun fetchData(): String? {
-        val source = "https://api.lolicon.app/setu/?apikey=${Config.data.API["LoliconAPI"]?.random()}"
+        //todo config
+        val source = "https://api.lolicon.app/setu/?apikey=${""}"
         val result = NetWorkUtil[source]
         return try {
             val inputStream = result!!.second

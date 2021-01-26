@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -8,7 +9,9 @@ import java.net.URLEncoder
 
 object Baike : SimpleCommand(
     owner = Main,
-    primaryName = "baike"
+    primaryName = "baike",
+    description = "百度百科",
+    parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle(context : String) {

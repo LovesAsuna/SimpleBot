@@ -3,6 +3,7 @@ package me.lovesasuna.bot.controller.game
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
@@ -19,7 +20,8 @@ import kotlin.system.measureTimeMillis
 object RainbowSix : RawCommand(
     owner = Main,
     primaryName = "r6",
-    description = "彩虹六号战绩查询"
+    description = "彩虹六号战绩查询",
+    parentPermission = registerDefaultPermission()
 ) {
 
     override suspend fun CommandSender.onCommand(args: MessageChain) {

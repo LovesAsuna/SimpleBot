@@ -1,10 +1,9 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.OriginMain
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
@@ -20,7 +19,7 @@ import kotlin.random.Random
  * @author LovesAsuna
  */
 class KeyWord : FunctionListener {
-    private val imagePath = "${OriginMain.dataFolder.path}${File.separator}image${File.separator}"
+    private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
     override suspend fun execute(box: MessageBox): Boolean {
         val senderID = box.sender.id
@@ -40,7 +39,8 @@ class KeyWord : FunctionListener {
                 BotData.debug = !BotData.debug
                 return true
             }
-            message == "/keyword list" && Config.data.Admin.contains(senderID) -> {
+            //todo config
+            message == "/keyword list" && true -> {
                 val builder = StringBuilder()
                 builder.append("匹配规则  |  回复词  |  几率\n")
                 builder.append("======================\n")
@@ -61,7 +61,8 @@ class KeyWord : FunctionListener {
                 box.reply(builder.toString())
                 return true
             }
-            message.startsWith("/keyword remove ") && Config.data.Admin.contains(senderID) -> {
+            //todo config
+            message.startsWith("/keyword remove ") && true -> {
                 val id = BasicUtil.extractInt(message)
                 keyWordService.removeKeyWord(id).also {
                     if (it) {
@@ -72,7 +73,8 @@ class KeyWord : FunctionListener {
                 }
                 return true
             }
-            message.startsWith("/keyword add ") && Config.data.Admin.contains(senderID) -> {
+            //todo config
+            message.startsWith("/keyword add ") && true -> {
                 val prams = message.split(" ")
                 keyWordService.addKeyWord(groupID, prams[2], prams[3], BasicUtil.extractInt(prams[4])).also {
                     if (it) {

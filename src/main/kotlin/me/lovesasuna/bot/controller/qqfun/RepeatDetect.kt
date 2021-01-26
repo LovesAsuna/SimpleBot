@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import com.sun.imageio.plugins.gif.*
-import me.lovesasuna.bot.OriginMain
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.photo.ImageUtil
@@ -45,7 +45,7 @@ class RepeatDetect : FunctionListener {
         }
 
         if (isRepeat(messageList)) {
-            OriginMain.scheduler.asyncTask {
+            Main.scheduler.asyncTask {
 
                 val messageChain = box.event.message
                 when (messageChain.size) {

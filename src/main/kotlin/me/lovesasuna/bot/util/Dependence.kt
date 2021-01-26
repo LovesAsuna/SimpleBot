@@ -6,12 +6,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.Agent
-import me.lovesasuna.bot.OriginMain
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.DependenceData
 import me.lovesasuna.bot.util.file.FileUtil
 import me.lovesasuna.bot.util.network.DownloadUtil
-import me.lovesasuna.bot.util.plugin.Logger
 import me.lovesasuna.bot.util.plugin.display.ProgressBarImpl
 import java.io.File
 import java.io.IOException
@@ -51,7 +50,7 @@ class Dependence constructor(
         }
 
         private fun getFile(dependence: Dependence): File {
-            return File("${OriginMain.dataFolder.path}${File.separator}Dependencies${File.separator}${dependence.fileName}")
+            return File("${Main.dataFolder.path}${File.separator}Dependencies${File.separator}${dependence.fileName}")
         }
 
         private fun getResource(dependence: Dependence) {
@@ -96,7 +95,6 @@ class Dependence constructor(
         }
 
         fun init() {
-            Logger.log(Logger.Messages.DOWNLOAD_DEPEN, Logger.LogLevel.CONSOLE)
             GlobalScope.launch {
                 val dependencies = ArrayList<Dependence>()
                 dependencies.apply {
@@ -176,7 +174,7 @@ class Dependence constructor(
         }
 
         init {
-            depenDir = File("${OriginMain.dataFolder.path}${File.separator}Dependencies").also {
+            depenDir = File("${Main.dataFolder.path}${File.separator}Dependencies").also {
                 if (!it.exists()) {
                     Files.createDirectories(Paths.get(it.toURI()))
                 }

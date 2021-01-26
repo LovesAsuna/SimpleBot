@@ -2,6 +2,7 @@ package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
@@ -14,7 +15,9 @@ import java.nio.charset.StandardCharsets
 
 object Hitokoto : RawCommand(
     owner = Main,
-    primaryName = "一言"
+    primaryName = "一言",
+    description = "一言",
+    parentPermission = registerDefaultPermission()
 ) {
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         when (args.size) {

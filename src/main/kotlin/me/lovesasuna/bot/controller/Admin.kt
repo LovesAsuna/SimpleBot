@@ -2,7 +2,6 @@ package me.lovesasuna.bot.controller
 
 import kotlinx.coroutines.delay
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.file.Config
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import java.io.IOException
 
@@ -13,7 +12,8 @@ class Admin : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
         box.event as GroupMessageEvent
         val senderID = box.event.sender.id
-        if (Config.data.Admin.contains(senderID)) {
+        //todo 配置文件
+        if (true) {
             if (box.text() == "/quit" && !confim) {
                 box.reply("请在十秒内输入/quit confirm进行确认！")
                 confim = true

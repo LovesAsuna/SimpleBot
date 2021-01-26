@@ -1,14 +1,15 @@
 package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
-import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.lanzou.util.NetWorkUtil
+import net.mamoe.mirai.console.permission.Permission
+import net.mamoe.mirai.console.permission.PermissionId
+import net.mamoe.mirai.console.permission.PermissionService
 import java.io.File
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
-
 
 /**
  * @author LovesAsuna
@@ -74,9 +75,11 @@ object BasicUtil {
             Paths.get(c.protectionDomain.codeSource.location.path).parent.toFile()
         }
     }
+}
 
-    fun getLocation(fileName: String): File {
-        return File("${getLocation(OriginMain::class.java).path}${File.separator}$fileName")
-    }
+fun registerDefaultPermission() = registerPermission("default", "默认权限")
 
+fun registerPermission(name: String, description: String): Permission {
+    val permissionId = PermissionId("bot", name)
+    return PermissionService.INSTANCE[permissionId] ?: PermissionService.INSTANCE.register(permissionId, description)
 }

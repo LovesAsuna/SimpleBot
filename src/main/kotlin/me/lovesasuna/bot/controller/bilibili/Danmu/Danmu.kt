@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.data.pushError
-import me.lovesasuna.bot.file.Config
 import me.lovesasuna.bot.util.BasicUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.ByteArrayInputStream
@@ -44,7 +43,8 @@ class Danmu : FunctionListener {
                 scheduledFuture.cancel(true)
                 box.reply("与直播间主动断开连接!")
             }
-            message.startsWith("/直播 send ") && Config.data.Admin.contains(box.event.sender.id) -> {
+            //todo config
+            message.startsWith("/直播 send ") &&true -> {
                 val roomID = message.split(" ")[2].toInt()
                 PacketManager.sendDanmu(roomID, message.replaceFirst("/直播 send $roomID ", ""))
                 box.reply("弹幕发送成功!")

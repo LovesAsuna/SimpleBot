@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -14,7 +15,9 @@ import java.time.format.DateTimeFormatter
  **/
 object WhichTime : SimpleCommand(
     owner = Main,
-    primaryName = "几点了"
+    primaryName = "几点了",
+    description = "发送含有当前时间的图片",
+    parentPermission = registerDefaultPermission()
 ) {
     val formatter = DateTimeFormatter.ofPattern("HH-mm")
 

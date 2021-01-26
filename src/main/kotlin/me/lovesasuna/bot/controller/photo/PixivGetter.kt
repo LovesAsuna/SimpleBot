@@ -1,8 +1,8 @@
 package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -12,7 +12,9 @@ import java.io.InputStream
 
 object PixivGetter : SimpleCommand(
     owner = Main,
-    primaryName = "pixiv work"
+    primaryName = "pixiv work",
+    description = "反代理P站图片",
+    parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle(ID: Int) {
@@ -31,7 +33,7 @@ object PixivGetter : SimpleCommand(
         var originInputStream: InputStream?
         if (size == 0) {
             if (BotData.debug) sendMessage("尝试复制IO流")
-            OriginMain.scheduler.withTimeOut(suspend {
+            Main.scheduler.withTimeOut(suspend {
                 originInputStream =
                     NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
                 sendMessage(originInputStream!!.uploadAsImage(getGroupOrNull()!!))

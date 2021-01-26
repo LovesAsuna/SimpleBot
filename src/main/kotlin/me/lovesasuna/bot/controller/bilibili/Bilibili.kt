@@ -3,6 +3,7 @@ package me.lovesasuna.bot.controller.bilibili
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
@@ -20,6 +21,7 @@ object Bilibili : RawCommand(
     owner = Main,
     primaryName = "/converse",
     description = "B站视频解析",
+    parentPermission = registerDefaultPermission()
 ) {
     private val pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 

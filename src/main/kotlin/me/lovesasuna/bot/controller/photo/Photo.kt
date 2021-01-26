@@ -6,6 +6,7 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -17,7 +18,9 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object Photo : CompositeCommand(
     owner = Main,
-    primaryName = "色图"
+    primaryName = "色图",
+    description = "从多个图源中获取色图",
+    parentPermission = registerDefaultPermission()
 ) {
     lateinit var photoSource: PhotoSource
     val bannotice = { sender: CommandSender ->

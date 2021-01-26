@@ -6,13 +6,16 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
+import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import java.io.IOException
 
 object McQuery : SimpleCommand(
     owner = Main,
-    primaryName = "mcquery"
+    primaryName = "mcquery",
+    description = "MC服务器查询",
+    parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle(ip: String) {

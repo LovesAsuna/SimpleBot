@@ -1,8 +1,7 @@
 package me.lovesasuna.bot.util
 
-import me.lovesasuna.bot.OriginMain
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.pushError
-import me.lovesasuna.bot.util.plugin.Logger
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
@@ -13,7 +12,7 @@ import java.util.jar.JarFile
 import kotlin.collections.HashSet
 
 class ClassUtil {
-    private val jarFile = JarFile(OriginMain::class.java.protectionDomain.codeSource.location.path)
+    private val jarFile = JarFile(Main::class.java.protectionDomain.codeSource.location.path)
 
     @Deprecated("不建议使用")
     fun getFunctions(): List<String> {
@@ -69,9 +68,8 @@ class ClassUtil {
                                             try {
                                                 classes.add(Class.forName("$packageNameClone.$className"))
                                             } catch (e: Throwable) {
-                                                Logger.log(
-                                                    "Error occurs while adding class [$packageNameClone.$className]",
-                                                    Logger.LogLevel.ERROR
+                                                Main.logger.info(
+                                                    "Error occurs while adding class [$packageNameClone.$className]"
                                                 )
                                                 e.printStackTrace()
                                             }

@@ -1,10 +1,10 @@
 package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.OriginMain
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -18,7 +18,9 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object PictureSearch : SimpleCommand(
     owner = Main,
-    primaryName = "搜图"
+    primaryName = "搜图",
+    description = "以图搜图",
+    parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle(type: Int, image: Image) {
@@ -47,7 +49,7 @@ object PictureSearch : SimpleCommand(
             result.extUrls.forEach {
                 builder.append(it).append("\n")
             }
-            OriginMain.scheduler.withTimeOut(suspend {
+            Main.scheduler.withTimeOut(suspend {
                 val uploadImage = NetWorkUtil[result.thumbnail]!!.second.uploadAsImage(getGroupOrNull()!!) as Message
                 sendMessage(
                     uploadImage + PlainText(

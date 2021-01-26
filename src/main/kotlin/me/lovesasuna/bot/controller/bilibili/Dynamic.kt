@@ -12,6 +12,7 @@ import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
@@ -30,7 +31,8 @@ import java.util.concurrent.TimeoutException
 object Dynamic : CompositeCommand(
     owner = Main,
     primaryName = "subscribe",
-    description = "B站Up动态订阅"
+    description = "B站Up动态订阅",
+    parentPermission = registerDefaultPermission()
 ) {
     var task: Pair<Job, PluginScheduler.RepeatTaskReceipt>
     val dynamicService: DynamicService = DynamicServiceImpl

@@ -1,27 +1,30 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
-
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
 
 /**
  * @author LovesAsuna
  **/
-class DogLicking : FunctionListener {
-    override suspend fun execute(box: MessageBox): Boolean {
-        if (box.text() != "/舔狗日记") {
-            return false
-        }
+object DogLicking : SimpleCommand(
+    owner = Main,
+    primaryName = "/舔狗日记",
+    description = "舔狗日记",
+    parentPermission = registerDefaultPermission()
+) {
+    @Handler
+    suspend fun CommandSender.handle() {
         val node = BotData.objectMapper.readTree(NetWorkUtil["http://api.yyhy.me/tg.php?type=api"]!!.second)
-        box.reply(
+        sendMessage(
             if (node["code"].asInt() == 1) {
                 node["date"].asText() + "\n" + node["content"].asText()
             } else {
                 "获取失败！！"
             }
         )
-        return true
     }
 }
