@@ -1,8 +1,6 @@
 ## Bot
 
-一个基于 [Mirai](https://github.com/mamoe/mirai) 开发的机器人
-
-当 [Mirai-Console](https://github.com/mamoe/mirai-console) 的正式版推出，机器人将作为Console插件进行开发
+一个基于 [Mirai-Console](https://github.com/mamoe/mirai-console) 开发的机器人插件
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0364d226b78149979387cb47f44b365c)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&utm_medium=referral&utm_content=LovesAsuna/Mirai-Bot&utm_campaign=Badge_Grade_Dashboard)
 [![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
@@ -52,11 +50,9 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 ### 直接下载
 
 1. 到 [蓝奏云](https://wwa.lanzous.com/b0epzhmba) 下载最新版本的 jar
-2. 使用 cmd 启动 Bot, 然后去 config.json修改api
+2. 将插件jar放至plugins目录
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
 ## 📜 协议
 
 [AGPLv3 with Mamoe Exceptions](https://github.com/mamoe/mirai/blob/master/LICENSE)
-
-机器人采用的部分技术如果侵权，请直接联系邮箱[qq625924077@gmail.com](mailto:qq625924077@gmail.com)
