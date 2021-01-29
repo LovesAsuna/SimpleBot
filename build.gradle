@@ -31,7 +31,7 @@ shadowJar {
 }
 
 dependencies {
-    compileOnly 'net.mamoe:mirai-console:2.0.0'
+    compileOnly 'net.mamoe:mirai-console:2.2.0'
     compileOnly 'net.mamoe:mirai-core:2.1.0'
     compileOnly 'com.google.auto.service:auto-service:1.0-rc7'
     implementation 'org.jsoup:jsoup:1.13.1'
