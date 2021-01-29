@@ -1,11 +1,8 @@
 package me.lovesasuna.bot
 
 import com.google.auto.service.AutoService
-import me.lovesasuna.bot.controller.bilibili.Dynamic
-import me.lovesasuna.bot.controller.qqfun.Make
 import me.lovesasuna.bot.controller.qqfun.Nbnhhsh
 import me.lovesasuna.bot.util.plugin.PluginScheduler
-import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
