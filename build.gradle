@@ -12,7 +12,7 @@ version '3.1.0'
 
 ext {
     workDir = 'E:\\work\\Mirai-Console\\plugins'
-    mirai_Version = '2.3.1'
+    mirai_Version = '2.3.2'
 }
 
 sourceCompatibility = 8
@@ -21,6 +21,7 @@ targetCompatibility = 8
 repositories {
     jcenter()
     mavenCentral()
+    maven { url('https://dl.bintray.com/him188moe/mirai') }
 }
 
 defaultTasks("shadowJar")
@@ -32,8 +33,8 @@ shadowJar {
 }
 
 dependencies {
-    compileOnly 'net.mamoe:mirai-console:' + mirai_Version
-    compileOnly 'net.mamoe:mirai-core:' + mirai_Version
+    implementation 'net.mamoe:mirai-console:' + mirai_Version
+    implementation 'net.mamoe:mirai-core:' + mirai_Version
     compileOnly 'com.google.auto.service:auto-service:1.0-rc7'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
