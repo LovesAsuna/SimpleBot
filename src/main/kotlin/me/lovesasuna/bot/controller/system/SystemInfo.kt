@@ -1,7 +1,9 @@
 package me.lovesasuna.bot.controller.system
 
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.registerDefaultPermission
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
 import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
 import java.text.DecimalFormat
@@ -13,15 +15,18 @@ import java.util.concurrent.TimeUnit
 /**
  * @author LovesAsuna
  **/
-class SystemInfo : FunctionListener {
+object SystemInfo : SimpleCommand(
+    owner = Main,
+    primaryName = "统计",
+    "运行状态",
+    description = "系统信息",
+    parentPermission = registerDefaultPermission()
+) {
     private val systemInfo = SystemInfo()
     val startTime = LocalDateTime.now()
 
-    override suspend fun execute(box: MessageBox): Boolean {
-        val message = box.text()
-        if (message != "/统计" && message != "/运行状态") {
-            return false
-        }
+    @Handler
+    suspend fun CommandSender.handle() {
         val processor = systemInfo.hardware.processor
         val prevTicks = processor.systemCpuLoadTicks
         // 睡眠1s
@@ -80,8 +85,7 @@ class SystemInfo : FunctionListener {
         jvm已使用内存：${formatByte(jvmTotalMemoryByte - freeMemoryByte)}
         java版本：$jdkVersion
         """.trimIndent()
-        box.reply(info)
-        return true
+        sendMessage(info)
     }
 
     private fun formatByte(byteNumber: Long): String? {
