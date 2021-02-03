@@ -1,13 +1,15 @@
 package me.lovesasuna.bot
 
 import com.google.auto.service.AutoService
-import me.lovesasuna.bot.controller.qqfun.Nbnhhsh
+import me.lovesasuna.bot.util.ClassUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.Command
+import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import java.lang.management.ManagementFactory
+import kotlin.reflect.jvm.jvmName
 
 /**
  * @author LovesAsuna
@@ -21,7 +23,7 @@ object Main : KotlinPlugin(
     )
 ) {
     val scheduler = PluginScheduler()
-    lateinit var bot : Bot
+    lateinit var bot: Bot
     override fun onEnable() {
         logger.info("[Mirai-Bot] 插件已成功启用!")
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
@@ -33,6 +35,14 @@ object Main : KotlinPlugin(
         } else {
             logger.info("Unable to read system info")
         }
-       Nbnhhsh.register()
+        ClassUtil.getClasses("me.lovesasuna.bot.controller").forEach {
+            val kClass = it.kotlin
+            if (!kClass.jvmName.contains("$")) {
+                val objectInstance = kClass.objectInstance
+                if (objectInstance != null) {
+                    CommandManager.registerCommand(objectInstance as Command)
+                }
+            }
+        }
     }
 }
