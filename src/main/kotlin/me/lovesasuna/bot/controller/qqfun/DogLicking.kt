@@ -6,25 +6,21 @@ import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 /**
  * @author LovesAsuna
  **/
 object DogLicking : SimpleCommand(
     owner = Main,
-    primaryName = "/舔狗日记",
+    primaryName = "舔狗日记",
     description = "舔狗日记",
     parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle() {
-        val node = BotData.objectMapper.readTree(NetWorkUtil["http://api.yyhy.me/tg.php?type=api"]!!.second)
-        sendMessage(
-            if (node["code"].asInt() == 1) {
-                node["date"].asText() + "\n" + node["content"].asText()
-            } else {
-                "获取失败！！"
-            }
-        )
+        val reader = BufferedReader(InputStreamReader(NetWorkUtil["https://v1.alapi.cn/api/dog?format=text"]!!.second, "UTF-8"))
+        sendMessage(reader.readLine())
     }
 }
