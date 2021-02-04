@@ -35,14 +35,15 @@ object Dynamic : CompositeCommand(
     description = "B站Up动态订阅",
     parentPermission = registerDefaultPermission()
 ) {
-    var task: Pair<Job, PluginScheduler.RepeatTaskReceipt>
+    var task: Pair<Job, PluginScheduler.RepeatTaskReceipt> = launchTask()
+
     val dynamicService: DynamicService = DynamicServiceImpl
     val linkService: LinkService = LinkServiceImpl
     var intercept = false
     var time = ""
 
-    init {
-        task = BasicUtil.scheduleWithFixedDelay({
+    private fun launchTask() : Pair<Job, PluginScheduler.RepeatTaskReceipt>{
+        return BasicUtil.scheduleWithFixedDelay({
             linkService.getUps().forEach {
                 runBlocking {
                     with(it) {
@@ -69,6 +70,21 @@ object Dynamic : CompositeCommand(
                 }
             }
         }, 0, 1, TimeUnit.MINUTES)
+    }
+
+    @SubCommand
+    fun CommandSender.run() {
+        task = launchTask()
+    }
+
+    @SubCommand
+    suspend fun CommandSender.stop() {
+        if (task.second.cancelled) {
+            sendMessage("目前无正在运行的任务!")
+            return
+        }
+        task.first.cancel()
+        task.second.cancelled = true
     }
 
     @SubCommand
