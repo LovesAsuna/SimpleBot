@@ -12,12 +12,15 @@ import java.io.InputStream
 
 object PixivGetter : SimpleCommand(
     owner = Main,
-    primaryName = "pixiv work",
+    primaryName = "pixiv",
     description = "反代理P站图片",
     parentPermission = registerDefaultPermission()
 ) {
     @Handler
-    suspend fun CommandSender.handle(ID: Int) {
+    suspend fun CommandSender.handle(command: String, ID: Int) {
+        if (command != "work") {
+            return
+        }
         sendMessage("获取中,请稍后..")
         val reader = NetWorkUtil.post(
             "https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray(),
