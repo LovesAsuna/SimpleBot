@@ -73,8 +73,12 @@ object Dynamic : CompositeCommand(
     }
 
     @SubCommand
-    fun CommandSender.run() {
-        task = launchTask()
+    suspend fun CommandSender.run() {
+        if (!task.second.cancelled) {
+           sendMessage("已经有正在运行的任务！")
+        } else {
+            task = launchTask()
+        }
     }
 
     @SubCommand
