@@ -13,6 +13,7 @@ import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
+import me.lovesasuna.bot.util.registerPermission
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
@@ -39,13 +40,9 @@ object Dynamic : CompositeCommand(
     val linkService: LinkService = LinkServiceImpl
     var intercept = false
     var time = ""
-    var start = false
 
     init {
         task = BasicUtil.scheduleWithFixedDelay({
-            if (!start) {
-                return@scheduleWithFixedDelay
-            }
             linkService.getUps().forEach {
                 runBlocking {
                     with(it) {
@@ -114,7 +111,7 @@ object Dynamic : CompositeCommand(
 
     @SubCommand
     suspend fun CommandSender.debug() {
-        if (hasPermission(PermissionId("bot", "admin"))) {
+        if (hasPermission(registerPermission("admin", "管理员权限"))) {
             sendMessage("开始收集信息...")
             val builder = StringBuilder()
             builder.append("Task状态: \n")
