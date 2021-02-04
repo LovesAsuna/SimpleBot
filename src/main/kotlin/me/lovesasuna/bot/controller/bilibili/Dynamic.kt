@@ -14,6 +14,7 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
@@ -26,9 +27,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class Dynamic : FunctionListener {
-    init {
-        start = true
-    }
 
     override suspend fun execute(box: MessageBox): Boolean {
         box.event as GroupMessageEvent
@@ -58,9 +56,9 @@ class Dynamic : FunctionListener {
                         box.reply("开始收集信息...")
                         val builder = StringBuilder()
                         builder.append("Task状态: \n")
-                        builder.append("Active: ${task.isActive}\n")
-                        builder.append("Completed: ${task.isCompleted}\n")
-                        builder.append("Cancelled: ${task.isCancelled}\n\n")
+                        builder.append("Active: ${task.first.isActive}\n")
+                        builder.append("Completed: ${task.first.isCompleted}\n")
+                        builder.append("Cancelled: ${task.first.isCancelled}\n\n")
                         builder.append("最后查询时间: $time\n\n")
                         builder.append("是否被拦截: $intercept\n\n")
                         builder.append("订阅的UP集合: ${linkService.getUps()}\n\n")
@@ -91,24 +89,36 @@ class Dynamic : FunctionListener {
                         this
                     }
                 }
+                "run" -> {
+                    if (!task.second.cancelled) {
+                        box.reply("已经有正在运行的任务！")
+                    } else {
+                        task = launchTask()
+                    }
+                }
+                "stop" -> {
+                    if (task.second.cancelled) {
+                        box.reply("目前无正在运行的任务!")
+                    }
+                    task.first.cancel()
+                    task.second.cancelled = true
+                }
             }
         }
         return true
     }
 
+
+
     companion object {
-        private var task: Job
+        private var task: Pair<Job, PluginScheduler.RepeatTaskReceipt> = launchTask()
         val dynamicService: DynamicService = DynamicServiceImpl
         val linkService: LinkService = LinkServiceImpl
         var intercept = false
         var time = ""
-        var start = false
 
-        init {
-            task = BasicUtil.scheduleWithFixedDelay({
-                if (!start) {
-                    return@scheduleWithFixedDelay
-                }
+        private fun launchTask() : Pair<Job, PluginScheduler.RepeatTaskReceipt>{
+            return BasicUtil.scheduleWithFixedDelay({
                 linkService.getUps().forEach {
                     runBlocking {
                         with(it) {
@@ -134,7 +144,7 @@ class Dynamic : FunctionListener {
 
                     }
                 }
-            }, 0, 1, TimeUnit.MINUTES).first
+            }, 0, 1, TimeUnit.MINUTES)
         }
 
         private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
