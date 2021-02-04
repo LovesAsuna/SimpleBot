@@ -41,8 +41,6 @@ class ClassUtil {
             val dirs: Enumeration<URL>
             try {
                 dirs = classLoader.getResources(packageDirName)
-                Main.logger.info(classLoader.toString())
-                Main.logger.info(dirs.hasMoreElements().toString())
                 while (dirs.hasMoreElements()) {
                     val url = dirs.nextElement() as URL
                     val protocol: String = url.protocol
