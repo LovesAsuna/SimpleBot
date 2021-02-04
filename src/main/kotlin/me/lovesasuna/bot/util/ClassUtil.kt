@@ -31,6 +31,7 @@ class ClassUtil {
         @JvmStatic
         fun getClasses(
             packageName: String,
+            classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
             annotationClass: Class<out Annotation>? = null
         ): Set<Class<*>> {
             var packageNameClone = packageName
@@ -39,7 +40,9 @@ class ClassUtil {
             val packageDirName = packageNameClone.replace('.', '/')
             val dirs: Enumeration<URL>
             try {
-                dirs = Thread.currentThread().contextClassLoader.getResources(packageDirName)
+                dirs = classLoader.getResources(packageDirName)
+                Main.logger.info(classLoader.toString())
+                Main.logger.info(dirs.hasMoreElements().toString())
                 while (dirs.hasMoreElements()) {
                     val url = dirs.nextElement() as URL
                     val protocol: String = url.protocol
@@ -66,7 +69,7 @@ class ClassUtil {
                                         if (name.endsWith(".class") && !entry.isDirectory) {
                                             val className = name.substring(packageNameClone.length + 1, name.length - 6)
                                             try {
-                                                classes.add(Class.forName("$packageNameClone.$className"))
+                                                classes.add(classLoader.loadClass("$packageNameClone.$className"))
                                             } catch (e: Throwable) {
                                                 Main.logger.info(
                                                     "Error occurs while adding class [$packageNameClone.$className]"
