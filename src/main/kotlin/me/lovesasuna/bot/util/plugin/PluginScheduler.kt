@@ -65,7 +65,6 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = GlobalSc
      * @param delayMs 超时时间
      * @param notCompletedAction 超时动作
      */
-    @ExperimentalCoroutinesApi
     @Throws(TimeoutException::class)
     suspend fun <R> withTimeOut(consumer: suspend () -> R, delayMs: Long, notCompletedAction: suspend () -> Unit) {
         val result = GlobalScope.async {
