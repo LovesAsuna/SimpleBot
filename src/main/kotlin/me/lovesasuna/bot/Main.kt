@@ -9,6 +9,8 @@ import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import java.lang.management.ManagementFactory
+import java.util.logging.Level
+import java.util.logging.Logger
 import kotlin.reflect.jvm.jvmName
 
 /**
@@ -25,6 +27,7 @@ object Main : KotlinPlugin(
     val scheduler = PluginScheduler()
     lateinit var bot: Bot
     override fun onEnable() {
+        Logger.getLogger("").level = Level.OFF
         logger.info("[Mirai-Bot] 插件已成功启用!")
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
         val osMX = ManagementFactory.getOperatingSystemMXBean()
@@ -35,11 +38,11 @@ object Main : KotlinPlugin(
         } else {
             logger.info("Unable to read system info")
         }
-        ClassUtil.getClasses("me.lovesasuna.bot.controller").forEach {
+        ClassUtil.getClasses("me.lovesasuna.bot.controller", Main::class.java.classLoader).forEach {
             val kClass = it.kotlin
             if (!kClass.jvmName.contains("$")) {
                 val objectInstance = kClass.objectInstance
-                if (objectInstance != null) {
+                if (objectInstance != null && Command::class.java.isInstance(objectInstance)) {
                     CommandManager.registerCommand(objectInstance as Command)
                 }
             }
