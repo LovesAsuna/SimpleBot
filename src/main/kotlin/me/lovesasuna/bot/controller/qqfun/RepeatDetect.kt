@@ -4,8 +4,8 @@ import com.sun.imageio.plugins.gif.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
@@ -64,7 +64,7 @@ class RepeatDetect : FunctionListener {
                             }
                             is Image -> {
                                 val url = box.message(Image::class.java)!!.queryUrl()
-                                val cloneInputStream = NetWorkUtil.inputStreamClone(NetWorkUtil[url]?.second!!)!!
+                                val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(OkHttpUtil[url]))!!
                                 when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
                                     // 暂时移除对gif的支持
                                     "gif/unsupported" -> {

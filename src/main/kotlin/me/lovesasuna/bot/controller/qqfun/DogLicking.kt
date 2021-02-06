@@ -1,13 +1,10 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 /**
  * @author LovesAsuna
@@ -20,7 +17,6 @@ object DogLicking : SimpleCommand(
 ) {
     @Handler
     suspend fun CommandSender.handle() {
-        val reader = BufferedReader(InputStreamReader(NetWorkUtil["https://v1.alapi.cn/api/dog?format=text"]!!.second, "UTF-8"))
-        sendMessage(reader.readLine())
+        sendMessage(OkHttpUtil.getStr("https://v1.alapi.cn/api/dog?format=text"))
     }
 }

@@ -1,8 +1,8 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -24,6 +24,6 @@ object WhichTime : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle() {
         val time = formatter.format(LocalDateTime.now())
-        sendMessage(NetWorkUtil["https://ty.kuku.me/images/time/$time.jpg"]!!.second.uploadAsImage(getGroupOrNull()!!))
+        sendMessage(OkHttpUtil.getIs(OkHttpUtil["https://ty.kuku.me/images/time/$time.jpg"]).uploadAsImage(getGroupOrNull()!!))
     }
 }

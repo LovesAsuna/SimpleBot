@@ -1,9 +1,8 @@
 package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
@@ -19,7 +18,7 @@ object MouthSmell : SimpleCommand(
 ) {
     @Handler
     suspend fun CommandSender.handle() {
-        val node = BotData.objectMapper.readTree(NetWorkUtil["https://s.nmsl8.club/getloveword?type=2"]!!.second)
+        val node = OkHttpUtil.getJson("https://s.nmsl8.club/getloveword?type=2")
         sendMessage(node["content"].asText())
     }
 }
@@ -32,7 +31,7 @@ object MouthSweat : SimpleCommand(
 ) {
     @Handler
     suspend fun CommandSender.handle() {
-        val node = BotData.objectMapper.readTree(NetWorkUtil["https://s.nmsl8.club/getloveword?type=1"]!!.second)
+        val node = OkHttpUtil.getJson("https://s.nmsl8.club/getloveword?type=1")
         sendMessage(node["content"].asText())
     }
 }

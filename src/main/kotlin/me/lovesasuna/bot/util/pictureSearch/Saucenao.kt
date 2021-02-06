@@ -1,18 +1,15 @@
 package me.lovesasuna.bot.util.pictureSearch
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Config
-import me.lovesasuna.lanzou.util.NetWorkUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 
 object Saucenao : PictureSearchSource {
     private val api =
         "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.SauceNaoAPI}&numres=16&url="
-    private val mapper = ObjectMapper()
 
     override fun search(url: String): List<Result> {
-        val inputStream = NetWorkUtil[api + url]?.second ?: return emptyList()
-        val results = mapper.readTree(inputStream)["results"]
+        val results =  OkHttpUtil.getJson(api + url)["results"]
         val resultList = ArrayList<Result>()
         for (i in 0..results.size()) {
             val result = results[i]

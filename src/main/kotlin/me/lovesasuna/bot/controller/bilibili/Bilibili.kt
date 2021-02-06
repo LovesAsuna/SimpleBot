@@ -3,18 +3,14 @@ package me.lovesasuna.bot.controller.bilibili
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
 object Bilibili : RawCommand(
@@ -28,26 +24,27 @@ object Bilibili : RawCommand(
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         lateinit var av: String
         lateinit var bv: String
-        lateinit var reader: BufferedReader
-        var inputStream: InputStream? = null
 
-        when {
-            args.contentToString().toLowerCase().contains("av") -> {
-                av = BasicUtil.extractInt(args.content).toString()
-                inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
-            }
-            args.contentToString().contains("BV") -> {
-                val matcher = pattern.matcher(args.content)
-                bv = if (matcher.find()) {
-                    matcher.group()
-                } else {
-                    return
+        val line = OkHttpUtil.getStr(
+            when {
+                args.contentToString().toLowerCase().contains("av") -> {
+                    av = BasicUtil.extractInt(args.content).toString()
+                    "https://api.bilibili.com/x/web-interface/view?aid=$av"
                 }
-                inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?bvid=$bv"]?.second
+                args.contentToString().contains("BV") -> {
+                    val matcher = pattern.matcher(args.content)
+                    bv = if (matcher.find()) {
+                        matcher.group()
+                    } else {
+                        return
+                    }
+                    "https://api.bilibili.com/x/web-interface/view?bvid=$bv"
+                }
+                else -> {
+                    IllegalArgumentException("不正确的视频ID").let { "" }
+                }
             }
-        }
-        reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
-        val line = reader.readLine()
+        )
         if (!line.startsWith("{\"code\":0")) {
             return
         }
@@ -91,6 +88,6 @@ object Bilibili : RawCommand(
             .append(like)
             .append("\n")
             .append(desc)
-        sendMessage(NetWorkUtil[pic]!!.second.uploadAsImage(getGroupOrNull()!!) + builder.toString())
+        sendMessage(OkHttpUtil.getIs(OkHttpUtil[pic]).uploadAsImage(getGroupOrNull()!!) + builder.toString())
     }
 }

@@ -6,8 +6,8 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -42,7 +42,9 @@ object Photo : CompositeCommand(
                 sendMessage("达到每日调用额度限制")
             } else {
                 val url = data.split("|")[0]
-                sendMessage(NetWorkUtil[url]!!.second.uploadAsImage(getGroupOrNull()!!) + PlainText("\n剩余次数: $quota"))
+                sendMessage(
+                    OkHttpUtil.getIs(OkHttpUtil[url]).uploadAsImage(getGroupOrNull()!!) + PlainText("\n剩余次数: $quota")
+                )
             }
         } else {
             bannotice.invoke(this)
@@ -53,7 +55,9 @@ object Photo : CompositeCommand(
     suspend fun CommandSender.random() {
         if (random) {
             photoSource = Random()
-            sendMessage(photoSource.fetchData()?.let { NetWorkUtil[it] }!!.second.uploadAsImage(getGroupOrNull()!!))
+            sendMessage(
+                photoSource.fetchData()?.let { OkHttpUtil.getIs(OkHttpUtil[it]) }!!.uploadAsImage(getGroupOrNull()!!)
+            )
         } else {
             bannotice.invoke(this)
         }

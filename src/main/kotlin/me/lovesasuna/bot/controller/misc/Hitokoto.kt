@@ -1,17 +1,12 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.content
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 
 object Hitokoto : RawCommand(
     owner = Main,
@@ -23,8 +18,7 @@ object Hitokoto : RawCommand(
         when (args.size) {
             0 -> {
                 // 如果不带参数,默认全部获取
-                val inputStream = NetWorkUtil["https://v1.hitokoto.cn/"]?.second ?: return
-                inputStreamToResult(inputStream, this)
+                getResult("https://v1.hitokoto.cn/", this)
             }
             1 -> {
                 when (args[0].content) {
@@ -44,22 +38,15 @@ object Hitokoto : RawCommand(
                         )
                     }
                     else -> {
-                        val inputStream = NetWorkUtil["https://v1.hitokoto.cn/?c=" + args[0]]?.second ?: return
-                        inputStreamToResult(inputStream, this)
+                        getResult("https://v1.hitokoto.cn/?c=" + args[0], this)
                     }
                 }
             }
         }
     }
 
-    private suspend fun inputStreamToResult(inputStream: InputStream, sender: CommandSender) {
-        val reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
-        var string: String?
-        var text: String? = ""
-        while (reader.readLine().also { string = it } != null) {
-            text += string
-        }
-        val `object` = BotData.objectMapper.readTree(text)
+    private suspend fun getResult(url: String, sender: CommandSender) {
+        val `object` = OkHttpUtil.getJson(url)
         val hitokoto = `object`["hitokoto"].asText()
         val from = `object`["from"].asText()
         sender.sendMessage("『 $hitokoto 』- 「$from」")

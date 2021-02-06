@@ -2,10 +2,10 @@ package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -50,7 +50,7 @@ object PictureSearch : SimpleCommand(
                 builder.append(it).append("\n")
             }
             Main.scheduler.withTimeOut(suspend {
-                val uploadImage = NetWorkUtil[result.thumbnail]!!.second.uploadAsImage(getGroupOrNull()!!) as Message
+                val uploadImage = OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(getGroupOrNull()!!) as Message
                 sendMessage(
                     uploadImage + PlainText(
                         "\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${

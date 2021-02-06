@@ -11,19 +11,21 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.registerPermission
 import me.lovesasuna.bot.util.string.StringUtil
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
-import net.mamoe.mirai.console.permission.PermissionId
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.LightApp
+import net.mamoe.mirai.message.data.Message
+import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.messageChainOf
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -42,7 +44,7 @@ object Dynamic : CompositeCommand(
     var intercept = false
     var time = ""
 
-    private fun launchTask() : Pair<Job, PluginScheduler.RepeatTaskReceipt>{
+    private fun launchTask(): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         return BasicUtil.scheduleWithFixedDelay({
             linkService.getUps().forEach {
                 runBlocking {
@@ -75,7 +77,7 @@ object Dynamic : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.run() {
         if (!task.second.cancelled) {
-           sendMessage("已经有正在运行的任务！")
+            sendMessage("已经有正在运行的任务！")
         } else {
             task = launchTask()
         }
@@ -156,7 +158,8 @@ object Dynamic : CompositeCommand(
 
     private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
         val reader =
-            NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
+            OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
+                .bufferedReader()
         val root = ObjectMapper().readTree(reader.readLine())
         if (root.toString().contains("拦截")) {
             if (!intercept) {
@@ -228,7 +231,7 @@ object Dynamic : CompositeCommand(
         val pictures = origin["item"]["pictures"]
         var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
         for (i in 0 until pictures.size()) {
-            messageChain += NetWorkUtil[pictures[i]["img_src"].asText()]!!.second.uploadAsImage(group)
+            messageChain += OkHttpUtil.getIs(OkHttpUtil[pictures[i]["img_src"].asText()]).uploadAsImage(group)
         }
         return messageChain
     }
