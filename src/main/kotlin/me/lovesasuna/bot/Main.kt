@@ -6,6 +6,8 @@ import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
+import net.mamoe.mirai.console.data.AutoSavePluginConfig
+import net.mamoe.mirai.console.data.value
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import java.lang.management.ManagementFactory
@@ -47,5 +49,12 @@ object Main : KotlinPlugin(
                 }
             }
         }
+        Config.reload()
     }
+}
+
+object Config : AutoSavePluginConfig("config") {
+    val LoliconAPI by value<String>()
+    val SauceNaoAPI by value<String>()
+    val DisableFunction: List<String> by value()
 }
