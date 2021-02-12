@@ -6,9 +6,9 @@ import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
@@ -58,7 +58,7 @@ class PictureSearch : FunctionListener {
                     builder.append(it).append("\n")
                 }
                 Main.scheduler.withTimeOut(suspend {
-                    val uploadImage = NetWorkUtil[result.thumbnail]!!.second.uploadAsImage(box.group!!) as Message
+                    val uploadImage = OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(box.group!!) as Message
                     box.reply(
                         uploadImage + PlainText(
                             "\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${

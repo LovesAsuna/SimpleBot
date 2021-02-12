@@ -4,12 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.contact.Contact.Companion.uploadImage
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
+import me.lovesasuna.bot.util.network.OkHttpUtil
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
 class Bilibili : FunctionListener {
@@ -19,27 +15,26 @@ class Bilibili : FunctionListener {
 
         var av: String?
         var bv: String?
-        var reader: BufferedReader?
-        var inputStream: InputStream?
-        if (box.text().toLowerCase().contains("av")) {
-            av = BasicUtil.extractInt(box.text()).toString()
-            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?aid=$av"]?.second
-        } else if (box.text().contains("BV")) {
-            val matcher = pattern.matcher(box.text())
-            bv = if (matcher.find()) {
-                matcher.group()
-            } else {
-                return false
+        val line = OkHttpUtil.getStr(
+            when {
+                box.text().toLowerCase().contains("av") -> {
+                    av = BasicUtil.extractInt(box.text()).toString()
+                    "https://api.bilibili.com/x/web-interface/view?aid=$av"
+                }
+                box.text().contains("BV") -> {
+                    val matcher = pattern.matcher(box.text())
+                    bv = if (matcher.find()) {
+                        matcher.group()
+                    } else {
+                        ""
+                    }
+                    "https://api.bilibili.com/x/web-interface/view?bvid=$bv"
+                }
+                else -> {
+                    IllegalArgumentException("不正确的视频ID").let { "" }
+                }
             }
-            inputStream = NetWorkUtil["https://api.bilibili.com/x/web-interface/view?bvid=$bv"]?.second
-        } else {
-            return false
-        }
-        if (inputStream == null) {
-            return false
-        }
-        reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
-        val line = reader.readLine()
+        )
         if (!line.startsWith("{\"code\":0")) {
             return false
         }
@@ -83,7 +78,7 @@ class Bilibili : FunctionListener {
             .append(like)
             .append("\n")
             .append(desc)
-        box.reply(box.event.subject.uploadImage(NetWorkUtil[pic]!!.second) + builder.toString())
+        box.reply(OkHttpUtil.getIs(OkHttpUtil[pic]).uploadAsImage(box.group!!) + builder.toString())
         return true
     }
 
