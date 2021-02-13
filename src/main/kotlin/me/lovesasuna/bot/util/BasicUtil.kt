@@ -2,8 +2,8 @@ package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import java.io.File
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
@@ -52,12 +52,14 @@ object BasicUtil {
     }
 
     fun debug(message: String): String {
-        val reader = NetWorkUtil.post(
-            "https://paste.ubuntu.com/",
-            "poster=Bot&syntax=text&expiration=day&content=$message".toByteArray(Charsets.UTF_8),
-            arrayOf("Content-Type", "application/x-www-form-urlencoded"),
-            arrayOf("host", "paste.ubuntu.com")
-        )!!.second.bufferedReader()
+        val reader = OkHttpUtil.getIs(OkHttpUtil.post("https://paste.ubuntu.com/", mapOf(
+            "poster" to "Bot",
+            "syntax" to "text",
+            "expiration" to "day",
+            "content" to message,
+        ), OkHttpUtil.addHeaders(mapOf(
+            "host" to "paste.ubuntu.com",
+        )))).bufferedReader()
         val builder = StringBuilder()
         reader.lines().skip(25).parallel().forEach {
             builder.append(it)

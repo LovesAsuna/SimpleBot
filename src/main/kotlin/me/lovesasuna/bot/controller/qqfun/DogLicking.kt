@@ -2,9 +2,7 @@ package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.lanzou.util.NetWorkUtil
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import me.lovesasuna.bot.util.network.OkHttpUtil
 
 /**
  * @author LovesAsuna
@@ -14,8 +12,7 @@ class DogLicking : FunctionListener {
         if (box.text() != "/舔狗日记") {
             return false
         }
-        val reader = BufferedReader(InputStreamReader(NetWorkUtil["https://v1.alapi.cn/api/dog?format=text"]!!.second))
-        box.reply(reader.readLine())
+        box.reply(OkHttpUtil.getStr("https://v1.alapi.cn/api/dog?format=text"))
         return true
     }
 }

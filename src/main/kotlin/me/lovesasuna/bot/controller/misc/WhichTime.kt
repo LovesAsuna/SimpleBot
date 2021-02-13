@@ -2,8 +2,8 @@ package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.lanzou.util.NetWorkUtil
-import net.mamoe.mirai.contact.Contact.Companion.uploadImage
+import me.lovesasuna.bot.util.network.OkHttpUtil
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -18,7 +18,7 @@ class WhichTime : FunctionListener {
             return false
         }
         val time = formatter.format(LocalDateTime.now())
-        box.reply(box.event.subject.uploadImage(NetWorkUtil["https://ty.kuku.me/images/time/$time.jpg"]!!.second))
+        box.reply(OkHttpUtil.getIs(OkHttpUtil["https://ty.kuku.me/images/time/$time.jpg"]).uploadAsImage(box.group!!))
         return true
     }
 }

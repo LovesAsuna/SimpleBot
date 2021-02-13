@@ -6,7 +6,7 @@ import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.lanzou.util.NetWorkUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import java.io.InputStream
 
 class PixivGetter : FunctionListener {
@@ -16,10 +16,13 @@ class PixivGetter : FunctionListener {
             box.text().startsWith("/pixiv work ") -> {
                 val ID = BasicUtil.extractInt(box.text().split(" ")[2])
                 box.reply("获取中,请稍后..")
-                val reader = NetWorkUtil.post(
-                    "https://api.pixiv.cat/v1/generate", "p=$ID".toByteArray(),
-                    arrayOf("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-                )!!.second.bufferedReader()
+                val reader = OkHttpUtil.getIs(
+                    OkHttpUtil.post(
+                        "https://api.pixiv.cat/v1/generate", mapOf(
+                            "p" to "$ID"
+                        )
+                    )
+                ).bufferedReader()
                 val root = BotData.objectMapper.readTree(reader.readLine())
                 val list = root.get("original_url") ?: root.get("original_urls")
                 if (list == null) {
@@ -32,7 +35,7 @@ class PixivGetter : FunctionListener {
                     if (BotData.debug) box.reply("尝试复制IO流")
                     Main.scheduler.withTimeOut(suspend {
                         originInputStream =
-                            NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"]!!.second
+                            OkHttpUtil.getIs(OkHttpUtil["https://api.kuku.me/pixiv/picbyurl?url=${list.asText()}"])
                         val uploadImage = box.uploadImage(originInputStream!!)
                         box.reply(uploadImage)
                         box.reply("获取完成!")
@@ -43,14 +46,11 @@ class PixivGetter : FunctionListener {
                     box.reply("该作品共有${size}张图片")
                     repeat(size) {
                         originInputStream =
-                            NetWorkUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"]!!.second
+                            OkHttpUtil.getIs(OkHttpUtil["https://api.kuku.me/pixiv/picbyurl?url=${list[it].asText()}"])
                         box.reply(box.uploadImage(originInputStream!!))
                     }
                     box.reply("获取完成!")
                 }
-            }
-            box.text().contains("i.pximg.net") -> {
-                box.reply(box.uploadImage(NetWorkUtil[box.text().replace("i.pximg.net", "/i.pixiv.cat")]!!.second))
             }
         }
         return true

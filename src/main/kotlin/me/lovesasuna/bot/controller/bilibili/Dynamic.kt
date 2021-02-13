@@ -14,13 +14,17 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.string.StringUtil
 import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.LightApp
+import net.mamoe.mirai.message.data.Message
+import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.messageChainOf
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -109,7 +113,6 @@ class Dynamic : FunctionListener {
     }
 
 
-
     companion object {
         private var task: Pair<Job, PluginScheduler.RepeatTaskReceipt> = launchTask()
         val dynamicService: DynamicService = DynamicServiceImpl
@@ -117,7 +120,7 @@ class Dynamic : FunctionListener {
         var intercept = false
         var time = ""
 
-        private fun launchTask() : Pair<Job, PluginScheduler.RepeatTaskReceipt>{
+        private fun launchTask(): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
             return BasicUtil.scheduleWithFixedDelay({
                 linkService.getUps().forEach {
                     runBlocking {
@@ -149,7 +152,8 @@ class Dynamic : FunctionListener {
 
         private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
             val reader =
-                NetWorkUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"]!!.second.bufferedReader()
+                OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
+                    .bufferedReader()
             val root = ObjectMapper().readTree(reader.readLine())
             if (root.toString().contains("拦截")) {
                 if (!intercept) {
