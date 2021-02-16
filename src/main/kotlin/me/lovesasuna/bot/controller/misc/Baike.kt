@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.lanzou.util.NetWorkUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import java.net.URLEncoder
 
 class Baike : FunctionListener {
@@ -11,7 +11,7 @@ class Baike : FunctionListener {
         if (message.startsWith("/baike ")) {
             val string = message.split(" ")[1]
             val url = "https://baike.baidu.com/item/${URLEncoder.encode(string, "UTF-8")}"
-            val reader = NetWorkUtil.get(url)!!.second.bufferedReader()
+            val reader = OkHttpUtil.getIs(OkHttpUtil[url]).bufferedReader()
             for (i in 0 until 10) reader.readLine()
             val desc = reader.readLine()
             val args = desc.split("\"")

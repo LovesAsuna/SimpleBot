@@ -17,7 +17,6 @@ import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.string.StringUtil
-import me.lovesasuna.lanzou.util.NetWorkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -226,7 +225,7 @@ class Dynamic : FunctionListener {
             val pictures = origin["item"]["pictures"]
             var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
             for (i in 0 until pictures.size()) {
-                messageChain += NetWorkUtil[pictures[i]["img_src"].asText()]!!.second.uploadAsImage(group)
+                messageChain += OkHttpUtil.getIs(OkHttpUtil[pictures[i]["img_src"].asText()]).uploadAsImage(group)
             }
             return messageChain
         }

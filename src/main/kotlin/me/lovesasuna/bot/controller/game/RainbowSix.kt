@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.lanzou.util.NetWorkUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.util.*
 import kotlin.system.measureTimeMillis
 
@@ -168,20 +166,8 @@ class RainbowSix : FunctionListener {
     }
 
     private suspend fun getRoot(box: MessageBox, username: String): JsonNode {
-        val result = NetWorkUtil.get(
-            "https://www.r6s.cn/Stats?username=$username",
-            arrayOf("referer", "https://www.r6s.cn/stats.jsp?username=$username")
-        )
-        requireNotNull(result) {
-            "连接超时".also {
-                box.reply(it)
-            }
-        }
-        val inputStream = result.second
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val line = reader.readLine()
-        reader.close()
-        val mapper = ObjectMapper()
-        return mapper.readTree(line)
+        return OkHttpUtil.getJson("https://www.r6s.cn/Stats?username=$username", mapOf(
+            "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
+        ))
     }
 }
