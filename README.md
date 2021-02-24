@@ -8,6 +8,10 @@
 [![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/SLovesAsuna/Mirai-Bot/issues)
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai-Bot?include_prereleases)](https://github.com/LovesAsuna/Mirai-Bot/releases)
 
+```
+交流群: 69612912
+```
+
 ## 🎉 它能干什么?
 
 * 以图搜图
