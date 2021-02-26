@@ -6,7 +6,7 @@ import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand

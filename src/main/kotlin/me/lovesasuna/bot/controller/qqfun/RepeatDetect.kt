@@ -4,7 +4,7 @@ import com.sun.imageio.plugins.gif.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image

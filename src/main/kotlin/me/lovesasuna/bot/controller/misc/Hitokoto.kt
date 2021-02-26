@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.controller.misc
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand

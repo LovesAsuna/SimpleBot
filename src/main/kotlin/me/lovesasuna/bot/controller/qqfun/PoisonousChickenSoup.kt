@@ -3,7 +3,7 @@ package me.lovesasuna.bot.controller.qqfun
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 
 /**
  * @author LovesAsuna

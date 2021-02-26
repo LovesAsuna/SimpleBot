@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.bot.util.registerDefaultPermission

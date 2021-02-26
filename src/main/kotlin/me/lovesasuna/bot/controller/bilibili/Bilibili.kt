@@ -3,7 +3,7 @@ package me.lovesasuna.bot.controller.bilibili
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand

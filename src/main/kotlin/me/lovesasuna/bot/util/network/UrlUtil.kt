@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.util.network
 
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import java.io.IOException
 import java.net.URLEncoder
 

@@ -11,7 +11,7 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.registerPermission

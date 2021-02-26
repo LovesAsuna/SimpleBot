@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller.photo.source
 
 import me.lovesasuna.bot.data.BotData.objectMapper
 import me.lovesasuna.bot.data.pushError
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import java.io.IOException
 
 /**
