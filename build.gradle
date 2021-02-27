@@ -1,9 +1,9 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id "org.jetbrains.kotlin.plugin.serialization" version "1.4.10"
-    id "org.jetbrains.kotlin.kapt" version "1.4.30-RC"
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.4.31"
+    id "org.jetbrains.kotlin.kapt" version "1.4.31"
 }
 
 description('一个基于Mirai的机器人')
@@ -55,6 +55,7 @@ compileKotlin {
     kotlinOptions {
         jvmTarget = 1.8
     }
+    kotlinOptions.useIR = true
 }
 
 compileJava {
