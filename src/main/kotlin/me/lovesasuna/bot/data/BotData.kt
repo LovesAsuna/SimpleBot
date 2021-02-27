@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.data
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import me.lovesasuna.bot.Main
@@ -13,7 +14,7 @@ import java.util.*
  */
 object BotData {
     var objectMapper: ObjectMapper =
-        jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CASE }
+        jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CASE }
 
     var debug: Boolean = false
 

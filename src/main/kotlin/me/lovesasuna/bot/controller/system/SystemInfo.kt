@@ -60,13 +60,13 @@ object SystemInfo : SimpleCommand(
         //jvm总内存
         val jvmTotalMemoryByte = runtime.totalMemory()
         //jvm最大可申请
-        val jvmMaxMoryByte = runtime.maxMemory()
+        // val jvmMaxMoryByte = runtime.maxMemory()
         //空闲空间
         val freeMemoryByte = runtime.freeMemory()
         //jdk版本
         val jdkVersion: String = props.getProperty("java.version")
         //jdk路径
-        val jdkHome: String = props.getProperty("java.home")
+        // val jdkHome: String = props.getProperty("java.home")
         val nowTime = LocalDateTime.now()
         val duration: Duration = Duration.between(startTime, nowTime)
         val days: Long = duration.toDays()

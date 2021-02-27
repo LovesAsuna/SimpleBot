@@ -22,7 +22,6 @@ class KeyWord : FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
     override suspend fun execute(box: MessageBox): Boolean {
-        val senderID = box.sender.id
         val groupID = box.group!!.id
         val message = box.text()
         when {

@@ -40,7 +40,7 @@ object RainbowSix : RawCommand(
     private suspend fun normalCheck(sender: CommandSender, username: String) {
         val builder = StringBuilder()
         val time = measureTimeMillis {
-            val root = getRoot(sender, username)
+            val root = getRoot(username)
             val basicStat = root["Basicstat"][0]
             val level = basicStat["level"].asText()
             var historyMaxMMR = basicStat["max_mmr"].asText()
@@ -120,7 +120,7 @@ object RainbowSix : RawCommand(
 
     private suspend fun operatorCheck(sender: CommandSender, username: String, operatorName: String) {
         val start = System.currentTimeMillis()
-        val root = getRoot(sender, username)
+        val root = getRoot(username)
         val statOperator = root["StatOperator"]
         val size = statOperator.size()
         val operators: MutableList<String> = ArrayList()
@@ -169,7 +169,7 @@ object RainbowSix : RawCommand(
         sender.sendMessage(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
     }
 
-    private suspend fun getRoot(sender: CommandSender, username: String): JsonNode {
+    private suspend fun getRoot(username: String): JsonNode {
         return OkHttpUtil.getJson("https://www.r6s.cn/Stats?username=$username", mapOf(
             "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
         ))

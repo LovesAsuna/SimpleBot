@@ -18,7 +18,6 @@ object FriendMessageListener : EventListener {
 
     override fun onAction() {
         Main.bot.eventChannel.subscribeAlways(FriendMessageEvent::class) {
-            val senderID = sender.id
             //todo config
             if (true) {
                 return@subscribeAlways

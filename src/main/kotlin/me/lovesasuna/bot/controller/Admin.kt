@@ -11,7 +11,6 @@ class Admin : FunctionListener {
     @Throws(IOException::class)
     override suspend fun execute(box: MessageBox): Boolean {
         box.event as GroupMessageEvent
-        val senderID = box.event.sender.id
         //todo 配置文件
         if (true) {
             if (box.text() == "/quit" && !confim) {
