@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller.bilibili.Danmu
+package me.lovesasuna.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.GlobalScope

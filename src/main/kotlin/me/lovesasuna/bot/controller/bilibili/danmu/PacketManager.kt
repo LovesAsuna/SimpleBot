@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.controller.bilibili.Danmu
+package me.lovesasuna.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -50,7 +50,7 @@ object PacketManager {
         out.writeShort(version.toInt())
         out.writeInt(packetType)
         out.writeInt(magic)
-        if (bodyData.size > 0) {
+        if (bodyData.isNotEmpty()) {
             out.write(bodyData)
         }
         out.flush()
