@@ -1,23 +1,16 @@
 package me.lovesasuna.bot.util.protocol
 
-import org.xbill.DNS.Lookup
-import org.xbill.DNS.SRVRecord
-import org.xbill.DNS.TextParseException
-import org.xbill.DNS.Type
+import java.nio.charset.Charset
 
 object SRVConvertUtil {
-    @Throws(TextParseException::class)
-    fun convert(host: String): String? {
-        val resultHost: String
-        val resultPort: Int
-        val records = Lookup("_minecraft._tcp.$host", Type.SRV).run()
-        return if (records != null && records.isNotEmpty()) {
-            val result = records[0] as SRVRecord
-            resultHost = result.target.toString().replaceFirst(Regex("\\.$"), "")
-            resultPort = result.port
-            "$resultHost:$resultPort"
-        } else {
-            null
-        }
+    private val runtime = Runtime.getRuntime()
+
+    fun convert(host: String): String {
+        val process = runtime.exec("cmd /c nslookup -qt=SRV _minecraft._tcp.$host")
+        val reader = process.inputStream.bufferedReader(Charset.forName("GBK"))
+        (0..5).forEach { _ -> reader.readLine() }
+        val port = reader.readLine().split("=")[1].trim()
+        val ip = reader.readLine().split("=")[1].trim()
+        return "$ip:$port"
     }
 }
