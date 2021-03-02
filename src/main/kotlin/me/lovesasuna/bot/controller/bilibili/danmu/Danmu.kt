@@ -6,7 +6,6 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.BasicUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.ByteArrayInputStream
@@ -83,7 +82,6 @@ class Danmu : FunctionListener {
                     }
                 }
             } catch (e: IOException) {
-                e.pushError()
                 e.printStackTrace()
             }
         }, 0, 30, TimeUnit.SECONDS)
@@ -114,14 +112,12 @@ class Danmu : FunctionListener {
                             process(event, header.packetType, dataInputStream)
                         }
                     } catch (e: IOException) {
-                        e.pushError()
                         e.printStackTrace()
                     }
                 } else {
                     process(event, header.packetType, DataInputStream(ByteArrayInputStream(buffer)))
                 }
             } catch (e: RuntimeException) {
-                e.pushError()
                 e.printStackTrace()
             }
         }

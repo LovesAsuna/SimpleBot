@@ -2,7 +2,6 @@ package me.lovesasuna.bot.controller.photo.source
 
 import me.lovesasuna.bot.Config
 import me.lovesasuna.bot.data.BotData.objectMapper
-import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.lanzou.util.OkHttpUtil
 import java.io.IOException
 
@@ -19,11 +18,9 @@ class Pixiv : PhotoSource {
             val url = root["data"][0]?.let { it["url"].asText() } ?: return "|0"
             return "$url|$quota"
         } catch (e: IOException) {
-            e.pushError()
             e.printStackTrace()
             null
         } catch (e: NullPointerException) {
-            e.pushError()
             e.printStackTrace()
             null
         }

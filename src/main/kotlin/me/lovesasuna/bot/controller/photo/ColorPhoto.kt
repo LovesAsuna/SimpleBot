@@ -16,7 +16,7 @@ import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermiss
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
-object Photo : CompositeCommand(
+object ColorPhoto : CompositeCommand(
     owner = Main,
     primaryName = "色图",
     description = "从多个图源中获取色图",

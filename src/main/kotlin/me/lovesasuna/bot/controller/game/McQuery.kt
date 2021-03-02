@@ -3,7 +3,6 @@ package me.lovesasuna.bot.controller.game
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.util.protocol.QueryUtil
 import me.lovesasuna.bot.util.protocol.SRVConvertUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
@@ -21,7 +20,7 @@ object McQuery : SimpleCommand(
     suspend fun CommandSender.handle(ip: String) {
         var status: Boolean
 
-        /*如果不含:则默认为srv记录*/
+        // 如果不含:则默认为srv记录
         if (!ip.contains(":")) {
             status = query(this, "$ip:25565", false)
             if (!status) {
@@ -65,22 +64,20 @@ object McQuery : SimpleCommand(
     }
 
     @Throws(IOException::class)
-    private suspend fun query(sender: CommandSender, ipAndport: String, SRV: Boolean): Boolean {
+    private suspend fun query(sender: CommandSender, ipAndPort: String, SRV: Boolean): Boolean {
         val host: String
         val port: Int
         if (SRV) {
-            val NewipAndport = SRVConvertUtil.convert(ipAndport)
-            host = NewipAndport ?: ipAndport.split(":").toTypedArray()[0]
-            port = (NewipAndport ?: ipAndport).split(":").toTypedArray()[1].toInt()
+            val NewipAndport = SRVConvertUtil.convert(ipAndPort)
+            host = NewipAndport ?: ipAndPort.split(":").toTypedArray()[0]
+            port = (NewipAndport ?: ipAndPort).split(":").toTypedArray()[1].toInt()
         } else {
-            host = ipAndport.split(":").toTypedArray()[0]
-            port = ipAndport.split(":").toTypedArray()[1].toInt()
+            host = ipAndPort.split(":").toTypedArray()[0]
+            port = ipAndPort.split(":").toTypedArray()[1].toInt()
         }
-        var json: String?
-        json = try {
+        val json: String? = try {
             QueryUtil.query(host, port)
         } catch (e: IOException) {
-            e.pushError()
             return false
         }
         val objectMapper = ObjectMapper()
@@ -96,7 +93,7 @@ object McQuery : SimpleCommand(
         var texts = ""
         var mods = ""
         if (extra != null) {
-            for (i in 0..extra.size() - 1) {
+            for (i in 0 until extra.size()) {
                 val node = extra[i]
                 texts += nodeProcess(node)
             }

@@ -18,16 +18,10 @@ object BotData {
 
     var debug: Boolean = false
 
-    val error = Stack<Throwable>()
-
     val HibernateConfig: Configuration = Configuration().also {
         ClassUtil.getClasses("me.lovesasuna.bot.entity", Main::class.java.classLoader).forEach { c ->
             it.addAnnotatedClass(c)
         }
         it.configure()
     }
-}
-
-fun Throwable.pushError() {
-    BotData.error.push(this)
 }

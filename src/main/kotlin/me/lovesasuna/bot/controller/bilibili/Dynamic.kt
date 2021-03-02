@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.data.pushError
 import me.lovesasuna.bot.service.DynamicService
 import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
@@ -60,7 +59,6 @@ object Dynamic : CompositeCommand(
                                 throw TimeoutException()
                             }
                         } catch (e: TimeoutException) {
-                            e.pushError()
                             linkService.getGroupByUp(it).forEach {
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")

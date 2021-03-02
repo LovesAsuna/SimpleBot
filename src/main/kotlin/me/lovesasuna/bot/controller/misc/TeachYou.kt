@@ -14,34 +14,40 @@ class TeachYou : FunctionListener {
         val message = box.text()
         val msg: String
         val url: String
-        val sequence = message.split(" ")
-        when {
-            message.startsWith("/百度 ") -> {
-                msg = "百度"
-                url = "https://u.iheit.com/teachsearch/baidu/index.html?q=${getSuffix(message)}"
-            }
-            message.startsWith("/谷歌 ") -> {
-                msg = "谷歌"
-                url = "https://u.iheit.com/teachsearch/google/index.html?q=${getSuffix(message)}"
-            }
-            message.startsWith("/bing ") -> {
-                msg = "必应"
-                url = "https://u.iheit.com/teachsearch/bing/index.html?q=${getSuffix(message)}"
-            }
-            message.startsWith("/搜狗 ") -> {
-                msg = "搜狗"
-                url = "https://u.iheit.com/teachsearch/sougou/index.html?q=${getSuffix(message)}"
-            }
-            else -> return false
-        }
-
+        val searchContent = message.split(" ")[1]
         box.reply(
-            """
-            点击以下链接即可教您使用${msg}搜索“${sequence[1]}“
-            ${UrlUtil.shortUrl(url)}
-            """.trimIndent()
+            when {
+                message.startsWith("/百度 ") -> {
+                    Baidu().searchUrl(message)
+                }
+                message.startsWith("/谷歌 ") -> {
+                    Google().searchUrl(message)
+                }
+                message.startsWith("/bing ") -> {
+                    Bing().searchUrl(message)
+                }
+                message.startsWith("/搜狗 ") -> {
+                    Sogou().searchUrl(message)
+                }
+                else -> return false
+            }
         )
         return true
+    }
+}
+
+private interface SearchFactory {
+    fun searchUrl(message: String): String
+}
+
+sealed class AbstractSearch(val engineID: String, val engineName: String) : SearchFactory {
+    override fun searchUrl(message: String): String {
+        val url = "https://u.iheit.com/teachsearch/${engineID}/index.html?q=${getSuffix(message)}"
+        val searchContent = message.split(" ")[1]
+        return """
+            点击以下链接即可教您使用${engineName}搜索"$searchContent"
+            ${UrlUtil.shortUrl(url)}
+            """.trimIndent()
     }
 
     private fun getSuffix(message: String): String {
@@ -49,3 +55,8 @@ class TeachYou : FunctionListener {
         return URLEncoder.encode(Base64.getEncoder().encodeToString(content.toByteArray()), "UTF-8")
     }
 }
+
+private class Baidu : AbstractSearch("baidu", "百度")
+private class Google : AbstractSearch("google", "谷歌")
+private class Bing : AbstractSearch("bing", "必应")
+private class Sogou : AbstractSearch("sogou", "搜狗")
