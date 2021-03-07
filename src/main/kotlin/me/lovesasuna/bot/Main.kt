@@ -10,6 +10,13 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.value
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
+import net.mamoe.mirai.event.events.BotOnlineEvent
+import net.mamoe.mirai.event.globalEventChannel
+import net.mamoe.mirai.utils.MiraiInternalApi
+import net.mamoe.mirai.utils.MiraiLogger
+import net.mamoe.mirai.utils.PlatformLogger
+import net.mamoe.mirai.utils.SimpleLogger
+import java.io.PrintStream
 import java.lang.management.ManagementFactory
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -27,7 +34,7 @@ object Main : KotlinPlugin(
     )
 ) {
     val scheduler = PluginScheduler()
-    lateinit var bot: Bot
+    val eventChannel = globalEventChannel()
     override fun onEnable() {
         Logger.getLogger("").level = Level.OFF
         logger.info("[Mirai-Bot] 插件已成功启用!")

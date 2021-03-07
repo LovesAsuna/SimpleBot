@@ -17,7 +17,7 @@ object FriendMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.eventChannel.subscribeAlways(FriendMessageEvent::class) {
+        Main.eventChannel.subscribeAlways(FriendMessageEvent::class) {
             //todo config
             if (true) {
                 return@subscribeAlways

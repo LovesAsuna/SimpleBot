@@ -22,7 +22,7 @@ object GroupMessageListener : EventListener {
     }
 
     override fun onAction() {
-        Main.bot.eventChannel.subscribeAlways(GroupMessageEvent::class) {
+        Main.eventChannel.subscribeAlways(GroupMessageEvent::class) {
             listeners.forEach {
                 Main.scheduler.asyncTask {
                     it.execute(MessageBox(this))
