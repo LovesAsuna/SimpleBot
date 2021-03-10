@@ -1,22 +1,19 @@
 package me.lovesasuna.bot
 
 import com.google.auto.service.AutoService
+import me.lovesasuna.bot.listener.EventListener
+import me.lovesasuna.bot.listener.FriendMessageListener
+import me.lovesasuna.bot.listener.GroupMessageListener
+import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.util.ClassUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
-import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.value
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
-import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.globalEventChannel
-import net.mamoe.mirai.utils.MiraiInternalApi
-import net.mamoe.mirai.utils.MiraiLogger
-import net.mamoe.mirai.utils.PlatformLogger
-import net.mamoe.mirai.utils.SimpleLogger
-import java.io.PrintStream
 import java.lang.management.ManagementFactory
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -56,6 +53,9 @@ object Main : KotlinPlugin(
                 }
             }
         }
+        listOf(
+            GroupMessageListener, FriendMessageListener, MemberLeaveListener
+        ).forEach(EventListener::onAction)
         Config.reload()
     }
 }
