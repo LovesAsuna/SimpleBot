@@ -18,6 +18,7 @@ import kotlin.random.Random
 /**
  * @author LovesAsuna
  */
+// todo 添加全局关键词
 class KeyWord : FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
