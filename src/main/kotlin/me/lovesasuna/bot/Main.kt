@@ -44,6 +44,7 @@ object Main : KotlinPlugin(
         } else {
             logger.info("Unable to read system info")
         }
+        Config.reload()
         ClassUtil.getClasses("me.lovesasuna.bot.controller", Main::class.java.classLoader).forEach {
             val kClass = it.kotlin
             if (!kClass.jvmName.contains("$")) {
@@ -56,7 +57,6 @@ object Main : KotlinPlugin(
         listOf(
             GroupMessageListener, FriendMessageListener, MemberLeaveListener
         ).forEach(EventListener::onAction)
-        Config.reload()
     }
 }
 
