@@ -16,7 +16,12 @@ object GroupMessageListener : EventListener {
             !Config.DisableFunction.contains(it.simpleName) && ClassUtil.getSuperClass(it)
                 .contains(FunctionListener::class.java)
         }.forEach {
-            listeners.add(it.getConstructor().newInstance() as FunctionListener)
+            val objectInstance = it.kotlin.objectInstance
+            if (objectInstance != null) {
+                listeners.add(objectInstance as FunctionListener)
+            } else {
+                listeners.add(it.getConstructor().newInstance() as FunctionListener)
+            }
             Main.logger.info("注册拓展功能: ${it.simpleName}")
         }
     }

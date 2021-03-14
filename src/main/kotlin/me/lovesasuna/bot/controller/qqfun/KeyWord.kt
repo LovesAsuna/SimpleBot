@@ -21,7 +21,7 @@ import kotlin.random.Random
  * @author LovesAsuna
  */
 // todo 添加全局关键词
-class KeyWord : CompositeCommand(
+object KeyWord : CompositeCommand(
     owner = Main,
     primaryName = "keyword",
     description = "关键词回复",
@@ -29,6 +29,7 @@ class KeyWord : CompositeCommand(
 ), FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
+    private val keyWordService: KeyWordService = KeyWordServiceImpl
 
     @SubCommand
     suspend fun CommandSender.debug() {
@@ -128,10 +129,6 @@ class KeyWord : CompositeCommand(
         if (!File(imagePath).exists()) {
             Files.createDirectory(Paths.get(imagePath))
         }
-    }
-
-    companion object {
-        val keyWordService: KeyWordService = KeyWordServiceImpl
     }
 
 }

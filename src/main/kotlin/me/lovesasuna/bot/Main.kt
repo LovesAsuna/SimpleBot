@@ -48,7 +48,7 @@ object Main : KotlinPlugin(
             val kClass = it.kotlin
             if (!kClass.jvmName.contains("$")) {
                 val objectInstance = kClass.objectInstance
-                if (objectInstance != null && Command::class.java.isInstance(objectInstance)) {
+                if (objectInstance != null && Command::class.isInstance(objectInstance)) {
                     CommandManager.registerCommand(objectInstance as Command)
                 }
             }
