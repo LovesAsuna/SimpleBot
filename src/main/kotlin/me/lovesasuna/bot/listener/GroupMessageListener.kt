@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.listener
 
+import me.lovesasuna.bot.Config
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
@@ -10,14 +11,13 @@ object GroupMessageListener : EventListener {
     private val listeners = ArrayList<FunctionListener>()
 
     init {
-        val listenersClass = ClassUtil.getClasses(FunctionListener::class.java.typeName.substringBeforeLast("."))
+        val listenersClass = ClassUtil.getClasses(FunctionListener::class.java.typeName.substringBeforeLast("."), Main::class.java.classLoader)
         listenersClass.filter {
-            //todo config
-            true && ClassUtil.getSuperClass(it)
+            !Config.DisableFunction.contains(it.simpleName) && ClassUtil.getSuperClass(it)
                 .contains(FunctionListener::class.java)
         }.forEach {
             listeners.add(it.getConstructor().newInstance() as FunctionListener)
-            Main.logger.info("注册功能: ${it.simpleName}")
+            Main.logger.info("注册拓展功能: ${it.simpleName}")
         }
     }
 
