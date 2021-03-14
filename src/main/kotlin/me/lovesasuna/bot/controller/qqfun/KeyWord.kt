@@ -6,7 +6,9 @@ import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
-import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.registerDefaultPermission
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf
 import java.io.File
@@ -19,73 +21,76 @@ import kotlin.random.Random
  * @author LovesAsuna
  */
 // todo 添加全局关键词
-class KeyWord : FunctionListener {
+class KeyWord : CompositeCommand(
+    owner = Main,
+    primaryName = "keyword",
+    description = "关键词回复",
+    parentPermission = registerDefaultPermission()
+), FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
+
+    @SubCommand
+    suspend fun CommandSender.debug() {
+        sendMessage(
+            "调试模式${
+                if (BotData.debug) {
+                    "关闭"
+                } else {
+                    "开启"
+                }
+            }"
+        )
+        BotData.debug = !BotData.debug
+    }
+
+    @SubCommand
+    suspend fun CommandSender.list() {
+        val builder = StringBuilder()
+        builder.append("匹配规则  |  回复词  |  几率\n")
+        builder.append("======================\n")
+        keyWordService.getKeyWordsByGroup(subject!!.id).forEach {
+            builder.append(
+                "${it.id}. ${it.wordRegex} | ${
+                    it.reply.subSequence(
+                        0, if (it.reply.length >= 10) {
+                            10
+                        } else {
+                            it.reply.length
+                        }
+                    )
+                } | ${it.chance}\n"
+            )
+        }
+
+        sendMessage(builder.toString())
+    }
+
+    @SubCommand
+    suspend fun CommandSender.remove(id: Int) {
+        keyWordService.removeKeyWord(id).also {
+            if (it) {
+                sendMessage("关键词删除成功")
+            } else {
+                sendMessage("关键词删除失败")
+            }
+        }
+    }
+
+    @SubCommand
+    suspend fun CommandSender.add(rule: String, reply: String, chance: Int) {
+        keyWordService.addKeyWord(subject!!.id, rule, reply, chance).also {
+            if (it) {
+                sendMessage("关键词添加成功")
+            } else {
+                sendMessage("关键词添加失败")
+            }
+        }
+    }
+
     override suspend fun execute(box: MessageBox): Boolean {
         val groupID = box.group!!.id
         val message = box.text()
-        when {
-            message == "/debug" -> {
-                box.reply(
-                    "调试模式${
-                        if (BotData.debug) {
-                            "关闭"
-                        } else {
-                            "开启"
-                        }
-                    }"
-                )
-                BotData.debug = !BotData.debug
-                return true
-            }
-            //todo config
-            message == "/keyword list" && true -> {
-                val builder = StringBuilder()
-                builder.append("匹配规则  |  回复词  |  几率\n")
-                builder.append("======================\n")
-                keyWordService.getKeyWordsByGroup(groupID).forEach {
-                    builder.append(
-                        "${it.id}. ${it.wordRegex} | ${
-                            it.reply.subSequence(
-                                0, if (it.reply.length >= 10) {
-                                    10
-                                } else {
-                                    it.reply.length
-                                }
-                            )
-                        } | ${it.chance}\n"
-                    )
-                }
-
-                box.reply(builder.toString())
-                return true
-            }
-            //todo config
-            message.startsWith("/keyword remove ") && true -> {
-                val id = BasicUtil.extractInt(message)
-                keyWordService.removeKeyWord(id).also {
-                    if (it) {
-                        box.reply("关键词删除成功")
-                    } else {
-                        box.reply("关键词删除失败")
-                    }
-                }
-                return true
-            }
-            //todo config
-            message.startsWith("/keyword add ") && true -> {
-                val prams = message.split(" ")
-                keyWordService.addKeyWord(groupID, prams[2], prams[3], BasicUtil.extractInt(prams[4])).also {
-                    if (it) {
-                        box.reply("关键词添加成功")
-                    } else {
-                        box.reply("关键词添加失败")
-                    }
-                }
-                return true
-            }
-        }
 
         keyWordService.getKeyWordsByGroup(groupID).forEach {
             val regex = Regex(it.wordRegex)
