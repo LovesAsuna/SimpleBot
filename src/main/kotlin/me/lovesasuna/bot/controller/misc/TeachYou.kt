@@ -12,9 +12,6 @@ import java.util.*
 class TeachYou : FunctionListener {
     override suspend fun execute(box: MessageBox): Boolean {
         val message = box.text()
-        val msg: String
-        val url: String
-        val searchContent = message.split(" ")[1]
         box.reply(
             when {
                 message.startsWith("/百度 ") -> {
