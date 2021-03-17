@@ -12,7 +12,7 @@ version '3.1.0'
 
 ext {
     workDir = 'E:\\work\\Mirai-Console\\plugins'
-    mirai_Version = '2.4.0'
+    mirai_Version = '2.4.2'
 }
 
 sourceCompatibility = 8
