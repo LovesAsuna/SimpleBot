@@ -124,7 +124,7 @@ public class GifDecoder {
         //
         delay = -1;
         if ((n >= 0) && (n < frameCount)) {
-            delay = ((GifFrame) frames.get(n)).delay;
+            delay = frames.get(n).delay;
         }
         return delay;
     }
@@ -248,7 +248,7 @@ public class GifDecoder {
     public BufferedImage getFrame(int n) {
         BufferedImage im = null;
         if ((n >= 0) && (n < frameCount)) {
-            im = ((GifFrame) frames.get(n)).image;
+            im = frames.get(n).image;
         }
         return im;
     }
@@ -259,7 +259,7 @@ public class GifDecoder {
      * @return BufferedImage representation of frame, or null if n is invalid.
      */
     public java.util.List<BufferedImage> getFrames() {
-        List<BufferedImage> bms = new ArrayList<BufferedImage>();
+        List<BufferedImage> bms = new ArrayList<>();
         for (GifFrame frame : this.frames) {
             bms.add(frame.image);
         }
@@ -342,7 +342,7 @@ public class GifDecoder {
         status = STATUS_OK;
         try {
             name = name.trim().toLowerCase();
-            if ((name.indexOf("file:") >= 0) || (name.indexOf(":/") > 0)) {
+            if ((name.contains("file:")) || (name.indexOf(":/") > 0)) {
                 URL url = new URL(name);
                 in = new BufferedInputStream(url.openStream());
             } else {
@@ -566,11 +566,11 @@ public class GifDecoder {
                     break;
                     case 0xff: // application extension
                     readBlock();
-                    String app = "";
+                    StringBuilder app = new StringBuilder();
                     for (int i = 0; i < 11; i++) {
-                    app += (char) block[i];
+                    app.append((char) block[i]);
                 }
-                    if (app.equals("NETSCAPE2.0")) {
+                    if (app.toString().equals("NETSCAPE2.0")) {
                         readNetscapeExt();
                     } else
                         skip(); // don't care
@@ -610,11 +610,11 @@ public class GifDecoder {
      * Reads GIF file header information.
      */
     protected void readHeader() {
-        String id = "";
+        StringBuilder id = new StringBuilder();
         for (int i = 0; i < 6; i++) {
-            id += (char) read();
+            id.append((char) read());
         }
-        if (!id.startsWith("GIF")) {
+        if (!id.toString().startsWith("GIF")) {
             status = STATUS_FORMAT_ERROR;
             return;
         }
