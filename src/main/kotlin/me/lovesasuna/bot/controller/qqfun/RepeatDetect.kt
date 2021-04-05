@@ -4,8 +4,11 @@ import com.sun.imageio.plugins.gif.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
+import me.lovesasuna.bot.util.photo.gif.AnimatedGifEncoder
+import me.lovesasuna.bot.util.photo.gif.GifDecoder
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
@@ -15,18 +18,15 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
-import javax.imageio.IIOImage
 import javax.imageio.ImageIO
-import javax.imageio.stream.MemoryCacheImageInputStream
-import javax.imageio.stream.MemoryCacheImageOutputStream
 
 /**
  * @author LovesAsuna
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
-    private val gifReader = GIFImageReaderSpi().createReaderInstance() as GIFImageReader
-    private val gifWriter = GIFImageWriterSpi().createWriterInstance() as GIFImageWriter
+    private val gifDecoder = GifDecoder()
+    private val gifEncoder = AnimatedGifEncoder()
     private val random = Random()
 
     override suspend fun execute(box: MessageBox): Boolean {
@@ -66,26 +66,23 @@ class RepeatDetect : FunctionListener {
                                 val url = box.message(Image::class.java)!!.queryUrl()
                                 val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(OkHttpUtil[url]))!!
                                 when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
-                                    // 暂时移除对gif的支持
-                                    "gif/unsupported" -> {
-                                        val out = ByteArrayOutputStream()
-                                        gifWriter.output = MemoryCacheImageOutputStream(out)
-                                        gifReader.input =
-                                            MemoryCacheImageInputStream(ByteArrayInputStream(cloneInputStream.toByteArray()))
-                                        gifWriter.prepareWriteSequence(null)
-                                        val num = gifReader.getNumImages(true)
+                                    "gif" -> {
                                         val type = random.nextInt(4)
-                                        for (i in 0 until num) {
-                                            try {
-                                                val image = getOperatedImageByType(gifReader.read(i), type)
-                                                val metadata = gifReader.getImageMetadata(0) as GIFImageMetadata
-                                                gifWriter.writeToSequence(IIOImage(image, null, metadata), null)
-                                            } catch (e: Exception) {
-                                                box.reply("处理第$i($num)帧时出错, 跳过处理该帧: \n${e.javaClass.typeName}")
+                                        val out = ByteArrayOutputStream()
+                                        try {
+                                            gifDecoder.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
+                                            gifEncoder.start(out)
+                                            gifEncoder.setDelay(gifDecoder.getDelay(0))
+                                            gifDecoder.frames.forEach {
+                                                val image = getOperatedImageByType(it, type)
+                                                gifEncoder.addFrame(image)
                                             }
+                                            gifEncoder.finish()
+                                        } catch (e: Exception) {
+                                            box.reply("发生未知错误: ${e.javaClass}")
+                                            e.message?.let { box.reply("堆栈信息: ${BasicUtil.debug(it)}") }
+                                            return@asyncTask false
                                         }
-                                        gifWriter.endWriteSequence()
-                                        (gifWriter.output as MemoryCacheImageOutputStream).flush()
                                         box.reply(box.uploadImage(ByteArrayInputStream(out.toByteArray())))
                                     }
                                     else -> {
