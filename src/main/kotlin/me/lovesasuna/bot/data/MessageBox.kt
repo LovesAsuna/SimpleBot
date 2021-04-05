@@ -42,7 +42,6 @@ class MessageBox(val event: MessageEvent) : Iterable<SingleMessage> {
     suspend fun uploadImage(image: BufferedImage) = event.subject.uploadImage(ImageUtil.imageToByte(image).toExternalResource())
 
     fun <M : SingleMessage> message(key: Class<M>): M? {
-        File("").toExternalResource().close()
         event.message.forEach {
             if (key.isInstance(it)) {
                 return key.cast(it)
