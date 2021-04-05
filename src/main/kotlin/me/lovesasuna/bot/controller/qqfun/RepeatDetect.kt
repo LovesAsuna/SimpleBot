@@ -137,7 +137,7 @@ class RepeatDetect : FunctionListener {
         val first = messageList.first()
         val second = messageList[1]
         val third = messageList[2]
-        if (first.contentEquals(second) && second.contentEquals(third)) {
+        if (first.contentEquals(second, strict = true) && second.contentEquals(third, strict = true)) {
             return true
         }
         return false
