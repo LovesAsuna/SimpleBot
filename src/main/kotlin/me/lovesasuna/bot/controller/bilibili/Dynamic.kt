@@ -164,6 +164,7 @@ object Dynamic : CompositeCommand(
                 Main.logger.error("B站动态api请求被拦截")
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
+                        // todo 可能由于退群导致群号不存在而抛出NPE
                         val group = Bot.instances[0].getGroup(it)
                         group?.sendMessage("B站动态api请求被拦截，请联系管理员!")
                         this
