@@ -22,7 +22,7 @@ object LinkServiceImpl : LinkService {
 
     override fun deleteGroup(groupID: Long) : Int {
         session.transaction.begin()
-        require(getUps().contains(groupID))
+        require(getGroups().contains(groupID))
         val i = LinkDao(session).deleteGroup(groupID)
         session.transaction.commit()
         return i
