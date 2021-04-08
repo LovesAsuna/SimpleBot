@@ -9,6 +9,8 @@ interface LinkService : DBService {
 
     fun deleteUp(upID: Long, groupID: Long): Int
 
+    fun deleteGroup(groupID: Long): Int
+
     fun getGroups(): List<Long>
 
     fun getUps(): List<Long>

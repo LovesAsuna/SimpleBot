@@ -36,12 +36,11 @@ object Dynamic : CompositeCommand(
     description = "B站Up动态订阅",
     parentPermission = registerDefaultPermission()
 ) {
-    var task: Pair<Job, PluginScheduler.RepeatTaskReceipt> = launchTask()
-
-    val dynamicService: DynamicService = DynamicServiceImpl
-    val linkService: LinkService = LinkServiceImpl
-    var intercept = false
-    var time = ""
+    private var task: Pair<Job, PluginScheduler.RepeatTaskReceipt> = launchTask()
+    private val dynamicService: DynamicService = DynamicServiceImpl
+    private val linkService: LinkService = LinkServiceImpl
+    private var intercept = false
+    private var time = ""
 
     private fun launchTask(): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         return BasicUtil.scheduleWithFixedDelay({
@@ -158,13 +157,12 @@ object Dynamic : CompositeCommand(
         val reader =
             OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
                 .bufferedReader()
-        val root = ObjectMapper().readTree(reader.readLine())
+        val root = BotData.objectMapper.readTree(reader.readLine())
         if (root.toString().contains("拦截")) {
             if (!intercept) {
                 Main.logger.error("B站动态api请求被拦截")
                 linkService.getGroupByUp(uid).forEach {
                     Main.scheduler.asyncTask {
-                        // todo 可能由于退群导致群号不存在而抛出NPE
                         val group = Bot.instances[0].getGroup(it)
                         group?.sendMessage("B站动态api请求被拦截，请联系管理员!")
                         this
@@ -185,10 +183,13 @@ object Dynamic : CompositeCommand(
             dynamicService.update(uid, card.toString().substring(50..100))
             linkService.getGroupByUp(uid).forEach {
                 Main.scheduler.asyncTask {
-                    val group = Bot.instances[0].getGroup(it)!!
-                    group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                    parse(group, card)
-                    1
+                    val group = Bot.instances[0].getGroup(it)
+                    if (group != null) {
+                        group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
+                        parse(group, card)
+                    } else {
+                        linkService.deleteGroup(it)
+                    }
                 }
             }
 

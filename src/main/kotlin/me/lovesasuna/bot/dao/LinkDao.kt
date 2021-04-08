@@ -25,6 +25,10 @@ class LinkDao(override val session: Session) : DefaultHibernateDao<LinkEntity>(s
         return update("delete from LinkEntity where upID = $upID and groupID = $groupID")
     }
 
+    fun deleteGroup(groupID: Long): Int {
+        return update("delete from LinkEntity where groupID= $groupID")
+    }
+
     fun addLink(entity: LinkEntity) {
         session.saveOrUpdate(entity)
     }
