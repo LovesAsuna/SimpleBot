@@ -20,7 +20,13 @@ object LinkServiceImpl : LinkService {
 
     override fun getGroupByUp(upID: Long) = LinkDao(session).getGroupByUp(upID)
 
-    override fun deleteGroup(groupID: Long) = LinkDao(session).deleteGroup(groupID)
+    override fun deleteGroup(groupID: Long) : Int {
+        session.transaction.begin()
+        require(getUps().contains(groupID))
+        val i = LinkDao(session).deleteGroup(groupID)
+        session.transaction.commit()
+        return i
+    }
 
     override fun deleteUp(upID: Long, groupID: Long): Int {
         session.transaction.begin()

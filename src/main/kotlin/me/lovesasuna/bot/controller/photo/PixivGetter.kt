@@ -18,7 +18,7 @@ object PixivGetter : CompositeCommand(
 ) {
     @SubCommand
     suspend fun CommandSender.work(ID: Int) {
-        var count = 1
+        val count: Int
         val root = OkHttpUtil.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
         if (root["error"] != null) {
             sendMessage("该作品不存在或已被删除!")
