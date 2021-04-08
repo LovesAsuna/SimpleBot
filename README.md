@@ -53,7 +53,7 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 
 ### 直接下载
 
-1. 到 [蓝奏云](https://wwa.lanzous.com/b0epzhmba) 下载最新版本的 jar
+1. 到 [Jenkins](https://ci.hyosakura.com) 下载最新版本的 jar
 2. 将插件jar放至plugins目录
 3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
 
