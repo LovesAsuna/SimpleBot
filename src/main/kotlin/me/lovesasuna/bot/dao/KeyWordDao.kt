@@ -29,6 +29,6 @@ class KeyWordDao(override val session: Session) : DefaultHibernateDao<KeyWordEnt
     }
 
     fun getKeyWordsByGroup(groupID: Long): List<KeyWordEntity> {
-        return queryEntity("from KeyWordEntity where groupID = ?1", KeyWordEntity::class.java, groupID)
+        return queryEntity("from KeyWordEntity where groupID = ?1 or groupID = 0", KeyWordEntity::class.java, groupID)
     }
 }
