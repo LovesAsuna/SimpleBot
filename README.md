@@ -2,7 +2,6 @@
 
 一个基于 [Mirai-Console](https://github.com/mamoe/mirai-console) 开发的机器人插件
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0364d226b78149979387cb47f44b365c)](https://www.codacy.com/manual/LovesAsuna/Mirai-Bot?utm_source=github.com&utm_medium=referral&utm_content=LovesAsuna/Mirai-Bot&utm_campaign=Badge_Grade_Dashboard)
 [![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
 [![LICENSE](https://img.shields.io/github/license/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
 [![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/SLovesAsuna/Mirai-Bot/issues)
