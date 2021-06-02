@@ -3,20 +3,19 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.4.31'
     id "org.jetbrains.kotlin.plugin.serialization" version "1.4.31"
-    id "org.jetbrains.kotlin.kapt" version "1.4.31"
 }
 
 description('一个基于Mirai的机器人')
 group 'me.lovesasuna'
-version '3.1.0'
+version '4.0.0'
 
 ext {
     workDir = 'E:\\work\\Mirai-Console\\plugins'
-    mirai_Version = '2.4.2'
+    mirai_Version = '2.6.4'
 }
 
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     jcenter()
@@ -34,26 +33,32 @@ shadowJar {
 dependencies {
     compileOnly 'net.mamoe:mirai-console:' + mirai_Version
     compileOnly 'net.mamoe:mirai-core:' + mirai_Version
-    compileOnly 'com.google.auto.service:auto-service:1.0-rc7'
+    testImplementation 'net.mamoe:mirai-console:' + mirai_Version
+    testImplementation 'net.mamoe:mirai-core:' + mirai_Version
     compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'me.lovesasuna:Lanzou:1.3.8'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3"
     implementation 'com.h2database:h2:1.4.200'
-    implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha6'
+    implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha8'
     implementation 'com.charleskorn.kaml:kaml:0.26.0'
     implementation 'com.github.oshi:oshi-core:5.3.6'
     implementation 'net.java.dev.jna:jna:5.6.0'
     implementation 'net.java.dev.jna:jna-platform:5.6.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-    kapt 'com.google.auto.service:auto-service:1.0-rc7'
+
+    testImplementation 'com.squareup.okhttp3:okhttp:4.9.1'
 }
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = 1.8
+        jvmTarget = 11
     }
     kotlinOptions.useIR = true
+}
+
+test {
+    useJUnitPlatform()
 }
 
 compileJava {
