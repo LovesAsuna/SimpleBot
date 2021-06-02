@@ -1,6 +1,5 @@
 package me.lovesasuna.bot
 
-import com.google.auto.service.AutoService
 import me.lovesasuna.bot.listener.EventListener
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -22,7 +21,6 @@ import kotlin.reflect.jvm.jvmName
 /**
  * @author LovesAsuna
  */
-@AutoService(KotlinPlugin::class)
 object Main : KotlinPlugin(
     JvmPluginDescription(
         id = "me.lovesasuna.bot",
