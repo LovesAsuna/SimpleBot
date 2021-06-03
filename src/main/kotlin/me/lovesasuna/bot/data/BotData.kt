@@ -20,7 +20,9 @@ object BotData {
         ClassUtil.getClasses("me.lovesasuna.bot.entity", Main::class.java.classLoader).forEach { c ->
             it.addAnnotatedClass(c)
         }
+        val classLoader = Thread.currentThread().contextClassLoader
         Thread.currentThread().contextClassLoader = this.javaClass.classLoader
         it.configure()
+        Thread.currentThread().contextClassLoader = classLoader
     }
 }
