@@ -1,7 +1,6 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
@@ -10,11 +9,11 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.lanzou.util.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.registerPermission
 import me.lovesasuna.bot.util.string.StringUtil
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -26,6 +25,7 @@ import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
+import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -186,7 +186,11 @@ object Dynamic : CompositeCommand(
                     val group = Bot.instances[0].getGroup(it)
                     if (group != null) {
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        parse(group, card)
+                        Main.scheduler.withTimeOut(suspend {
+                            parse(group, card)
+                        }, Duration.ofSeconds(60).toMillis()) {
+                            group.sendMessage("解析动态详细信息超时！")
+                        }
                     } else {
                         linkService.deleteGroup(it)
                     }
