@@ -14,8 +14,6 @@ object BotData {
     var objectMapper: ObjectMapper =
         jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CASE }
 
-    var debug: Boolean = false
-
     val HibernateConfig: Configuration = Configuration().also {
         ClassUtil.getClasses("me.lovesasuna.bot.entity", Main::class.java.classLoader).forEach { c ->
             it.addAnnotatedClass(c)

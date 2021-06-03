@@ -2,7 +2,6 @@ package me.lovesasuna.bot.controller.qqfun
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.service.KeyWordService
 import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
@@ -30,20 +29,6 @@ object KeyWord : CompositeCommand(
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
     private val keyWordService: KeyWordService = KeyWordServiceImpl
-
-    @SubCommand
-    suspend fun CommandSender.debug() {
-        sendMessage(
-            "调试模式${
-                if (BotData.debug) {
-                    "关闭"
-                } else {
-                    "开启"
-                }
-            }"
-        )
-        BotData.debug = !BotData.debug
-    }
 
     @SubCommand
     suspend fun CommandSender.list() {

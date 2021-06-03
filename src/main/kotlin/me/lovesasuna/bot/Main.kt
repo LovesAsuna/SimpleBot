@@ -5,6 +5,7 @@ import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.util.ClassUtil
+import me.lovesasuna.bot.util.logger.ContactLogger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
@@ -32,6 +33,7 @@ object Main : KotlinPlugin(
     val eventChannel = globalEventChannel()
     override fun onEnable() {
         Logger.getLogger("").level = Level.OFF
+        logger.follower = ContactLogger
         logger.info("[Mirai-Bot] 插件已成功启用!")
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
         val osMX = ManagementFactory.getOperatingSystemMXBean()

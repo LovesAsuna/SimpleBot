@@ -1,11 +1,11 @@
 package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.logger.debug
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.bot.util.registerDefaultPermission
+import me.lovesasuna.lanzou.util.OkHttpUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -36,21 +36,22 @@ object PictureSearch : SimpleCommand(
             else -> Saucenao
         }
         val imgUrl = image.queryUrl()
-        if (BotData.debug) sendMessage("图片URL: $imgUrl")
+        debug("图片URL: $imgUrl")
         val results = source.search(imgUrl)
         if (results.isEmpty()) {
             sendMessage("未查找到结果!")
             return
         }
         sendMessage("搜索完成!")
-        if (BotData.debug) sendMessage(results.toString())
+        debug(results.toString())
         results.forEach { result ->
             val builder = StringBuilder()
             result.extUrls.forEach {
                 builder.append(it).append("\n")
             }
             Main.scheduler.withTimeOut(suspend {
-                val uploadImage = OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(getGroupOrNull()!!) as Message
+                val uploadImage =
+                    OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(getGroupOrNull()!!) as Message
                 sendMessage(
                     uploadImage + PlainText(
                         "\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${

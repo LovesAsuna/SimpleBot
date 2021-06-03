@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.data.BotData
+import me.lovesasuna.bot.util.logger.debug
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.lanzou.util.OkHttpUtil
 import net.mamoe.mirai.console.command.CommandSender
@@ -33,7 +33,7 @@ object PixivGetter : CompositeCommand(
         sendMessage("获取中,请稍后..")
         var originInputStream: InputStream?
         if (count == 1) {
-            if (BotData.debug) sendMessage("尝试复制IO流")
+            debug("尝试复制IO流")
             Main.scheduler.withTimeOut(suspend {
                 originInputStream =
                     OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID.jpg"])
