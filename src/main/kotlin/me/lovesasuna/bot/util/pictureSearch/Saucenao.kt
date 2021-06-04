@@ -2,7 +2,7 @@ package me.lovesasuna.bot.util.pictureSearch
 
 import com.fasterxml.jackson.databind.JsonNode
 import me.lovesasuna.bot.Config
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 
 object Saucenao : PictureSearchSource {
     private val api =

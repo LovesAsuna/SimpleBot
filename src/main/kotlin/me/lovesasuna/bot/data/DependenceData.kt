@@ -1,8 +1,5 @@
 package me.lovesasuna.bot.data
 
-import me.lovesasuna.lanzou.Lanzou
-
-
 interface DependenceData {
     val data: String
 
@@ -44,10 +41,6 @@ interface DependenceData {
 
         /*MyBaits*/
         MYBATIS("4c8905eba706ce15addbf5ee2b0d5b9"),
-    }
-
-    enum class Lanzous(override val data: String) : LanzousUrl {
-        CUSTOMCORE(Lanzou.getFileDownloadUrl("iIVhAfu89he").toString()),
     }
 
     enum class Maven(override val data: String) : MavenUrl {

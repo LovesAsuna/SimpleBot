@@ -5,7 +5,7 @@ import me.lovesasuna.bot.util.logger.debug
 import me.lovesasuna.bot.util.pictureSearch.Ascii2d
 import me.lovesasuna.bot.util.pictureSearch.Saucenao
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull

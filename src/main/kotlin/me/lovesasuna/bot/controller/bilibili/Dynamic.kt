@@ -13,7 +13,7 @@ import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.registerPermission
 import me.lovesasuna.bot.util.string.StringUtil
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand

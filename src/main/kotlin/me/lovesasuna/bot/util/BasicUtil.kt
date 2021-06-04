@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.util
 
 import kotlinx.coroutines.*
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.permission.Permission
 import net.mamoe.mirai.console.permission.PermissionId

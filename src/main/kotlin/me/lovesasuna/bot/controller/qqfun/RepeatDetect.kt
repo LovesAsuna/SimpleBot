@@ -8,7 +8,7 @@ import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.bot.util.photo.gif.AnimatedGifEncoder
 import me.lovesasuna.bot.util.photo.gif.GifDecoder
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl

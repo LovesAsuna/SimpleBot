@@ -2,7 +2,7 @@ package me.lovesasuna.bot.controller.game
 
 import com.fasterxml.jackson.databind.JsonNode
 import me.lovesasuna.bot.Main
-import me.lovesasuna.lanzou.util.OkHttpUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand

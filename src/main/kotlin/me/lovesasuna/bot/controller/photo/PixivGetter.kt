@@ -2,8 +2,8 @@ package me.lovesasuna.bot.controller.photo
 
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.logger.debug
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.lanzou.util.OkHttpUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
