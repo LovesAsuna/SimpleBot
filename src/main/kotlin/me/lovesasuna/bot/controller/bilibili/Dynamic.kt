@@ -9,11 +9,10 @@ import me.lovesasuna.bot.service.LinkService
 import me.lovesasuna.bot.service.impl.DynamicServiceImpl
 import me.lovesasuna.bot.service.impl.LinkServiceImpl
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import me.lovesasuna.bot.util.registerDefaultPermission
 import me.lovesasuna.bot.util.registerPermission
-import me.lovesasuna.bot.util.string.StringUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -118,7 +117,7 @@ object Dynamic : CompositeCommand(
         Main.scheduler.asyncTask {
             linkService.getUps().forEach {
                 runBlocking {
-                    read(it, 0, true)
+                    read(it, 0)
                     time = "${Calendar.getInstance().time}"
                     delay(15 * 1000)
                 }
@@ -147,13 +146,13 @@ object Dynamic : CompositeCommand(
             builder.append("\n")
             builder.append("UP消息摘要: \n")
             linkService.getUps().forEach {
-                builder.append("UP=$it: 摘要=${dynamicService.getContext(it)}\n")
+                builder.append("UP=$it: DynamicID=${dynamicService.getDynamicID(it)}\n")
             }
             sendMessage("debug信息: ${BasicUtil.debug(builder.toString())}")
         }
     }
 
-    private suspend fun read(uid: Long, num: Int, push: Boolean = false) {
+    private suspend fun read(uid: Long, num: Int) {
         val reader =
             OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
                 .bufferedReader()
@@ -174,19 +173,17 @@ object Dynamic : CompositeCommand(
         }
         intercept = false
         val cards = root["data"]["cards"]
+        val dynamicID = cards[num]["desc"]["dynamic_id_str"].asText()
         val card = dequate(cards[num]["card"])
-        if (push || dynamicService.getContext(uid).isEmpty() || StringUtil.getSimilarityRatio(
-                dynamicService.getContext(uid),
-                card.toString().substring(50..100)
-            ) < 90
-        ) {
-            dynamicService.update(uid, card.toString().substring(50..100))
+        if (dynamicID != dynamicService.getDynamicID(uid)) {
+            dynamicService.update(uid, dynamicID)
             linkService.getGroupByUp(uid).forEach {
                 Main.scheduler.asyncTask {
                     val group = Bot.instances[0].getGroup(it)
                     if (group != null) {
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
                         Main.scheduler.withTimeOut(suspend {
+                            // todo 动态解析不完整
                             parse(group, card)
                         }, Duration.ofSeconds(60).toMillis()) {
                             group.sendMessage("解析动态详细信息超时！")

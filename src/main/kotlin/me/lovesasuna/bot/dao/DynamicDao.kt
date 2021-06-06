@@ -2,6 +2,7 @@ package me.lovesasuna.bot.dao
 
 import me.lovesasuna.bot.entity.database.dynamic.DynamicEntity
 import org.hibernate.Session
+import java.util.*
 
 class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEntity>(session) {
 
@@ -9,33 +10,20 @@ class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEnt
         session.saveOrUpdate(entity)
     }
 
-    fun getContext(upID: Long): String {
+    fun getDynamicID(upID: Long): Optional<String> {
+        return getField(upID, "dynamicID", String::class.java)
+    }
+
+    private fun <T> getField(upID: Long, fieldName: String, clazz: Class<T>): Optional<T> {
         return queryField(
-            "select distinct e.context from DynamicEntity as e where upID = ?1",
-            String::class.java,
+            "select distinct e.${fieldName} from DynamicEntity as e where upID = ?1",
+            clazz,
             upID
         ).let {
-            if (it.isEmpty()) {
-                ""
-            } else {
-                it[0]
-            }
+            Optional.ofNullable(it.getOrNull(0))
         }
     }
 
-    fun getID(upID: Long): Int? {
-        return queryField(
-            "select distinct e.id from DynamicEntity as e where upID = ?1",
-            Int::class.javaObjectType,
-            upID
-        ).let {
-            if (it.isEmpty()) {
-                null
-            } else {
-                it[0]
-            }
-        }
-    }
 
     fun getEntity(upID: Long): DynamicEntity? {
         return queryEntity("from DynamicEntity as e where e.upID = ?1", DynamicEntity::class.java, upID).let {

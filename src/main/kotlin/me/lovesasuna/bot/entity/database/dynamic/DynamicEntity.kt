@@ -10,6 +10,6 @@ data class DynamicEntity(
     var id: Int? = null,
     @Column(name = "ups")
     var upID: Long? = null,
-    @Lob
-    var context: String = ""
+    @Column(name = "dynamicid")
+    var dynamicID: String? = null,
 )
