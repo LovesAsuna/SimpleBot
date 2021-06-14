@@ -1,7 +1,9 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.JsonNode
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.service.DynamicService
@@ -27,11 +29,10 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 object Dynamic : CompositeCommand(
     owner = Main,
-    primaryName = "subscribe",
+    primaryName = "dynamic",
     description = "B站Up动态订阅",
     parentPermission = registerDefaultPermission()
 ) {
@@ -46,17 +47,10 @@ object Dynamic : CompositeCommand(
             linkService.getUps().forEach {
                 runBlocking {
                     with(it) {
-                        try {
-                            val result = GlobalScope.async {
-                                read(it, 0)
-                                time = "${Calendar.getInstance().time}"
-                                true
-                            }
-                            delay(10 * 1000)
-                            if (!result.isCompleted) {
-                                throw TimeoutException()
-                            }
-                        } catch (e: TimeoutException) {
+                        Main.scheduler.withTimeOut({
+                            read(it, 0)
+                            time = "${Calendar.getInstance().time}"
+                        }, 10 * 1000) {
                             linkService.getGroupByUp(it).forEach {
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")
@@ -148,7 +142,7 @@ object Dynamic : CompositeCommand(
             linkService.getUps().forEach {
                 builder.append("UP=$it: DynamicID=${dynamicService.getDynamicID(it)}\n")
             }
-            sendMessage("debug信息: ${BasicUtil.debug(builder.toString())}")
+            sendMessage("Debug信息: ${BasicUtil.debug(builder.toString())}")
         }
     }
 
