@@ -9,7 +9,6 @@ data class ConfigData(
     var Account: Long = 0,
     var Password: String = "",
     val API: Map<String, Array<String>> = mapOf(
-        "LoliconAPI" to arrayOf(""),
         "SauceNaoAPI" to arrayOf("")
     ),
     var BilibiliCookie: String = "没什么用的功能",

@@ -1,28 +1,29 @@
 package me.lovesasuna.bot.controller.photo.source
 
-import me.lovesasuna.bot.Config
-import me.lovesasuna.bot.data.BotData.objectMapper
+import me.lovesasuna.bot.controller.photo.MultiPhoto
+import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import java.io.IOException
 
 /**
  * @author LovesAsuna
  */
-class Pixiv : PhotoSource {
-    override fun fetchData(): String? {
-        val source = "https://api.lolicon.app/setu/?apikey=${Config.LoliconAPI}"
+class Pixiv : MultiPhoto {
+    override fun fetchData(num: Int): List<String> {
+        val source = "https://api.lolicon.app/setu/v2?num=${if (num > 10) 10 else num}"
         val result = OkHttpUtil.getIs(OkHttpUtil[source])
-        return try {
-            val root = objectMapper.readTree(result)
-            val quota = root["quota"].asText()
-            val url = root["data"][0]?.let { it["url"].asText() } ?: return "|0"
-            return "$url|$quota"
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
-            null
+        val root = BotData.objectMapper.readTree(result)
+        return ArrayList<String>().apply {
+            try {
+                repeat(num) {
+                    val url = root["data"][it]["urls"]["original"]
+                    this.add(url.asText())
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: NullPointerException) {
+                e.printStackTrace()
+            }
         }
     }
 }

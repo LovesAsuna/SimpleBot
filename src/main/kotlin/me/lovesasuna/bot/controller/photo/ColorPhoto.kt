@@ -13,7 +13,6 @@ import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.console.permission.PermissionId
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
-import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object ColorPhoto : CompositeCommand(
@@ -33,17 +32,13 @@ object ColorPhoto : CompositeCommand(
     var pixiv = true
 
     @SubCommand
-    suspend fun CommandSender.pixiv() {
+    suspend fun CommandSender.pixiv(num: Int = 1) {
         if (pixiv) {
             photoSource = Pixiv()
-            val data = photoSource.fetchData()
-            val quota = data?.split("|")!![1]
-            if (quota == "0") {
-                sendMessage("达到每日调用额度限制")
-            } else {
-                val url = data.split("|")[0]
+            val urls = (photoSource as MultiPhoto).fetchData(num)
+            urls?.forEach {
                 sendMessage(
-                    OkHttpUtil.getIs(OkHttpUtil[url]).uploadAsImage(getGroupOrNull()!!) + PlainText("\n剩余次数: $quota")
+                    OkHttpUtil.getIs(OkHttpUtil[it]).uploadAsImage(getGroupOrNull()!!)
                 )
             }
         } else {
