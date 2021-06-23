@@ -17,6 +17,6 @@ object DogLicking : SimpleCommand(
 ) {
     @Handler
     suspend fun CommandSender.handle() {
-        sendMessage(OkHttpUtil.getStr("https://v1.alapi.cn/api/dog?format=text"))
+        sendMessage(OkHttpUtil.getStr("https://v2.alapi.cn/api/dog?format=text&token=dppfgmdxhKZlt6vB"))
     }
 }
