@@ -33,14 +33,14 @@ object BasicUtil {
      * @param command 任务
      * @param delay 延迟(单位:秒)
      */
-    fun scheduleWithFixedDelay(
+     fun scheduleWithFixedDelay(
         command: Runnable,
         initialDelay: Long,
         delay: Long,
         unit: TimeUnit
     ): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         val receipt = PluginScheduler.RepeatTaskReceipt()
-        val job = GlobalScope.launch {
+        val job = CoroutineScope(Dispatchers.Default).launch {
             delay(unit.toMillis(initialDelay))
             while (!receipt.cancelled && this.isActive) {
                 withContext(Dispatchers.IO) {
@@ -53,14 +53,20 @@ object BasicUtil {
     }
 
     fun debug(message: String): String {
-        val reader = OkHttpUtil.getIs(OkHttpUtil.post("https://paste.ubuntu.com/", mapOf(
-            "poster" to "Bot",
-            "syntax" to "text",
-            "expiration" to "day",
-            "content" to message,
-        ), OkHttpUtil.addHeaders(mapOf(
-            "host" to "paste.ubuntu.com",
-        )))).bufferedReader()
+        val reader = OkHttpUtil.getIs(
+            OkHttpUtil.post(
+                "https://paste.ubuntu.com/", mapOf(
+                    "poster" to "Bot",
+                    "syntax" to "text",
+                    "expiration" to "day",
+                    "content" to message,
+                ), OkHttpUtil.addHeaders(
+                    mapOf(
+                        "host" to "paste.ubuntu.com",
+                    )
+                )
+            )
+        ).bufferedReader()
         val builder = StringBuilder()
         reader.lines().skip(25).parallel().forEach {
             builder.append(it)

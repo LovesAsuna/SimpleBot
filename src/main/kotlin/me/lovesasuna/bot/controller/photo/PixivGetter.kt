@@ -39,7 +39,7 @@ object PixivGetter : CompositeCommand(
                     OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID.jpg"])
                 sendMessage(originInputStream!!.uploadAsImage(getGroupOrNull()!!))
                 sendMessage("获取完成!")
-            }, 60 * 1000) {
+            }, 60000) {
                 sendMessage("图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者")
             }
         } else {
@@ -49,7 +49,7 @@ object PixivGetter : CompositeCommand(
                     originInputStream =
                         OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID-${it + 1}.jpg"])
                     sendMessage(originInputStream!!.uploadAsImage(getGroupOrNull()!!))
-                }, 60 * 1000) {
+                }, 60000) {
                     sendMessage("图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者")
                 }
             }

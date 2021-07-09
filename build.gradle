@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-    id "org.jetbrains.kotlin.plugin.serialization" version "1.4.31"
+    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.5.20"
 }
 
 description('一个基于Mirai的机器人')
@@ -11,7 +11,7 @@ version '4.0.0'
 
 ext {
     workDir = 'E:\\work\\Mirai-Console\\plugins'
-    mirai_Version = '2.6.4'
+    mirai_Version = '2.6.7'
 }
 
 sourceCompatibility = 11
@@ -29,12 +29,21 @@ shadowJar {
     }
 }
 
+// mirai
 dependencies {
     compileOnly 'net.mamoe:mirai-console:' + mirai_Version
     compileOnly 'net.mamoe:mirai-core:' + mirai_Version
     testImplementation 'net.mamoe:mirai-console:' + mirai_Version
     testImplementation 'net.mamoe:mirai-core:' + mirai_Version
-    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
+}
+
+// kotlin
+dependencies {
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:1.5.20'
+}
+
+dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3"
     implementation 'com.h2database:h2:1.4.200'

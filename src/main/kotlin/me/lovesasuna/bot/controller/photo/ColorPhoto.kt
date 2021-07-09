@@ -1,17 +1,15 @@
 package me.lovesasuna.bot.controller.photo
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
 import me.lovesasuna.bot.controller.photo.source.Random
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
+import me.lovesasuna.bot.util.registerPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
-import net.mamoe.mirai.console.permission.PermissionId
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
@@ -64,8 +62,8 @@ object ColorPhoto : CompositeCommand(
     }
 
     private fun changeBanStatus(sender: CommandSender, type: String) {
-        if (sender.hasPermission(PermissionId("photo", "switch"))) {
-            GlobalScope.async {
+        if (sender.hasPermission(registerPermission("photo.switch", "图源开关"))) {
+            Main.scheduler.asyncTask {
                 when (type) {
                     "pixiv" -> {
                         sender.sendMessage("已${if (pixiv) "禁用" else "解禁"}pixiv图源")
@@ -76,8 +74,8 @@ object ColorPhoto : CompositeCommand(
                         random = !random
                     }
                 }
+
             }
         }
     }
-
 }

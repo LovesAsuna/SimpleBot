@@ -1,14 +1,13 @@
 package me.lovesasuna.bot.controller.qqfun
 
-import com.sun.imageio.plugins.gif.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
+import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.photo.ImageUtil
 import me.lovesasuna.bot.util.photo.gif.AnimatedGifEncoder
 import me.lovesasuna.bot.util.photo.gif.GifDecoder
-import me.lovesasuna.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
@@ -52,14 +51,18 @@ class RepeatDetect : FunctionListener {
                     2 -> {
                         when (messageChain[1]) {
                             is PlainText -> {
-                                ArrayList<Char>().apply {
-                                    box.event.message.contentToString().forEach {
-                                        this.add(it)
+                                if (random.nextBoolean()) {
+                                    ArrayList<Char>().apply {
+                                        box.event.message.contentToString().forEach {
+                                            this.add(it)
+                                        }
+                                        this.shuffle()
+                                        val builder = StringBuilder()
+                                        this.forEach { builder.append(it) }
+                                        box.reply(builder.toString())
                                     }
-                                    this.shuffle()
-                                    val builder = StringBuilder()
-                                    this.forEach { builder.append(it) }
-                                    box.reply(builder.toString())
+                                } else {
+                                    box.reply(messageChain[1])
                                 }
                             }
                             is Image -> {

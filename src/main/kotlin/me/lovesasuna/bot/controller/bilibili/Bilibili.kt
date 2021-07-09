@@ -1,52 +1,51 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.lovesasuna.bot.Main
+import me.lovesasuna.bot.controller.FunctionListener
+import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
-import net.mamoe.mirai.console.command.CommandSender
-import net.mamoe.mirai.console.command.RawCommand
-import net.mamoe.mirai.console.command.getGroupOrNull
-import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
-object Bilibili : RawCommand(
-    owner = Main,
-    primaryName = "/converse",
-    description = "B站视频解析",
-    parentPermission = registerDefaultPermission()
-) {
-    private val pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
+class Bilibili : FunctionListener {
+    private val av_pattern = Pattern.compile("[aA][vV]\\d*")
+    private val bv_pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
-    override suspend fun CommandSender.onCommand(args: MessageChain) {
+    override suspend fun execute(box: MessageBox): Boolean {
+
         lateinit var av: String
         lateinit var bv: String
+        val args = box.text()
 
         val line = OkHttpUtil.getStr(
             when {
-                args.contentToString().toLowerCase().contains("av") -> {
-                    av = BasicUtil.extractInt(args.content).toString()
+                args.toLowerCase().contains("av") -> {
+                    val matcher = av_pattern.matcher(args)
+                    av = if (matcher.find()) {
+                        matcher.group()
+                    } else {
+                        return false
+                    }
+                    av = BasicUtil.extractInt(av).toString()
                     "https://api.bilibili.com/x/web-interface/view?aid=$av"
                 }
-                args.contentToString().contains("BV") -> {
-                    val matcher = pattern.matcher(args.content)
+                args.contains("BV") -> {
+                    val matcher = bv_pattern.matcher(args)
                     bv = if (matcher.find()) {
                         matcher.group()
                     } else {
-                        return
+                        return false
                     }
                     "https://api.bilibili.com/x/web-interface/view?bvid=$bv"
                 }
                 else -> {
-                    IllegalArgumentException("不正确的视频ID").let { "" }
+                    return false
                 }
             }
         )
         if (!line.startsWith("{\"code\":0")) {
-            return
+            return false
         }
         val mapper = ObjectMapper()
         val jsonNode = mapper.readTree(line)
@@ -88,6 +87,8 @@ object Bilibili : RawCommand(
             .append(like)
             .append("\n")
             .append(desc)
-        sendMessage(OkHttpUtil.getIs(OkHttpUtil[pic]).uploadAsImage(getGroupOrNull()!!) + builder.toString())
+        box.reply(OkHttpUtil.getIs(OkHttpUtil[pic]).uploadAsImage(box.group!!) + builder.toString())
+        return true
     }
+
 }

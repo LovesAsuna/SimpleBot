@@ -50,13 +50,13 @@ object Dynamic : CompositeCommand(
                         Main.scheduler.withTimeOut({
                             read(it, 0)
                             time = "${Calendar.getInstance().time}"
-                        }, 10 * 1000) {
+                        }, 10000) {
                             linkService.getGroupByUp(it).forEach {
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")
                             }
                         }
-                        delay(15 * 1000)
+                        delay(15000)
                     }
 
                 }
@@ -113,7 +113,7 @@ object Dynamic : CompositeCommand(
                 runBlocking {
                     read(it, 0)
                     time = "${Calendar.getInstance().time}"
-                    delay(15 * 1000)
+                    delay(15000)
                 }
             }
             sendMessage("推送完成")

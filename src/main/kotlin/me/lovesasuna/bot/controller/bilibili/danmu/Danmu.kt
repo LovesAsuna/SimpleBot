@@ -1,8 +1,9 @@
 package me.lovesasuna.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
@@ -33,7 +34,7 @@ class Danmu : FunctionListener {
             message.startsWith("/直播 connect ") -> {
                 closed = false
                 roomID = message.split(" ")[2].toInt()
-                GlobalScope.launch {
+                coroutineScope {
                     connect(box.event)
                 }
             }
@@ -43,7 +44,7 @@ class Danmu : FunctionListener {
                 box.reply("与直播间主动断开连接!")
             }
             //todo config
-            message.startsWith("/直播 send ") &&true -> {
+            message.startsWith("/直播 send ") -> {
                 val roomID = message.split(" ")[2].toInt()
                 PacketManager.sendDanmu(roomID, message.replaceFirst("/直播 send $roomID ", ""))
                 box.reply("弹幕发送成功!")
@@ -52,7 +53,7 @@ class Danmu : FunctionListener {
         return true
     }
 
-    fun connect(event: MessageEvent) {
+    suspend fun connect(event: MessageEvent) {
         val url = URL("https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id=$roomID")
         conn = url.openConnection() as HttpURLConnection
         conn.doInput = true
@@ -68,13 +69,13 @@ class Danmu : FunctionListener {
 
         socket = Socket(host, port.toInt())
         PacketManager.sendJoinChannel(event, roomID, DataOutputStream(socket.getOutputStream()), token)
-        BasicUtil.scheduleWithFixedDelay(Runnable {
+        BasicUtil.scheduleWithFixedDelay({
             try {
                 if (!socket.isClosed && !closed) {
                     val out = DataOutputStream(socket.getOutputStream())
                     PacketManager.sendHeartPacket(out)
                 } else {
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.Default). launch {
                         when {
                             socket.isClosed -> event.subject.sendMessage("socket is closed")
                             closed -> event.subject.sendMessage("live is closed")
@@ -125,7 +126,7 @@ class Danmu : FunctionListener {
     }
 
     @Throws(IOException::class)
-    private fun process(event: MessageEvent, packetType: Int, `in`: DataInputStream) {
+    private suspend fun process(event: MessageEvent, packetType: Int, `in`: DataInputStream) {
         //3是人气回调 无视无视（
         when (packetType) {
             5 -> {
@@ -134,7 +135,7 @@ class Danmu : FunctionListener {
                 try {
                     val bulletData = DanmuData(jsonNode, roomID, 2)
                     if (bulletData.type != null) {
-                        GlobalScope.launch {
+                        coroutineScope {
                             when (bulletData.type) {
                                 DanmuData.COMMENT_TYPE -> {
                                     event.subject.sendMessage(bulletData.toString())
@@ -144,6 +145,9 @@ class Danmu : FunctionListener {
                                 }
                                 DanmuData.LIVE_STOP_TYPE -> {
                                     event.subject.sendMessage("${roomID}关闭了直播")
+                                }
+                                else -> {
+                                    event.subject.sendMessage("未知类型！")
                                 }
                             }
                         }

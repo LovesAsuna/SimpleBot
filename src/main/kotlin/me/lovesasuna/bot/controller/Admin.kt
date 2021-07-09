@@ -18,13 +18,12 @@ object Admin : RawCommand(
 ) {
     private var confim = false
 
-
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         when (args.size) {
             1 -> {
                 sendMessage("请在十秒内输入/admin quit confirm进行确认！")
                 confim = true
-                delay(10 * 1000)
+                delay(10000)
             }
             2 -> {
                 when (args[0].content.toLowerCase()) {
