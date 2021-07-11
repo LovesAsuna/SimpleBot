@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.photo
 
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
@@ -28,16 +30,28 @@ object ColorPhoto : CompositeCommand(
     }
     var random = true
     var pixiv = true
+    private var left = 0
 
     @SubCommand
     suspend fun CommandSender.pixiv(num: Int = 1) {
         if (pixiv) {
             photoSource = Pixiv()
+            if (left >= 10) {
+                sendMessage("队列中还剩${num}张图片未发送")
+                return
+            } else left += num
             val urls = (photoSource as MultiPhoto).fetchData(num)
             urls?.forEach {
-                sendMessage(
-                    OkHttpUtil.getIs(OkHttpUtil[it]).uploadAsImage(getGroupOrNull()!!)
-                )
+                try {
+                    withTimeout(15000) {
+                        sendMessage(
+                            OkHttpUtil.getIs(OkHttpUtil[it]).uploadAsImage(getGroupOrNull()!!)
+                        )
+                        if (left > 0) left--
+                    }
+                } catch (e: TimeoutCancellationException) {
+                    if (left > 0) left--
+                }
             }
         } else {
             bannotice.invoke(this)

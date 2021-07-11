@@ -4,7 +4,8 @@ import kotlinx.coroutines.*
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
-class PluginScheduler(override val coroutineContext: CoroutineContext = SupervisorJob() + Dispatchers.Default) : CoroutineScope {
+class PluginScheduler(override val coroutineContext: CoroutineContext = SupervisorJob() + Dispatchers.Default) :
+    CoroutineScope {
 
 
     class RepeatTaskReceipt(@Volatile var cancelled: Boolean = false)
@@ -66,8 +67,8 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
      * @param notCompletedAction 超时动作
      */
     @Throws(TimeoutException::class)
-    suspend fun <R> withTimeOut(consumer: suspend () -> R, delayMs: Long, notCompletedAction: suspend () -> Unit) {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun <R> withTimeOut(consumer: suspend () -> R, delayMs: Long, notCompletedAction: suspend () -> Unit): Job {
+        return CoroutineScope(Dispatchers.Default).launch {
             val result = launch {
                 consumer.invoke()
             }
@@ -79,7 +80,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
                     result.cancel()
                 }
             }
-        }.join()
+        }
     }
 
 }

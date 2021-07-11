@@ -33,7 +33,7 @@ object BasicUtil {
      * @param command 任务
      * @param delay 延迟(单位:秒)
      */
-     fun scheduleWithFixedDelay(
+    fun scheduleWithFixedDelay(
         command: Runnable,
         initialDelay: Long,
         delay: Long,
