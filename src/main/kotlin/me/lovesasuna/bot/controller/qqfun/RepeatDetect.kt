@@ -13,6 +13,7 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.buildMessageChain
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -47,65 +48,96 @@ class RepeatDetect : FunctionListener {
             Main.scheduler.asyncTask {
 
                 val messageChain = box.event.message
-                when (messageChain.size) {
-                    2 -> {
-                        when (messageChain[1]) {
-                            is PlainText -> {
-                                if (random.nextBoolean()) {
-                                    ArrayList<Char>().apply {
-                                        box.event.message.contentToString().forEach {
-                                            this.add(it)
-                                        }
-                                        this.shuffle()
-                                        val builder = StringBuilder()
-                                        this.forEach { builder.append(it) }
-                                        box.reply(builder.toString())
+                box.reply(buildMessageChain {
+                    if (messageChain.size >= 2) {
+                        when (messageChain.size) {
+                            2 -> {
+                                when (messageChain[1]) {
+                                    is PlainText -> {
+                                        +randomText(box, messageChain[1] as PlainText)
                                     }
-                                } else {
-                                    box.reply(messageChain[1])
+                                    is Image -> {
+
+                                    }
+                                    else -> box.reply(messageList[2])
                                 }
                             }
-                            is Image -> {
-                                val url = box.message(Image::class.java)!!.queryUrl()
-                                val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(OkHttpUtil[url]))!!
-                                when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
-                                    "gif" -> {
-                                        val type = random.nextInt(4)
-                                        val out = ByteArrayOutputStream()
-                                        try {
-                                            gifDecoder.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
-                                            gifEncoder.start(out)
-                                            gifEncoder.setDelay(gifDecoder.getDelay(0))
-                                            gifDecoder.frames.forEach {
-                                                val image = getOperatedImageByType(it, type)
-                                                gifEncoder.addFrame(image)
-                                            }
-                                            gifEncoder.finish()
-                                        } catch (e: Exception) {
-                                            box.reply("发生未知错误: ${e.javaClass}")
-                                            e.message?.let { box.reply("堆栈信息: ${BasicUtil.debug(it)}") }
-                                            return@asyncTask false
+                            else -> {
+                                messageChain.shuffled().forEach {
+                                    when (it) {
+                                        is PlainText -> {
+                                            +randomText(box, it)
                                         }
-                                        box.reply(box.uploadImage(ByteArrayInputStream(out.toByteArray())))
-                                    }
-                                    else -> {
-                                        val bufferedImage =
-                                            getOperatedImage(ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())))
-                                        box.reply(box.uploadImage(bufferedImage))
+                                        else -> {
+                                            +it
+                                        }
                                     }
                                 }
                             }
-                            else -> box.reply(messageList[2])
                         }
                     }
-                    else -> box.reply(messageList[2])
-                }
-
+                })
                 messageList.clear()
                 this
             }
         }
         return true
+    }
+
+    private fun randomText(box : MessageBox, text: PlainText): MessageChain {
+        return buildMessageChain {
+            if (random.nextBoolean()) {
+                mutableListOf(text.content.split("")).apply {
+                    this.shuffle()
+                    joinToString("")
+                }
+                ArrayList<Char>().apply {
+                    text.content.forEach { c ->
+                        this.add(c)
+                    }
+                    this.shuffle()
+                    val builder = StringBuilder()
+                    this.forEach { c ->
+                        builder.append(c)
+                    }
+                    +builder.toString()
+                }
+            } else {
+                +text
+            }
+        }
+    }
+
+    private suspend fun randomImage(box : MessageBox, image: Image): MessageChain {
+        val url = image.queryUrl()
+        val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(OkHttpUtil[url]))!!
+        return buildMessageChain {
+            when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
+                "gif" -> {
+                    val type = random.nextInt(4)
+                    val out = ByteArrayOutputStream()
+                    try {
+                        gifDecoder.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
+                        gifEncoder.start(out)
+                        gifEncoder.setDelay(gifDecoder.getDelay(0))
+                        gifDecoder.frames.forEach {
+                            gifEncoder.addFrame(getOperatedImageByType(it, type))
+                        }
+                        gifEncoder.finish()
+                    } catch (e: Exception) {
+                        +"发生未知错误: ${e.javaClass}"
+                        +e.message!!.run {
+                            "堆栈信息: ${BasicUtil.debug(this)}"
+                        }
+                    }
+                    +box.uploadImage(ByteArrayInputStream(out.toByteArray()))
+                }
+                else -> {
+                    val bufferedImage = getOperatedImage(ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())))
+                    +box.uploadImage(bufferedImage)
+                }
+            }
+        }
     }
 
     /**
