@@ -38,9 +38,9 @@ object ColorPhoto : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.pixiv(num : Int) {
         if (pixiv) {
-            if (num > 10) sendMessage("一次最大只能同时获取10张图片")
+            if (num > 5) sendMessage("一次最大只能同时获取5张图片")
             photoSource = Pixiv()
-            if (queue.size >= 10) {
+            if (queue.size >= 5) {
                 sendMessage("队列中剩余${queue.size}张图片未发送")
                 return
             }
