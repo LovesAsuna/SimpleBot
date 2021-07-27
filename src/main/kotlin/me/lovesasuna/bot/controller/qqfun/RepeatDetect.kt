@@ -57,7 +57,7 @@ class RepeatDetect : FunctionListener {
                                         +randomText(box, messageChain[1] as PlainText)
                                     }
                                     is Image -> {
-
+                                        +randomImage(box, messageChain[1] as Image)
                                     }
                                     else -> box.reply(messageList[2])
                                 }
@@ -129,6 +129,7 @@ class RepeatDetect : FunctionListener {
                         +e.message!!.run {
                             "堆栈信息: ${BasicUtil.debug(this)}"
                         }
+                        return@buildMessageChain
                     }
                     +box.uploadImage(ByteArrayInputStream(out.toByteArray()))
                 }
