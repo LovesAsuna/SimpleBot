@@ -6,12 +6,15 @@ import javax.persistence.*
 @Table(name = "notice")
 data class NoticeEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int? = null,
+
     @Column(name = "groups")
     var groupID: Long? = null,
+
     @Column(name = "targets")
     var targetID: Long? = null,
+
     @Lob
     var message: String? = null
 )

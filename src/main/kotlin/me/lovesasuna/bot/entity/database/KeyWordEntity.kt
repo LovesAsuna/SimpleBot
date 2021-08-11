@@ -6,12 +6,15 @@ import javax.persistence.*
 @Table(name = "keyword")
 data class KeyWordEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int? = null,
+
     @Column(name = "groups")
     var groupID: Long? = null,
+
     var wordRegex: String = "",
     @Lob
     var reply: String = "",
+
     var chance: Int? = null
 )

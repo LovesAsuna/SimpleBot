@@ -9,15 +9,17 @@ import javax.persistence.*
 @Table(name = "members")
 data class MemberEntity(
     @Id
-    var id: Int? = null,
-    @Column(name = "NAME")
+    var id: Long? = null,
+
+    @Column(name = "name")
     @Basic
     var name: String? = null,
-    @ManyToMany
-    @JoinTable(
-        name = "participation",
-        joinColumns = [JoinColumn(name = "member_id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id")]
-    )
-    var groups: MutableSet<GroupEntity>? = null,
+
+    @OneToMany(targetEntity = ParticipationEntity::class)
+    @JoinColumn(name = "member_id")
+    var participation: MutableSet<ParticipationEntity>? = null,
+
+    @OneToMany(targetEntity = MessageEntity::class)
+    @JoinColumn(name = "member_id")
+    var messages: MutableSet<MessageEntity>? = null
 )
