@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
@@ -54,7 +56,7 @@ class RepeatDetect : FunctionListener {
                             2 -> {
                                 when (messageChain[1]) {
                                     is PlainText -> {
-                                        +randomText(box, messageChain[1] as PlainText)
+                                        +randomText(messageChain[1] as PlainText)
                                     }
                                     is Image -> {
                                         +randomImage(box, messageChain[1] as Image)
@@ -66,7 +68,7 @@ class RepeatDetect : FunctionListener {
                                 messageChain.shuffled().forEach {
                                     when (it) {
                                         is PlainText -> {
-                                            +randomText(box, it)
+                                            +randomText(it)
                                         }
                                         else -> {
                                             +it
@@ -84,7 +86,7 @@ class RepeatDetect : FunctionListener {
         return true
     }
 
-    private fun randomText(box : MessageBox, text: PlainText): MessageChain {
+    private fun randomText(text: PlainText): MessageChain {
         return buildMessageChain {
             if (random.nextBoolean()) {
                 mutableListOf(text.content.split("")).apply {
@@ -134,7 +136,10 @@ class RepeatDetect : FunctionListener {
                     +box.uploadImage(ByteArrayInputStream(out.toByteArray()))
                 }
                 else -> {
-                    val bufferedImage = getOperatedImage(ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())))
+                    @Suppress("BlockingMethodInNonBlockingContext")
+                    val bufferedImage = getOperatedImage(withContext(Dispatchers.Default) {
+                        ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
+                    })
                     +box.uploadImage(bufferedImage)
                 }
             }

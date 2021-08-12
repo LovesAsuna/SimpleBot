@@ -26,7 +26,7 @@ object Admin : RawCommand(
                 delay(10000)
             }
             2 -> {
-                when (args[0].content.toLowerCase()) {
+                when (args[0].content.lowercase()) {
                     "confirm" -> {
                         (this.subject as? Group)?.run {
                             quit()

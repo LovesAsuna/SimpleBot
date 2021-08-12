@@ -17,7 +17,7 @@ object StringUtil {
             return 0.0
         }
         d = Array(n + 1) { IntArray(m + 1) }
-        var i: Int = 0 // 遍历str的
+        var i = 0 // 遍历str的
         var j: Int // 遍历target的
         while (i <= n) {
             // 初始化第一列
@@ -38,7 +38,7 @@ object StringUtil {
             j = 1
             while (j <= m) {
                 ch2 = target[j - 1]
-                temp = if (ch1 == ch2 || ch1.toInt() == ch2.toInt() + 32 || ch1.toInt() + 32 == ch2.toInt()) {
+                temp = if (ch1 == ch2 || ch1.code == ch2.code + 32 || ch1.code + 32 == ch2.code) {
                     0
                 } else {
                     1

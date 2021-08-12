@@ -8,7 +8,6 @@ import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.content
-import java.util.*
 import kotlin.system.measureTimeMillis
 
 /**
@@ -125,7 +124,7 @@ object RainbowSix : RawCommand(
         val size = statOperator.size()
         val operators: MutableList<String> = ArrayList()
         for (i in 0 until size) {
-            var opName = statOperator[i]["name"].asText().toLowerCase()
+            var opName = statOperator[i]["name"].asText().lowercase()
             opName.apply {
                 when {
                     contains("盲") -> opName = "jager"
@@ -137,7 +136,7 @@ object RainbowSix : RawCommand(
             operators.add(opName)
         }
         val builder = StringBuilder()
-        val strings = operators.parallelStream().filter { s: String -> s.toLowerCase().startsWith(operatorName) }
+        val strings = operators.parallelStream().filter { s: String -> s.lowercase().startsWith(operatorName) }
             .toArray { arrayOfNulls<String>(size) }
 
         val level = root["Basicstat"][0]["level"].asText()
@@ -169,7 +168,7 @@ object RainbowSix : RawCommand(
         sender.sendMessage(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
     }
 
-    private suspend fun getRoot(username: String): JsonNode {
+    private fun getRoot(username: String): JsonNode {
         return OkHttpUtil.getJson("https://www.r6s.cn/Stats?username=$username", mapOf(
             "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
         ))

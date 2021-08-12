@@ -306,12 +306,12 @@ object OkHttpUtil {
 
     @Throws(IOException::class)
     private fun download(url: String): Response {
-        var url: String = url
+        var redirectUrl: String = url
         var response: Response
         while (true) {
-            response = OkHttpUtil[url]
+            response = OkHttpUtil[redirectUrl]
             val code: Int = response.code
-            url = if (code == 302 || code == 301) {
+            redirectUrl = if (code == 302 || code == 301) {
                 response.close()
                 response.header("location")!!
             } else break

@@ -54,7 +54,7 @@ object ContactLogger : MiraiLoggerPlatformBase() {
     }
 
     fun setLevel(level: String) : SimpleLogger.LogPriority{
-        logLevel = SimpleLogger.LogPriority.valueOf(level.toUpperCase())
+        logLevel = SimpleLogger.LogPriority.valueOf(level.uppercase())
         return logLevel
     }
 

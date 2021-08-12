@@ -1,6 +1,8 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
@@ -17,38 +19,42 @@ class Bilibili : FunctionListener {
         lateinit var av: String
         lateinit var bv: String
         val args = box.text()
-
-        val line = OkHttpUtil.getStr(
-            when {
-                args.toLowerCase().contains("av") -> {
-                    val matcher = av_pattern.matcher(args)
-                    av = if (matcher.find()) {
-                        matcher.group()
-                    } else {
-                        return false
-                    }
-                    av = BasicUtil.extractInt(av).toString()
-                    "https://api.bilibili.com/x/web-interface/view?aid=$av"
-                }
-                args.contains("BV") -> {
-                    val matcher = bv_pattern.matcher(args)
-                    bv = if (matcher.find()) {
-                        matcher.group()
-                    } else {
-                        return false
-                    }
-                    "https://api.bilibili.com/x/web-interface/view?bvid=$bv"
-                }
-                else -> {
+        val url = when {
+            args.lowercase().contains("av") -> {
+                val matcher = av_pattern.matcher(args)
+                av = if (matcher.find()) {
+                    matcher.group()
+                } else {
                     return false
                 }
+                av = BasicUtil.extractInt(av).toString()
+                "https://api.bilibili.com/x/web-interface/view?aid=$av"
             }
-        )
+            args.contains("BV") -> {
+                val matcher = bv_pattern.matcher(args)
+                bv = if (matcher.find()) {
+                    matcher.group()
+                } else {
+                    return false
+                }
+                "https://api.bilibili.com/x/web-interface/view?bvid=$bv"
+            }
+            else -> {
+                return false
+            }
+        }
+        @Suppress("BlockingMethodInNonBlockingContext")
+        val line = withContext(Dispatchers.IO) {
+            OkHttpUtil.getStr(url)
+        }
         if (!line.startsWith("{\"code\":0")) {
             return false
         }
         val mapper = ObjectMapper()
-        val jsonNode = mapper.readTree(line)
+        @Suppress("BlockingMethodInNonBlockingContext")
+        val jsonNode = withContext(Dispatchers.IO) {
+            mapper.readTree(line)
+        }
         val dataObject = jsonNode["data"]
         val pic = dataObject["pic"].asText()
         val title = dataObject["title"].asText()
