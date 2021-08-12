@@ -14,13 +14,21 @@ object BotData {
     var objectMapper: ObjectMapper =
         jacksonObjectMapper().also { it.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CASE }
 
-    val HibernateConfig: Configuration = Configuration().also {
+    val configBlock: (Configuration, String) -> Unit = { config, string ->
         ClassUtil.getClasses("me.lovesasuna.bot.entity", Main::class.java.classLoader).forEach { c ->
-            it.addAnnotatedClass(c)
+            config.addAnnotatedClass(c)
         }
         val classLoader = Thread.currentThread().contextClassLoader
         Thread.currentThread().contextClassLoader = this.javaClass.classLoader
-        it.configure()
+        config.configure(string)
         Thread.currentThread().contextClassLoader = classLoader
+    }
+
+    val functionConfig: Configuration = Configuration().also {
+      configBlock.invoke(it, "function.xml")
+    }
+
+    val recordConfig: Configuration = Configuration().also {
+        configBlock.invoke(it, "record.xml")
     }
 }
