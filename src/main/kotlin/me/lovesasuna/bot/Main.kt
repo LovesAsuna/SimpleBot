@@ -4,6 +4,7 @@ import me.lovesasuna.bot.listener.EventListener
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
+import me.lovesasuna.bot.service.DBService
 import me.lovesasuna.bot.util.ClassUtil
 import me.lovesasuna.bot.util.logger.ContactLogger
 import me.lovesasuna.bot.util.plugin.PluginScheduler
@@ -57,6 +58,12 @@ object Main : KotlinPlugin(
         listOf(
             GroupMessageListener, FriendMessageListener, MemberLeaveListener
         ).forEach(EventListener::onAction)
+    }
+
+    override fun onDisable() {
+        ClassUtil.getClasses("me.lovesasuna.bot.service.impl").forEach {
+            (it.kotlin.objectInstance as DBService).close()
+        }
     }
 }
 
