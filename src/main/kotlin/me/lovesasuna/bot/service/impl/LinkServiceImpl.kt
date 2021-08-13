@@ -8,22 +8,24 @@ import org.hibernate.Session
 
 object LinkServiceImpl : LinkService {
 
-    override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
+    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
+
+    private val dao: LinkDao by lazy { LinkDao(session) }
 
     override fun addLink(upID: Long, groupID: Long) {
         session.transaction.begin()
-        LinkDao(session).addLink(LinkEntity(null, groupID, upID))
+        dao.addLink(LinkEntity(null, groupID, upID))
         session.transaction.commit()
     }
 
-    override fun getUPByGroup(groupID: Long) = LinkDao(session).getUPByGroup(groupID)
+    override fun getUPByGroup(groupID: Long) = dao.getUPByGroup(groupID)
 
-    override fun getGroupByUp(upID: Long) = LinkDao(session).getGroupByUp(upID)
+    override fun getGroupByUp(upID: Long) = dao.getGroupByUp(upID)
 
-    override fun deleteGroup(groupID: Long) : Int {
+    override fun deleteGroup(groupID: Long): Int {
         session.transaction.begin()
         require(getGroups().contains(groupID))
-        val i = LinkDao(session).deleteGroup(groupID)
+        val i = dao.deleteGroup(groupID)
         session.transaction.commit()
         return i
     }
@@ -31,12 +33,12 @@ object LinkServiceImpl : LinkService {
     override fun deleteUp(upID: Long, groupID: Long): Int {
         session.transaction.begin()
         require(getUps().contains(upID))
-        val i = LinkDao(session).deleteUp(upID, groupID)
+        val i = dao.deleteUp(upID, groupID)
         session.transaction.commit()
         return i
     }
 
-    override fun getGroups() = LinkDao(session).getGroups()
+    override fun getGroups() = dao.getGroups()
 
-    override fun getUps() = LinkDao(session).getUps()
+    override fun getUps() = dao.getUps()
 }

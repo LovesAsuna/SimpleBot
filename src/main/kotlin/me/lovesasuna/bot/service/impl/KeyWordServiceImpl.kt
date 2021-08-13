@@ -8,11 +8,13 @@ import org.hibernate.Session
 
 object KeyWordServiceImpl : KeyWordService {
 
-    override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
+    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
 
+    private val dao: KeyWordDao by lazy { KeyWordDao(session) }
+    
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
         session.transaction.begin()
-        val dao = KeyWordDao(session)
+        val dao = dao
         return if (dao.checkKeyWordExist(groupID, wordRegex)) {
             session.transaction.commit()
             false
@@ -25,7 +27,7 @@ object KeyWordServiceImpl : KeyWordService {
 
     override fun removeKeyWord(id: Int): Boolean {
         session.transaction.begin()
-        val dao = KeyWordDao(session)
+        val dao = dao
         return if (!dao.checkKeyWordExist(id)) {
             session.transaction.commit()
             false
@@ -36,6 +38,6 @@ object KeyWordServiceImpl : KeyWordService {
         }
     }
 
-    override fun getKeyWordsByGroup(groupID: Long) = KeyWordDao(session).getKeyWordsByGroup(groupID)
+    override fun getKeyWordsByGroup(groupID: Long) = dao.getKeyWordsByGroup(groupID)
 
 }

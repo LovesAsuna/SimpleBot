@@ -8,11 +8,13 @@ import org.hibernate.Session
 
 object DynamicServiceImpl : DynamicService {
 
-    override val session: Session = BotData.HibernateConfig.buildSessionFactory().openSession()
+    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
 
+    private val dao: DynamicDao by lazy { DynamicDao(session) }
+    
     override fun update(upID: Long, dynamicID: String) {
         session.transaction.begin()
-        val dao = DynamicDao(session)
+        val dao = dao
         var entity = dao.getEntity(upID)
         if (entity == null) {
             entity = DynamicEntity(null, upID, dynamicID)
@@ -22,6 +24,5 @@ object DynamicServiceImpl : DynamicService {
         session.transaction.commit()
     }
 
-    override fun getDynamicID(upID: Long): String = DynamicDao(session).getDynamicID(upID).orElse("")
-
+    override fun getDynamicID(upID: Long): String = dao.getDynamicID(upID).orElse("")
 }
