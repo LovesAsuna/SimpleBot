@@ -2,7 +2,7 @@ package me.lovesasuna.bot.service.impl
 
 import me.lovesasuna.bot.dao.DynamicDao
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.database.dynamic.DynamicEntity
+import me.lovesasuna.bot.entity.dynamic.DynamicEntity
 import me.lovesasuna.bot.service.DynamicService
 import org.hibernate.Session
 

@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity.database.message
+package me.lovesasuna.bot.entity.message
 
 import java.util.*
 import javax.persistence.*

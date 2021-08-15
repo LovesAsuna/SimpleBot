@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.service
 
-import me.lovesasuna.bot.entity.database.KeyWordEntity
+import me.lovesasuna.bot.entity.KeyWordEntity
 
 interface KeyWordService : DBService {
     fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean

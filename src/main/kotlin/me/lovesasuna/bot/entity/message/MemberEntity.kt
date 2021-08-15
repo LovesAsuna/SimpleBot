@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity.database.message
+package me.lovesasuna.bot.entity.message
 
 import javax.persistence.*
 
@@ -22,4 +22,8 @@ data class MemberEntity(
     @OneToMany(targetEntity = MessageEntity::class)
     @JoinColumn(name = "member_id")
     var messages: MutableSet<MessageEntity>? = null
-)
+) {
+    override fun toString(): String {
+        return "${messages!!.size})"
+    }
+}

@@ -2,7 +2,7 @@ package me.lovesasuna.bot.service.impl
 
 import me.lovesasuna.bot.dao.NoticeDao
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.database.NoticeEntity
+import me.lovesasuna.bot.entity.NoticeEntity
 import me.lovesasuna.bot.service.NoticeService
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
