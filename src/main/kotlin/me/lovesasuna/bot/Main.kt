@@ -1,5 +1,6 @@
 package me.lovesasuna.bot
 
+import me.lovesasuna.bot.controller.game.TeamSpeak
 import me.lovesasuna.bot.listener.EventListener
 import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
@@ -63,6 +64,9 @@ object Main : KotlinPlugin(
     override fun onDisable() {
         ClassUtil.getClasses("me.lovesasuna.bot.service.impl").forEach {
             (it.kotlin.objectInstance as DBService).close()
+        }
+        TeamSpeak.queries.values.forEach {
+            it.exit()
         }
     }
 }
