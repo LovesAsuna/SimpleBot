@@ -33,20 +33,22 @@ object TeamSpeak : CompositeCommand(
     }
 
     @SubCommand
-    fun CommandSender.addserver(host: String, port: Int, username: String, password: String) {
+    suspend fun CommandSender.addserver(host: String, port: Int, username: String, password: String) {
         val entity = teamSpeakService.addServer(host, port, username, password, getGroupOrNull()!!.id)
         queries[Server(host, port)] = initQuery(entity!!)
+        sendMessage("ts服务器添加成功")
     }
 
     @SubCommand
-    fun CommandSender.removeserver(host: String, port: Int) {
+    suspend fun CommandSender.removeserver(host: String, port: Int) {
         teamSpeakService.deleteServer(host, port)
         queries.remove(Server(host, port))?.exit()
+        sendMessage("ts服务器删除成功")
     }
 
     @SubCommand
     suspend fun CommandSender.serverlist() {
-        val builder = StringBuilder()
+        val builder = StringBuilder("==================\n")
         teamSpeakService.getServerByGroup(getGroupOrNull()!!.id).forEach {
             builder.append("${it.server?.host}:${it.server?.port}\n")
         }
