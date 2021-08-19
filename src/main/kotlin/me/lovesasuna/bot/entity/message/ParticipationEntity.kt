@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity.database.message
+package me.lovesasuna.bot.entity.message
 
 import java.io.Serializable
 import javax.persistence.*
@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "participation")
 @IdClass(GroupAndMember::class)
-data class ParticipationEntity(
+class ParticipationEntity(
     @Id
     @Column(name = "group_id")
     var groupID: Long? = null,
@@ -18,10 +18,14 @@ data class ParticipationEntity(
     @Column(name = "nickname")
     @Basic
     var nickname: String? = null,
-)
+) {
+    override fun toString(): String {
+        return "群员 $memberID 在群 $groupID 的昵称为 $nickname"
+    }
+}
 
 
-private data class GroupAndMember(
+data class GroupAndMember(
     var groupID: Long? = null,
     var memberID: Long? = null,
 ) : Serializable

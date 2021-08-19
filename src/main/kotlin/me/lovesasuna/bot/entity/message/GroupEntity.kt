@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity.database.message
+package me.lovesasuna.bot.entity.message
 
 import javax.persistence.*
 
@@ -7,7 +7,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "groups")
-data class GroupEntity(
+class GroupEntity(
     @Id
     var id: Long? = null,
 
@@ -22,4 +22,8 @@ data class GroupEntity(
     @OneToMany(targetEntity = MessageEntity::class)
     @JoinColumn(name = "group_id")
     var messages: MutableSet<MessageEntity>? = null
-)
+) {
+    override fun toString(): String {
+        return "GroupEntity(id=$id, name=$name, participation=$participation)"
+    }
+}

@@ -7,7 +7,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "members")
-data class MemberEntity(
+class MemberEntity(
     @Id
     var id: Long? = null,
 
@@ -24,6 +24,6 @@ data class MemberEntity(
     var messages: MutableSet<MessageEntity>? = null
 ) {
     override fun toString(): String {
-        return "${messages!!.size})"
+        return "MemberEntity(id=$id, name=$name, participation=$participation)"
     }
 }

@@ -3,7 +3,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.5.21'
     id "org.jetbrains.kotlin.plugin.serialization" version "1.5.21"
-    id "org.jetbrains.kotlin.plugin.jpa" version "1.5.21"
 }
 
 description('一个基于Mirai的机器人')

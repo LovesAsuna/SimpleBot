@@ -8,7 +8,7 @@ import javax.persistence.*
  **/
 @Entity
 @Table(name = "messages")
-data class MessageEntity(
+class MessageEntity(
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     var id: Int? = null,
@@ -27,4 +27,8 @@ data class MessageEntity(
     @ManyToOne(targetEntity = GroupEntity::class)
     @JoinColumn(name = "group_id")
     var group : GroupEntity? = null
-)
+) {
+    override fun toString(): String {
+        return "${time}时 ${member?.name} 在群 [${group?.name}] 说了: ${content}"
+    }
+}
