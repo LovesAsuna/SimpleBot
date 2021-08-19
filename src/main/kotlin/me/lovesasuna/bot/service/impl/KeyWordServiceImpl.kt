@@ -2,7 +2,7 @@ package me.lovesasuna.bot.service.impl
 
 import me.lovesasuna.bot.dao.KeyWordDao
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.KeyWordEntity
+import me.lovesasuna.bot.entity.`fun`.KeyWordEntity
 import me.lovesasuna.bot.service.KeyWordService
 import org.hibernate.Session
 
