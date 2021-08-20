@@ -42,11 +42,11 @@ dependencies {
 }
 
 dependencies {
-    implementation 'org.jsoup:jsoup:1.14.1'
+    implementation 'org.jsoup:jsoup:1.14.2'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4'
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha8'
-    implementation 'com.charleskorn.kaml:kaml:0.35.1'
+    implementation 'com.charleskorn.kaml:kaml:0.35.2'
     implementation 'com.github.oshi:oshi-core:5.8.0'
     implementation 'net.java.dev.jna:jna:5.8.0'
     implementation 'net.java.dev.jna:jna-platform:5.8.0'
