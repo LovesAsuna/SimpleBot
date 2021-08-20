@@ -29,6 +29,6 @@ class MessageEntity(
     var group : GroupEntity? = null
 ) {
     override fun toString(): String {
-        return "${time}时 ${member?.name} 在群 [${group?.name}] 说了: ${content}"
+        return "${time}时 ${member?.name} 在群 [${group?.name}] 说了: $content"
     }
 }
