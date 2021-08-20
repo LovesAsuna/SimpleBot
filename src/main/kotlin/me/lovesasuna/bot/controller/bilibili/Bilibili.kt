@@ -11,8 +11,8 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
 class Bilibili : FunctionListener {
-    private val av_pattern = Pattern.compile("[aA][vV]\\d*")
-    private val bv_pattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
+    private val avPattern = Pattern.compile("[aA][vV]\\d*")
+    private val bvPattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
     override suspend fun execute(box: MessageBox): Boolean {
 
@@ -21,7 +21,7 @@ class Bilibili : FunctionListener {
         val args = box.text()
         val url = when {
             args.lowercase().contains("av") -> {
-                val matcher = av_pattern.matcher(args)
+                val matcher = avPattern.matcher(args)
                 av = if (matcher.find()) {
                     matcher.group()
                 } else {
@@ -31,7 +31,7 @@ class Bilibili : FunctionListener {
                 "https://api.bilibili.com/x/web-interface/view?aid=$av"
             }
             args.contains("BV") -> {
-                val matcher = bv_pattern.matcher(args)
+                val matcher = bvPattern.matcher(args)
                 bv = if (matcher.find()) {
                     matcher.group()
                 } else {
@@ -58,12 +58,12 @@ class Bilibili : FunctionListener {
         val dataObject = jsonNode["data"]
         val pic = dataObject["pic"].asText()
         val title = dataObject["title"].asText()
-        val UP = dataObject["owner"]["name"].asText()
+        val up = dataObject["owner"]["name"].asText()
         val uplink = dataObject["owner"]["mid"].asText()
         val zone = dataObject["tname"].asText()
         val statObject = dataObject["stat"]
         val view = statObject["view"].asText()
-        val Barrage = statObject["danmaku"].asText()
+        val barrage = statObject["danmaku"].asText()
         val reply = statObject["reply"].asText()
         val fav = statObject["favorite"].asText()
         val coin = statObject["coin"].asText()
@@ -72,7 +72,7 @@ class Bilibili : FunctionListener {
         val desc = dataObject["desc"].asText()
         val builder = StringBuilder("\n" + title)
         builder.append("\nUP: ")
-            .append(UP)
+            .append(up)
             .append("(https://space.bilibili.com/")
             .append(uplink)
             .append(")\n分区: ")
@@ -80,7 +80,7 @@ class Bilibili : FunctionListener {
             .append("\n播放量: ")
             .append(view)
             .append(" 弹幕: ")
-            .append(Barrage)
+            .append(barrage)
             .append(" 评论: ")
             .append(reply)
             .append("\n收藏: ")

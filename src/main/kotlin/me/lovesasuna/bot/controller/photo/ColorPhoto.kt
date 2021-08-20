@@ -1,8 +1,6 @@
 package me.lovesasuna.bot.controller.photo
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.controller.photo.source.PhotoSource
 import me.lovesasuna.bot.controller.photo.source.Pixiv
@@ -36,6 +34,7 @@ object ColorPhoto : CompositeCommand(
     private var queue: Queue<String> = LinkedList()
 
     @SubCommand
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun CommandSender.pixiv(num : Int) {
         if (pixiv) {
             if (num > 5) sendMessage("一次最大只能同时获取5张图片")
@@ -54,7 +53,9 @@ object ColorPhoto : CompositeCommand(
                                 sendMessage(
                                     OkHttpUtil.getIs(OkHttpUtil[it]).run {
                                         val image = uploadAsImage(getGroupOrNull()!!)
-                                        this.close()
+                                        withContext(Dispatchers.IO) {
+                                            this@run.close()
+                                        }
                                         image
                                     }
                                 )
@@ -97,7 +98,7 @@ object ColorPhoto : CompositeCommand(
     }
 
     @SubCommand
-    suspend fun CommandSender.switch(type: String) {
+    fun CommandSender.switch(type: String) {
         changeBanStatus(this, type)
     }
 

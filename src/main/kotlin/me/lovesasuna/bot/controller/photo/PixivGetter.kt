@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.photo
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.logger.debug
 import me.lovesasuna.bot.util.network.OkHttpUtil
@@ -19,7 +21,10 @@ object PixivGetter : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.work(ID: Int) {
         val count: Int
-        val root = OkHttpUtil.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
+        val root = withContext(Dispatchers.IO) {
+            @Suppress("BlockingMethodInNonBlockingContext")
+            OkHttpUtil.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
+        }
         if (root["error"] != null) {
             sendMessage("该作品不存在或已被删除!")
             return

@@ -1,5 +1,6 @@
 package me.lovesasuna.bot.controller.system
 
+import kotlinx.coroutines.delay
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
@@ -10,7 +11,6 @@ import java.text.DecimalFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * @author LovesAsuna
@@ -31,7 +31,7 @@ object SystemInfo : SimpleCommand(
         val prevTicks = processor.systemCpuLoadTicks
         // 睡眠1s
         try {
-            TimeUnit.SECONDS.sleep(1)
+            delay(1000)
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
@@ -90,20 +90,20 @@ object SystemInfo : SimpleCommand(
 
     private fun formatByte(byteNumber: Long): String? {
         //换算单位
-        val FORMAT = 1024.0
-        val kbNumber = byteNumber / FORMAT
-        if (kbNumber < FORMAT) {
+        val format = 1024.0
+        val kbNumber = byteNumber / format
+        if (kbNumber < format) {
             return DecimalFormat("#.##KB").format(kbNumber)
         }
-        val mbNumber = kbNumber / FORMAT
-        if (mbNumber < FORMAT) {
+        val mbNumber = kbNumber / format
+        if (mbNumber < format) {
             return DecimalFormat("#.##MB").format(mbNumber)
         }
-        val gbNumber = mbNumber / FORMAT
-        if (gbNumber < FORMAT) {
+        val gbNumber = mbNumber / format
+        if (gbNumber < format) {
             return DecimalFormat("#.##GB").format(gbNumber)
         }
-        val tbNumber = gbNumber / FORMAT
+        val tbNumber = gbNumber / format
         return DecimalFormat("#.##TB").format(tbNumber)
     }
 }

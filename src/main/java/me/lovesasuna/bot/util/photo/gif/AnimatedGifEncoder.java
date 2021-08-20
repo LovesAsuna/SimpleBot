@@ -94,7 +94,6 @@ public class AnimatedGifEncoder {
      * 设置GIF帧集应播放的次数。默认值为1；0表示无限期播放。必须在添加第一个图像之前调用。
      *
      * @param iter int number of iterations.
-     * @return
      */
     public void setRepeat(int iter) {
         if (iter >= 0) {
@@ -202,7 +201,6 @@ public class AnimatedGifEncoder {
      * reasonable speeds. Values greater than 20 do not yield significant improvements in speed.
      *
      * @param quality int greater than 0.
-     * @return
      */
     public void setQuality(int quality) {
         if (quality < 1)
@@ -255,7 +253,7 @@ public class AnimatedGifEncoder {
      * @return false if open or initial write failed.
      */
     public boolean start(String file) {
-        boolean ok = true;
+        boolean ok;
         try {
             out = new BufferedOutputStream(new FileOutputStream(file));
             ok = start(out);
@@ -519,11 +517,11 @@ class NeuQuant {
     /* defs for freq and bias */
     protected static final int intbiasshift = 16; /* bias for fractions */
 
-    protected static final int intbias = (((int) 1) << intbiasshift);
+    protected static final int intbias = (1 << intbiasshift);
 
     protected static final int gammashift = 10; /* gamma = 1024 */
 
-    protected static final int gamma = (((int) 1) << gammashift);
+    protected static final int gamma = (1 << gammashift);
 
     protected static final int betashift = 10;
 
@@ -538,7 +536,7 @@ class NeuQuant {
 
     protected static final int radiusbiasshift = 6; /* at 32.0 biased by 6 bits */
 
-    protected static final int radiusbias = (((int) 1) << radiusbiasshift);
+    protected static final int radiusbias = (1 << radiusbiasshift);
 
     protected static final int initradius = (initrad * radiusbias); /*
      * and decreases by a
@@ -549,18 +547,18 @@ class NeuQuant {
     /* defs for decreasing alpha factor */
     protected static final int alphabiasshift = 10; /* alpha starts at 1.0 */
 
-    protected static final int initalpha = (((int) 1) << alphabiasshift);
+    protected static final int initalpha = (1 << alphabiasshift);
 
     protected int alphadec; /* biased by 10 bits */
 
     /* radbias and alpharadbias used for radpower calculation */
     protected static final int radbiasshift = 8;
 
-    protected static final int radbias = (((int) 1) << radbiasshift);
+    protected static final int radbias = (1 << radbiasshift);
 
     protected static final int alpharadbshift = (alphabiasshift + radbiasshift);
 
-    protected static final int alpharadbias = (((int) 1) << alpharadbshift);
+    protected static final int alpharadbias = (1 << alpharadbshift);
 
     /*
      * Types and Global Variables --------------------------
@@ -918,7 +916,7 @@ class NeuQuant {
         int bestpos, bestbiaspos, bestd, bestbiasd;
         int[] n;
 
-        bestd = ~(((int) 1) << 31);
+        bestd = ~(1 << 31);
         bestbiasd = bestd;
         bestpos = -1;
         bestbiaspos = bestpos;
@@ -963,11 +961,12 @@ class LZWEncoder {
 
     private static final int EOF = -1;
 
-    private int imgW, imgH;
+    private final int imgW;
+    private final int imgH;
 
-    private byte[] pixAry;
+    private final byte[] pixAry;
 
-    private int initCodeSize;
+    private final int initCodeSize;
 
     private int remaining;
 
@@ -997,17 +996,17 @@ class LZWEncoder {
 
     int n_bits; // number of bits/code
 
-    int maxbits = BITS; // user settable max # bits/code
+    int maxBits = BITS; // user settable max # bits/code
 
-    int maxcode; // maximum code, given n_bits
+    int maxCode; // maximum code, given n_bits
 
-    int maxmaxcode = 1 << BITS; // should NEVER generate this code
+    int maxMaxCode = 1 << BITS; // should NEVER generate this code
 
-    int[] htab = new int[HSIZE];
+    int[] hTab = new int[HSIZE];
 
-    int[] codetab = new int[HSIZE];
+    int[] codeTab = new int[HSIZE];
 
-    int hsize = HSIZE; // for dynamic table sizing
+    int hSize = HSIZE; // for dynamic table sizing
 
     int free_ent = 0; // first unused entry
 
@@ -1052,7 +1051,7 @@ class LZWEncoder {
 
     int cur_bits = 0;
 
-    int masks[] = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F, 0x001F, 0x003F, 0x007F, 0x00FF, 0x01FF, 0x03FF, 0x07FF, 0x0FFF, 0x1FFF, 0x3FFF,
+    final int[] masks = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F, 0x001F, 0x003F, 0x007F, 0x00FF, 0x01FF, 0x03FF, 0x07FF, 0x0FFF, 0x1FFF, 0x3FFF,
         0x7FFF, 0xFFFF };
 
     // Number of characters so far in this 'packet'
@@ -1081,7 +1080,7 @@ class LZWEncoder {
 
     // table clear for block compress
     void cl_block(OutputStream outs) throws IOException {
-        cl_hash(hsize);
+        cl_hash(hSize);
         free_ent = ClearCode + 2;
         clear_flg = true;
 
@@ -1091,7 +1090,7 @@ class LZWEncoder {
     // reset code table
     void cl_hash(int hsize) {
         for (int i = 0; i < hsize; ++i)
-        htab[i] = -1;
+        hTab[i] = -1;
     }
 
     void compress(int init_bits, OutputStream outs) throws IOException {
@@ -1109,7 +1108,7 @@ class LZWEncoder {
         // Set up the necessary values
         clear_flg = false;
         n_bits = g_init_bits;
-        maxcode = MAXCODE(n_bits);
+        maxCode = MAXCODE(n_bits);
 
         ClearCode = 1 << (init_bits - 1);
         EOFCode = ClearCode + 1;
@@ -1120,23 +1119,23 @@ class LZWEncoder {
         ent = nextPixel();
 
         hshift = 0;
-        for (fcode = hsize; fcode < 65536; fcode *= 2)
+        for (fcode = hSize; fcode < 65536; fcode *= 2)
         ++hshift;
         hshift = 8 - hshift; // set hash code range bound
 
-        hsize_reg = hsize;
+        hsize_reg = hSize;
         cl_hash(hsize_reg); // clear hash table
 
         output(ClearCode, outs);
 
         outer_loop: while ((c = nextPixel()) != EOF) {
-            fcode = (c << maxbits) + ent;
+            fcode = (c << maxBits) + ent;
             i = (c << hshift) ^ ent; // xor hashing
 
-            if (htab[i] == fcode) {
-                ent = codetab[i];
+            if (hTab[i] == fcode) {
+                ent = codeTab[i];
                 continue;
-            } else if (htab[i] >= 0) // non-empty slot
+            } else if (hTab[i] >= 0) // non-empty slot
             {
                 disp = hsize_reg - i; // secondary hash (after G. Knott)
                 if (i == 0)
@@ -1145,17 +1144,17 @@ class LZWEncoder {
                     if ((i -= disp) < 0)
                         i += hsize_reg;
 
-                    if (htab[i] == fcode) {
-                        ent = codetab[i];
+                    if (hTab[i] == fcode) {
+                        ent = codeTab[i];
                         continue outer_loop;
                     }
-                } while (htab[i] >= 0);
+                } while (hTab[i] >= 0);
             }
             output(ent, outs);
             ent = c;
-            if (free_ent < maxmaxcode) {
-                codetab[i] = free_ent++; // code -> hashtable
-                htab[i] = fcode;
+            if (free_ent < maxMaxCode) {
+                codeTab[i] = free_ent++; // code -> hashtable
+                hTab[i] = fcode;
             } else
                 cl_block(outs);
         }
@@ -1221,16 +1220,16 @@ class LZWEncoder {
 
         // If the next entry is going to be too big for the code size,
         // then increase it, if possible.
-        if (free_ent > maxcode || clear_flg) {
+        if (free_ent > maxCode || clear_flg) {
             if (clear_flg) {
-                maxcode = MAXCODE(n_bits = g_init_bits);
+                maxCode = MAXCODE(n_bits = g_init_bits);
                 clear_flg = false;
             } else {
                 ++n_bits;
-                if (n_bits == maxbits)
-                    maxcode = maxmaxcode;
+                if (n_bits == maxBits)
+                    maxCode = maxMaxCode;
                 else
-                    maxcode = MAXCODE(n_bits);
+                    maxCode = MAXCODE(n_bits);
             }
         }
 

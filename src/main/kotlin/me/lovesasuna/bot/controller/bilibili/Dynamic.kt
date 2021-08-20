@@ -1,9 +1,7 @@
 package me.lovesasuna.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.JsonNode
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.service.DynamicService
@@ -150,7 +148,10 @@ object Dynamic : CompositeCommand(
         val reader =
             OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
                 .bufferedReader()
-        val root = BotData.objectMapper.readTree(reader.readLine())
+        val root = withContext(Dispatchers.IO) {
+            @Suppress("BlockingMethodInNonBlockingContext")
+            BotData.objectMapper.readTree(reader.readLine())
+        }
         if (root.toString().contains("拦截")) {
             if (!intercept) {
                 Main.logger.error("B站动态api请求被拦截")

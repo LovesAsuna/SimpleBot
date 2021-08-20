@@ -30,7 +30,7 @@ object ImageUtil {
         val rectangle = calculatorRotatedSize(Rectangle(Dimension(imageWidth, imageHeight)), revisedAngel)
         // 获取原始图片的透明度
         val type = bufferedImage.colorModel.transparency
-        var newImage: BufferedImage?
+        val newImage: BufferedImage?
         newImage = BufferedImage(rectangle.width, rectangle.height, type)
         val graphics = newImage.createGraphics()
         // 平移位置
@@ -61,14 +61,14 @@ object ImageUtil {
         }
         val r = Math.sqrt((src.height * src.height + src.width * src.width).toDouble()) / 2
         val len = 2 * Math.sin(Math.toRadians(revisedAngel.toDouble()) / 2) * r
-        val angel_alpha = (Math.PI - Math.toRadians(revisedAngel.toDouble())) / 2
-        val angel_dalta_width = Math.atan(src.height.toDouble() / src.width)
-        val angel_dalta_height = Math.atan(src.width.toDouble() / src.height)
-        val len_dalta_width = (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width)).toInt()
-        val len_dalta_height = (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height)).toInt()
-        val des_width = src.width + len_dalta_width * 2
-        val des_height = src.height + len_dalta_height * 2
-        return Rectangle(Dimension(des_width, des_height))
+        val angelAlpha = (Math.PI - Math.toRadians(revisedAngel.toDouble())) / 2
+        val angelDaltaWidth = Math.atan(src.height.toDouble() / src.width)
+        val angelDaltaHeight = Math.atan(src.width.toDouble() / src.height)
+        val lenDaltaWidth = (len * Math.cos(Math.PI - angelAlpha - angelDaltaWidth)).toInt()
+        val lenDaltaHeight = (len * Math.cos(Math.PI - angelAlpha - angelDaltaHeight)).toInt()
+        val desWidth = src.width + lenDaltaWidth * 2
+        val desHeight = src.height + lenDaltaHeight * 2
+        return Rectangle(Dimension(desWidth, desHeight))
     }
 
     fun mirrorImage(bufferedImage: BufferedImage): BufferedImage {

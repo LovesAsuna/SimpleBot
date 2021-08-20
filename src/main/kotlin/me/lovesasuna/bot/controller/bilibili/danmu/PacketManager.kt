@@ -2,7 +2,8 @@ package me.lovesasuna.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -13,7 +14,8 @@ import java.nio.charset.StandardCharsets
 
 object PacketManager {
     @Throws(IOException::class)
-    fun sendJoinChannel(event: MessageEvent, roomID: Int, out: DataOutputStream, key: String) {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun sendJoinChannel(event: MessageEvent, roomID: Int, out: DataOutputStream, key: String) {
         val mapper = ObjectMapper()
         val objectNode: ObjectNode = mapper.createObjectNode()
             .put("roomid", roomID)
@@ -21,8 +23,10 @@ object PacketManager {
             .put("key", key)
             .put("platform", "MC BC M/P")
             .put("protover", 2)
-        sendPacket(out, 7, objectNode.toString())
-        runBlocking { event.subject.sendMessage("成功连接直播间: $roomID") }
+        withContext(Dispatchers.IO) {
+            sendPacket(out, 7, objectNode.toString())
+        }
+        event.subject.sendMessage("成功连接直播间: $roomID")
     }
 
     @Throws(IOException::class)

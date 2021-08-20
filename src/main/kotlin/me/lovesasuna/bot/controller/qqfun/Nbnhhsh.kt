@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.data.BotData
 import me.lovesasuna.bot.util.network.OkHttpUtil
@@ -20,10 +22,13 @@ object Nbnhhsh : SimpleCommand(
         val text = BotData.objectMapper.createObjectNode().put("text", abbreviation)
         sendMessage(
             "可能的结果: ${
-                OkHttpUtil.postJson(
-                    "https://lab.magiconch.com/api/nbnhhsh/guess",
-                    text.toString().toRequestBody("application/json".toMediaType())
-                )[0]["trans"] ?: "[]"
+                withContext(Dispatchers.IO) {
+                    @Suppress("BlockingMethodInNonBlockingContext")
+                    OkHttpUtil.postJson(
+                        "https://lab.magiconch.com/api/nbnhhsh/guess",
+                        text.toString().toRequestBody("application/json".toMediaType())
+                    )[0]["trans"] ?: "[]"
+                }
             }"
         )
     }

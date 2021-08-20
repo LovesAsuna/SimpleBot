@@ -25,6 +25,7 @@ object GithubInfo : SimpleCommand(
     suspend fun CommandSender.handle(url: String) {
         try {
             sendMessage(OkHttpUtil.getIs(OkHttpUtil[withContext(Dispatchers.IO) {
+                @Suppress("BlockingMethodInNonBlockingContext")
                 Jsoup.parse(URL("https://hub.fastgit.org/$url"), 10000)
                     .head()
                     .getElementsByAttributeValue("property", "og:image")

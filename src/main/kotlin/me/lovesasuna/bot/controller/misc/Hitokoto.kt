@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.misc
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
@@ -46,7 +48,10 @@ object Hitokoto : RawCommand(
     }
 
     private suspend fun getResult(url: String, sender: CommandSender) {
-        val `object` = OkHttpUtil.getJson(url)
+        val `object` = withContext(Dispatchers.IO) {
+            @Suppress("BlockingMethodInNonBlockingContext")
+            OkHttpUtil.getJson(url)
+        }
         val hitokoto = `object`["hitokoto"].asText()
         val from = `object`["from"].asText()
         sender.sendMessage("『 $hitokoto 』- 「$from」")

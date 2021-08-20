@@ -1,5 +1,7 @@
 package me.lovesasuna.bot.controller.qqfun
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
@@ -16,7 +18,10 @@ object DogLicking : SimpleCommand(
     parentPermission = registerDefaultPermission()
 ) {
     @Handler
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun CommandSender.handle() {
-        sendMessage(OkHttpUtil.getStr("https://v2.alapi.cn/api/dog?format=text&token=dppfgmdxhKZlt6vB"))
+        sendMessage(withContext(Dispatchers.IO) {
+            OkHttpUtil.getStr("https://v2.alapi.cn/api/dog?format=text&token=dppfgmdxhKZlt6vB")
+        })
     }
 }

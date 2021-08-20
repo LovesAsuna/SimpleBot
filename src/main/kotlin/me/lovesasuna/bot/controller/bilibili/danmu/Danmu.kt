@@ -1,10 +1,7 @@
 package me.lovesasuna.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import me.lovesasuna.bot.controller.FunctionListener
 import me.lovesasuna.bot.data.MessageBox
 import me.lovesasuna.bot.util.BasicUtil
@@ -53,7 +50,8 @@ class Danmu : FunctionListener {
         return true
     }
 
-    suspend fun connect(event: MessageEvent) {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun connect(event: MessageEvent) = withContext(Dispatchers.IO) {
         val url = URL("https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id=$roomID")
         conn = url.openConnection() as HttpURLConnection
         conn.doInput = true
@@ -126,12 +124,15 @@ class Danmu : FunctionListener {
     }
 
     @Throws(IOException::class)
+    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun process(event: MessageEvent, packetType: Int, `in`: DataInputStream) {
         //3是人气回调 无视无视（
         when (packetType) {
             5 -> {
                 val mapper = ObjectMapper()
-                val jsonNode = mapper.readTree(`in`)
+                val jsonNode = withContext(Dispatchers.IO) {
+                    mapper.readTree(`in`)
+                }
                 try {
                     val bulletData = DanmuData(jsonNode, roomID, 2)
                     if (bulletData.type != null) {

@@ -26,6 +26,7 @@ object GroupMessageListener : EventListener {
         }
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override fun onAction() {
         Main.eventChannel.subscribeAlways(GroupMessageEvent::class) {
             listeners.forEach {

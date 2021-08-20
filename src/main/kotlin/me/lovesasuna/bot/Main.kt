@@ -2,7 +2,6 @@ package me.lovesasuna.bot
 
 import me.lovesasuna.bot.controller.game.TeamSpeak
 import me.lovesasuna.bot.listener.EventListener
-import me.lovesasuna.bot.listener.FriendMessageListener
 import me.lovesasuna.bot.listener.GroupMessageListener
 import me.lovesasuna.bot.listener.MemberLeaveListener
 import me.lovesasuna.bot.service.DBService
@@ -57,7 +56,7 @@ object Main : KotlinPlugin(
             }
         }
         listOf(
-            GroupMessageListener, FriendMessageListener, MemberLeaveListener
+            GroupMessageListener, MemberLeaveListener
         ).forEach(EventListener::onAction)
     }
 
