@@ -1,4 +1,4 @@
-package me.lovesasuna.bot.entity
+package me.lovesasuna.bot.entity.game
 
 import java.io.Serializable
 import javax.persistence.*

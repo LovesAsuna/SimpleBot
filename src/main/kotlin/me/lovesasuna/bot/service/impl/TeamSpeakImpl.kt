@@ -2,8 +2,8 @@ package me.lovesasuna.bot.service.impl
 
 import me.lovesasuna.bot.dao.TeamSpeakDao
 import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.Server
-import me.lovesasuna.bot.entity.TeamSpeakEntity
+import me.lovesasuna.bot.entity.game.Server
+import me.lovesasuna.bot.entity.game.TeamSpeakEntity
 import me.lovesasuna.bot.service.TeamSpeakService
 import org.hibernate.Session
 import java.util.stream.Collectors

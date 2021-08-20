@@ -1,6 +1,6 @@
 package me.lovesasuna.bot.service
 
-import me.lovesasuna.bot.entity.TeamSpeakEntity
+import me.lovesasuna.bot.entity.game.TeamSpeakEntity
 
 /**
  * @author LovesAsuna

@@ -1,7 +1,7 @@
 package me.lovesasuna.bot.dao
 
-import me.lovesasuna.bot.entity.Server
-import me.lovesasuna.bot.entity.TeamSpeakEntity
+import me.lovesasuna.bot.entity.game.Server
+import me.lovesasuna.bot.entity.game.TeamSpeakEntity
 import org.hibernate.Session
 
 /**

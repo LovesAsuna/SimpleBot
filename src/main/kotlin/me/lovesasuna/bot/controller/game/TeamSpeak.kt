@@ -4,8 +4,8 @@ import com.github.theholywaffle.teamspeak3.TS3Config
 import com.github.theholywaffle.teamspeak3.TS3Query
 import com.github.theholywaffle.teamspeak3.api.event.*
 import me.lovesasuna.bot.Main
-import me.lovesasuna.bot.entity.Server
-import me.lovesasuna.bot.entity.TeamSpeakEntity
+import me.lovesasuna.bot.entity.game.Server
+import me.lovesasuna.bot.entity.game.TeamSpeakEntity
 import me.lovesasuna.bot.service.TeamSpeakService
 import me.lovesasuna.bot.service.impl.TeamSpeakImpl
 import me.lovesasuna.bot.util.registerDefaultPermission
