@@ -26,7 +26,7 @@ class GroupRecord : FunctionListener {
             }
             recordService.addRecord(event.message.toString(), Date(), member.id, group.id)
         } catch (e: Exception) {
-            box.reply("聊天记录入库时发生错误:\n" + e.message)
+            box.reply("聊天记录入库时发生错误:\n" + e.localizedMessage)
             return false
         }
         return true
