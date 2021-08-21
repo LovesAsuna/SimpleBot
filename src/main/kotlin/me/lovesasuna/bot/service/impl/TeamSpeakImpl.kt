@@ -32,17 +32,27 @@ object TeamSpeakImpl : TeamSpeakService {
         groupID: Long
     ): TeamSpeakEntity {
         session.beginTransaction()
-        var server = queryServer(host, port)
-        if (server != null) {
-            server.groups!!.add(groupID)
-        } else {
-            server = TeamSpeakEntity(Server(host, port), username, password, mutableSetOf(groupID))
+        try {
+            var server = queryServer(host, port)
+            if (server != null) {
+                server.groups!!.add(groupID)
+            } else {
+                server = TeamSpeakEntity(Server(host, port), username, password, mutableSetOf(groupID))
+            }
+            session.saveOrUpdate(server)
+            return server
+        } finally {
+            session.transaction.commit()
         }
-        session.saveOrUpdate(server)
-        session.transaction.commit()
-        return server
     }
 
-    override fun deleteServer(host: String, port: Int): Boolean = dao.deleteServer(host, port)
+    override fun deleteServer(host: String, port: Int): Boolean {
+        session.beginTransaction()
+        try {
+            return dao.deleteServer(host, port)
+        } finally {
+            session.transaction.commit()
+        }
+    }
 
 }

@@ -11,30 +11,32 @@ object KeyWordServiceImpl : KeyWordService {
     override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
 
     private val dao: KeyWordDao by lazy { KeyWordDao(session) }
-    
+
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
         session.transaction.begin()
-        val dao = dao
-        return if (dao.checkKeyWordExist(groupID, wordRegex)) {
+        try {
+            return if (dao.checkKeyWordExist(groupID, wordRegex)) {
+                false
+            } else {
+                dao.addKeyWord(KeyWordEntity(null, groupID, wordRegex, reply, chance))
+                true
+            }
+        } finally {
             session.transaction.commit()
-            false
-        } else {
-            dao.addKeyWord(KeyWordEntity(null, groupID, wordRegex, reply, chance))
-            session.transaction.commit()
-            true
         }
     }
 
     override fun removeKeyWord(id: Int): Boolean {
         session.transaction.begin()
-        val dao = dao
-        return if (!dao.checkKeyWordExist(id)) {
+        try {
+            return if (!dao.checkKeyWordExist(id)) {
+                false
+            } else {
+                dao.removeKeyWord(KeyWordEntity(id))
+                true
+            }
+        } finally {
             session.transaction.commit()
-            false
-        } else {
-            dao.removeKeyWord(KeyWordEntity(id))
-            session.transaction.commit()
-            true
         }
     }
 

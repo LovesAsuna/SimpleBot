@@ -14,8 +14,11 @@ object LinkServiceImpl : LinkService {
 
     override fun addLink(upID: Long, groupID: Long) {
         session.transaction.begin()
-        dao.addLink(LinkEntity(null, groupID, upID))
-        session.transaction.commit()
+        try {
+            dao.addLink(LinkEntity(null, groupID, upID))
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun getUPByGroup(groupID: Long) = dao.getUPByGroup(groupID)
@@ -24,18 +27,22 @@ object LinkServiceImpl : LinkService {
 
     override fun deleteGroup(groupID: Long): Int {
         session.transaction.begin()
-        require(getGroups().contains(groupID))
-        val i = dao.deleteGroup(groupID)
-        session.transaction.commit()
-        return i
+        try {
+            require(getGroups().contains(groupID))
+            return dao.deleteGroup(groupID)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun deleteUp(upID: Long, groupID: Long): Int {
         session.transaction.begin()
-        require(getUps().contains(upID))
-        val i = dao.deleteUp(upID, groupID)
-        session.transaction.commit()
-        return i
+        try {
+            require(getUps().contains(upID))
+            return dao.deleteUp(upID, groupID)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun getGroups() = dao.getGroups()

@@ -14,14 +14,17 @@ object DynamicServiceImpl : DynamicService {
     
     override fun update(upID: Long, dynamicID: String) {
         session.transaction.begin()
-        val dao = dao
-        var entity = dao.getEntity(upID)
-        if (entity == null) {
-            entity = DynamicEntity(null, upID, dynamicID)
+        try {
+            val dao = dao
+            var entity = dao.getEntity(upID)
+            if (entity == null) {
+                entity = DynamicEntity(null, upID, dynamicID)
+            }
+            entity.dynamicID = dynamicID
+            dao.updateDynamic(entity)
+        } finally {
+            session.transaction.commit()
         }
-        entity.dynamicID = dynamicID
-        dao.updateDynamic(entity)
-        session.transaction.commit()
     }
 
     override fun getDynamicID(upID: Long): String = dao.getDynamicID(upID).orElse("")
