@@ -14,7 +14,7 @@ class MessageEntity(
     var id: Int? = null,
 
     @Column(name = "content")
-    @Basic
+    @Lob
     var content: String? = null,
 
     @Column(name = "time")
