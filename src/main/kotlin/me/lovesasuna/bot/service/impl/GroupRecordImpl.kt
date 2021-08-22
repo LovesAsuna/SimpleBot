@@ -13,35 +13,60 @@ object GroupRecordImpl : GroupRecordService {
 
     private val dao: GroupRecordDao by lazy { GroupRecordDao(session) }
 
-    override fun groupIsNull(groupID: Long): Boolean = dao.groupIsNull(groupID)
+    override fun groupIsNull(groupID: Long): Boolean = dao.queryGroup(groupID) == null
 
-    override fun memberIsNull(memberID: Long): Boolean = dao.memberIsNull(memberID)
+    override fun memberIsNull(memberID: Long): Boolean = dao.queryMember(memberID) == null
 
     override fun participationIsNull(memberID: Long, groupID: Long): Boolean =
-        dao.participationIsNull(memberID, groupID)
+        dao.queryParticipation(memberID, groupID) == null
 
     override fun addGroup(groupID: Long, name: String) {
         session.beginTransaction()
-        dao.addGroup(groupID, name)
-        session.transaction.commit()
+        try {
+            dao.addGroup(groupID, name)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun addMember(memberID: Long, name: String) {
         session.beginTransaction()
-        dao.addMember(memberID, name)
-        session.transaction.commit()
+        try {
+            dao.addMember(memberID, name)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun addRecord(message: String, time: Date, memberID: Long, groupID: Long) {
         session.beginTransaction()
-        dao.addRecord(message, time, memberID, groupID)
-        session.transaction.commit()
+        try {
+            dao.addRecord(message, time, memberID, groupID)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun addParticipation(groupID: Long, memberID: Long, nickName: String) {
         session.beginTransaction()
-        dao.addParticipation(groupID, memberID, nickName)
-        session.transaction.commit()
+        try {
+            dao.addParticipation(groupID, memberID, nickName)
+        } finally {
+            session.transaction.commit()
+        }
+    }
+
+    override fun updateParticipationNickName(groupID: Long, memberID: Long, nickName: String) {
+        val entity = dao.queryParticipation(groupID, memberID)
+        if (entity != null && entity.nickname != nickName) {
+            entity.nickname = nickName
+        }
+        session.beginTransaction()
+        try {
+            session.update(entity)
+        } finally {
+            session.transaction.commit()
+        }
     }
 
     override fun queryUserRecord(memberID: Long): List<MessageEntity> = dao.queryUserRecord(memberID)

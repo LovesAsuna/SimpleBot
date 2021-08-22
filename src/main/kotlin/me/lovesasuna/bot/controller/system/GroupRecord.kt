@@ -8,7 +8,8 @@ import net.mamoe.mirai.contact.Group
 import java.util.*
 
 class GroupRecord : FunctionListener {
-    val recordService: GroupRecordService = GroupRecordImpl
+    private val recordService: GroupRecordService = GroupRecordImpl
+    private var error = false
 
     override suspend fun execute(box: MessageBox): Boolean {
         val event = box.event
@@ -23,10 +24,16 @@ class GroupRecord : FunctionListener {
             }
             if (recordService.participationIsNull(member.id, group.id)) {
                 recordService.addParticipation(group.id, member.id, event.senderName)
+            } else {
+                recordService.updateParticipationNickName(group.id, member.id, event.senderName)
             }
             recordService.addRecord(event.message.toString(), Date(), member.id, group.id)
         } catch (e: Exception) {
-            box.reply("聊天记录入库时发生错误:\n" + e.localizedMessage)
+            e.printStackTrace()
+            if (!error) {
+                box.reply("聊天记录入库时发生错误:\n$e")
+                error = true
+            }
             return false
         }
         return true
