@@ -8,11 +8,13 @@ import me.lovesasuna.bot.entity.game.Server
 import me.lovesasuna.bot.entity.game.TeamSpeakEntity
 import me.lovesasuna.bot.service.TeamSpeakService
 import me.lovesasuna.bot.service.impl.TeamSpeakImpl
+import me.lovesasuna.bot.util.BasicUtil
 import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
+import java.util.concurrent.TimeUnit
 
 object TeamSpeak : CompositeCommand(
     owner = Main,
@@ -21,37 +23,48 @@ object TeamSpeak : CompositeCommand(
     parentPermission = registerDefaultPermission()
 ) {
     private val teamSpeakService: TeamSpeakService = TeamSpeakImpl
-    val configGetter = TS3Query::class.java.getDeclaredField("config").apply {
-        this.isAccessible = true
-    }
     val queries = hashMapOf<Server, TS3Query>()
 
     init {
         teamSpeakService.getAllServer().forEach {
-            initQuery(it)
+            queries[it.server!!] = initQuery(it)
         }
+        BasicUtil.scheduleWithFixedDelay({
+            while (queries.isNotEmpty()) {
+                queries.forEach { (server, query) ->
+                    if (!query.isConnected) {
+                        try {
+                            query.exit()
+                        } catch (e: Exception) {
+                        }
+                        queries[server] = initQuery(teamSpeakService.queryServer(server.host!!, server.port!!)!!)
+                    }
+                }
+            }
+        }, 0, 1, TimeUnit.SECONDS)
     }
 
     @SubCommand
-    suspend fun CommandSender.addserver(host: String, port: Int, username: String, password: String) {
+    suspend fun CommandSender.addServer(host: String, port: Int, username: String, password: String) {
         val entity = teamSpeakService.addServer(host, port, username, password, getGroupOrNull()!!.id)
         queries[Server(host, port)] = initQuery(entity!!)
         sendMessage("ts服务器添加成功")
     }
 
     @SubCommand
-    suspend fun CommandSender.removeserver(host: String, port: Int) {
+    suspend fun CommandSender.removeServer(host: String, port: Int) {
         teamSpeakService.deleteServer(host, port)
         queries.remove(Server(host, port))?.exit()
         sendMessage("ts服务器删除成功")
     }
 
     @SubCommand
-    suspend fun CommandSender.serverlist() {
+    suspend fun CommandSender.serverList() {
         val builder = StringBuilder("==================\n")
         teamSpeakService.getServerByGroup(getGroupOrNull()!!.id).forEach {
             builder.append("${it.server?.host}:${it.server?.port}\n")
         }
+        builder.append("==================")
         sendMessage(builder.toString())
     }
 
