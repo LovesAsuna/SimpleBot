@@ -1,6 +1,8 @@
 package me.lovesasuna.bot.util
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.Runnable
+import me.lovesasuna.bot.Main
 import me.lovesasuna.bot.util.network.OkHttpUtil
 import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.permission.Permission
@@ -38,19 +40,8 @@ object BasicUtil {
         initialDelay: Long,
         delay: Long,
         unit: TimeUnit
-    ): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
-        val receipt = PluginScheduler.RepeatTaskReceipt()
-        val job = CoroutineScope(Dispatchers.Default).launch {
-            delay(unit.toMillis(initialDelay))
-            while (!receipt.cancelled && this.isActive) {
-                withContext(Dispatchers.IO) {
-                    command.run()
-                }
-                delay(unit.toMillis(delay))
-            }
-        }
-        return Pair(job, receipt)
-    }
+    ): Pair<Job, PluginScheduler.RepeatTaskReceipt> =
+        Main.scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit)
 
     fun debug(message: String): String {
         val reader = OkHttpUtil.getIs(

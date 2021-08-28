@@ -1,6 +1,7 @@
 package me.lovesasuna.bot.util.plugin
 
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
@@ -13,23 +14,27 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
     /**
      * 新增一个 Repeat Task (定时任务)
      *
-     * 这个 Runnable 会被每 [intervalMs] 调用一次(不包含 [runnable] 执行时间)
+     * 这个 Runnable 会被每 [delay] 调用一次(不包含 [command] 执行时间)
      *
      * 使用返回的 [RepeatTaskReceipt], 可以取消这个定时任务
      */
-    fun repeat(runnable: Runnable, intervalMs: Long): RepeatTaskReceipt {
+    fun scheduleWithFixedDelay(
+        command: Runnable,
+        initialDelay: Long,
+        delay: Long,
+        unit: TimeUnit
+    ): Pair<Job, RepeatTaskReceipt> {
         val receipt = RepeatTaskReceipt()
-
-        this.launch {
-            while (isActive && (!receipt.cancelled)) {
+        val job = launch {
+            delay(unit.toMillis(initialDelay))
+            while (!receipt.cancelled && this.isActive) {
                 withContext(Dispatchers.IO) {
-                    runnable.run()
+                    command.run()
                 }
-                delay(intervalMs)
+                delay(unit.toMillis(delay))
             }
         }
-
-        return receipt
+        return Pair(job, receipt)
     }
 
     /**
