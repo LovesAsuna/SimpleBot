@@ -47,16 +47,16 @@ object GroupRecordImpl : GroupRecordService {
         }
     }
 
-    override fun addParticipation(groupID: Long, memberID: Long, nickName: String) {
+    override fun addParticipation(memberID: Long, groupID: Long, nickName: String) {
         session.beginTransaction()
         try {
-            dao.addParticipation(groupID, memberID, nickName)
+            dao.addParticipation(memberID, groupID, nickName)
         } finally {
             session.transaction.commit()
         }
     }
 
-    override fun updateParticipationNickName(groupID: Long, memberID: Long, nickName: String) {
+    override fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String) {
         val entity = dao.queryParticipation(groupID, memberID)
         if (entity != null && entity.nickname != nickName) {
             entity.nickname = nickName

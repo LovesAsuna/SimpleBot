@@ -19,9 +19,9 @@ interface GroupRecordService : DBService {
 
     fun addRecord(message: String, time: Date, memberID: Long, groupID: Long)
 
-    fun addParticipation(groupID: Long, memberID: Long, nickName: String)
+    fun addParticipation(memberID: Long, groupID: Long, nickName: String)
 
-    fun updateParticipationNickName(groupID: Long, memberID: Long, nickName: String)
+    fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String)
 
     fun queryUserRecord(memberID: Long): List<MessageEntity>
 

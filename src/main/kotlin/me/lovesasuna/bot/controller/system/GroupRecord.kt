@@ -23,7 +23,7 @@ class GroupRecord : FunctionListener {
                 recordService.addMember(member.id, member.nick)
             }
             if (recordService.participationIsNull(member.id, group.id)) {
-                recordService.addParticipation(group.id, member.id, event.senderName)
+                recordService.addParticipation(member.id, group.id,  event.senderName)
             } else {
                 recordService.updateParticipationNickName(group.id, member.id, event.senderName)
             }

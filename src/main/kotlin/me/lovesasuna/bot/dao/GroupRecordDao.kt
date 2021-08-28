@@ -16,7 +16,7 @@ class GroupRecordDao(override val session: Session) : DefaultHibernateDao<Messag
         return session.get(MemberEntity::class.java, memberID)
     }
 
-    fun queryParticipation(groupID: Long, memberID: Long): ParticipationEntity? {
+    fun queryParticipation(memberID: Long, groupID: Long): ParticipationEntity? {
         return session.get(ParticipationEntity::class.java, GroupAndMember(groupID, memberID))
     }
 
@@ -32,12 +32,12 @@ class GroupRecordDao(override val session: Session) : DefaultHibernateDao<Messag
         session.saveOrUpdate(MessageEntity(null, message, time, MemberEntity(memberID), GroupEntity(groupID)))
     }
 
-    fun addParticipation(groupID: Long, memberID: Long, nickName: String) {
+    fun addParticipation(memberID: Long, groupID: Long, nickName: String) {
         session.saveOrUpdate(ParticipationEntity(groupID, memberID, nickName))
     }
 
-    fun updateParticipationNickName(groupID: Long, memberID: Long, nickName: String) =
-        addParticipation(groupID, memberID, nickName)
+    fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String) =
+        addParticipation(memberID, groupID, nickName)
 
     fun queryUserRecord(memberID: Long): List<MessageEntity> {
         return queryEntity(
