@@ -27,7 +27,7 @@ class GroupRecord : FunctionListener {
             } else {
                 recordService.updateParticipationNickName(group.id, member.id, event.senderName)
             }
-            recordService.addRecord(event.message.toString(), Date(), member.id, group.id)
+            recordService.addRecord(event.message.serializeToMiraiCode(), Date(), member.id, group.id)
         } catch (e: Exception) {
             e.printStackTrace()
             if (!error) {
