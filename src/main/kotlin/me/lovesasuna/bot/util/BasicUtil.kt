@@ -54,17 +54,17 @@ object BasicUtil {
                 ), OkHttpUtil.addHeaders(
                     mapOf(
                         "host" to "paste.ubuntu.com",
+                        "cookie" to "sessionid=6h8n5um9l2tyk9guhf7b0mvz2qie2uuh"
                     )
                 )
             )
         ).bufferedReader()
-        val builder = StringBuilder()
-        reader.lines().skip(25).parallel().forEach {
-            builder.append(it)
-        }
+        val text = reader.lines().skip(52).filter {
+            it.contains("p-button--neutral")
+        }.findFirst().get()
         val s =
-            Regex("<a class=\"pturl\" href=\"/p/([0-9]|[a-z]|[A-Z])+/plain/\">Download as text</a>").find(builder.toString())!!.value
-        return "https://paste.ubuntu.com" + s.substringAfter("href=\"").substringBefore("/plain")
+            Regex("<a class=\"p-button--neutral\" href=\"/(p/([0-9a-zA-Z])+)/plain/\">View raw</a>").find(text)!!.groupValues[1]
+        return "https://paste.ubuntu.com/$s"
     }
 
     fun getLocation(c: Class<*>): File {
