@@ -42,8 +42,8 @@ object Dynamic : CompositeCommand(
 
     private fun launchTask(): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         return BasicUtil.scheduleWithFixedDelay({
-            linkService.getUps().forEach {
-                runBlocking {
+            Main.scheduler.asyncTask {
+                linkService.getUps().forEach {
                     with(it) {
                         Main.scheduler.withTimeOut({
                             read(it, 0)
@@ -53,10 +53,9 @@ object Dynamic : CompositeCommand(
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")
                             }
-                        }
-                        delay(15000)
+                        }.join()
                     }
-
+                    delay(15000)
                 }
             }
         }, 0, 1, TimeUnit.MINUTES)
@@ -152,7 +151,7 @@ object Dynamic : CompositeCommand(
             @Suppress("BlockingMethodInNonBlockingContext")
             BotData.objectMapper.readTree(reader.readLine())
         }
-        if (root.toString().contains("拦截")) {
+        if (root.toString().contains(Regex("拦截|错误"))) {
             if (!intercept) {
                 Main.logger.error("B站动态api请求被拦截")
                 linkService.getGroupByUp(uid).forEach {
