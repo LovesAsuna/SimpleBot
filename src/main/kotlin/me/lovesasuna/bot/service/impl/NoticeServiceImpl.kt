@@ -19,7 +19,9 @@ object NoticeServiceImpl : NoticeService {
     }
 
     override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             dao.addNotice(NoticeEntity(null, groupID, targetID, message.toString()))
         } finally {
@@ -28,7 +30,9 @@ object NoticeServiceImpl : NoticeService {
     }
 
     override fun removeNotice(groupID: Long, targetID: Long): Boolean {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             return if (dao.getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID)) == null) {
                 false

@@ -11,9 +11,11 @@ object DynamicServiceImpl : DynamicService {
     override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
 
     private val dao: DynamicDao by lazy { DynamicDao(session) }
-    
+
     override fun update(upID: Long, dynamicID: String) {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             val dao = dao
             var entity = dao.getEntity(upID)

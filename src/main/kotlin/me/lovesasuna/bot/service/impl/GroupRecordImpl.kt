@@ -21,7 +21,9 @@ object GroupRecordImpl : GroupRecordService {
         dao.queryParticipation(memberID, groupID) == null
 
     override fun addGroup(groupID: Long, name: String) {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             dao.addGroup(groupID, name)
         } finally {
@@ -30,7 +32,9 @@ object GroupRecordImpl : GroupRecordService {
     }
 
     override fun addMember(memberID: Long, name: String) {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             dao.addMember(memberID, name)
         } finally {
@@ -39,7 +43,11 @@ object GroupRecordImpl : GroupRecordService {
     }
 
     override fun addRecord(message: String, time: Date, memberID: Long, groupID: Long) {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            if (!session.transaction.isActive) {
+                session.beginTransaction()
+            }
+        }
         try {
             dao.addRecord(message, time, memberID, groupID)
         } finally {
@@ -48,7 +56,9 @@ object GroupRecordImpl : GroupRecordService {
     }
 
     override fun addParticipation(memberID: Long, groupID: Long, nickName: String) {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             dao.addParticipation(memberID, groupID, nickName)
         } finally {
@@ -61,7 +71,9 @@ object GroupRecordImpl : GroupRecordService {
         if (entity != null && entity.nickname != nickName) {
             entity.nickname = nickName
         }
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             session.update(entity)
         } finally {

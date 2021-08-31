@@ -31,7 +31,9 @@ object TeamSpeakImpl : TeamSpeakService {
         password: String,
         groupID: Long
     ): TeamSpeakEntity {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             var server = queryServer(host, port)
             if (server != null) {
@@ -47,7 +49,9 @@ object TeamSpeakImpl : TeamSpeakService {
     }
 
     override fun deleteServer(host: String, port: Int): Boolean {
-        session.beginTransaction()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             return dao.deleteServer(host, port)
         } finally {

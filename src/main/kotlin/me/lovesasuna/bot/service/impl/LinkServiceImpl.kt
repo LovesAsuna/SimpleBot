@@ -13,7 +13,9 @@ object LinkServiceImpl : LinkService {
     private val dao: LinkDao by lazy { LinkDao(session) }
 
     override fun addLink(upID: Long, groupID: Long) {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             dao.addLink(LinkEntity(null, groupID, upID))
         } finally {
@@ -26,7 +28,9 @@ object LinkServiceImpl : LinkService {
     override fun getGroupByUp(upID: Long) = dao.getGroupByUp(upID)
 
     override fun deleteGroup(groupID: Long): Int {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             require(getGroups().contains(groupID))
             return dao.deleteGroup(groupID)
@@ -36,7 +40,9 @@ object LinkServiceImpl : LinkService {
     }
 
     override fun deleteUp(upID: Long, groupID: Long): Int {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             require(getUps().contains(upID))
             return dao.deleteUp(upID, groupID)

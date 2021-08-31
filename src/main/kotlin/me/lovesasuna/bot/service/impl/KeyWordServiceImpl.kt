@@ -13,7 +13,9 @@ object KeyWordServiceImpl : KeyWordService {
     private val dao: KeyWordDao by lazy { KeyWordDao(session) }
 
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             return if (dao.checkKeyWordExist(groupID, wordRegex)) {
                 false
@@ -27,7 +29,9 @@ object KeyWordServiceImpl : KeyWordService {
     }
 
     override fun removeKeyWord(id: Int): Boolean {
-        session.transaction.begin()
+        if (!session.transaction.isActive) {
+            session.beginTransaction()
+        }
         try {
             return if (!dao.checkKeyWordExist(id)) {
                 false
