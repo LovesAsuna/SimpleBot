@@ -9,7 +9,7 @@ import java.util.*
 
 class GroupRecord : FunctionListener {
     private val recordService: GroupRecordService = GroupRecordImpl
-    private var error = false
+    private var errorCount = 5
 
     override suspend fun execute(box: MessageBox): Boolean {
         val event = box.event
@@ -23,16 +23,16 @@ class GroupRecord : FunctionListener {
                 recordService.addMember(member.id, member.nick)
             }
             if (recordService.participationIsNull(member.id, group.id)) {
-                recordService.addParticipation(member.id, group.id,  event.senderName)
+                recordService.addParticipation(member.id, group.id, event.senderName)
             } else {
                 recordService.updateParticipationNickName(group.id, member.id, event.senderName)
             }
             recordService.addRecord(event.message.serializeToMiraiCode(), Date(), member.id, group.id)
         } catch (e: Exception) {
             e.printStackTrace()
-            if (!error) {
+            if (errorCount > 0) {
                 box.reply("聊天记录入库时发生错误:\n$e")
-                error = true
+                errorCount--
             }
             return false
         }
