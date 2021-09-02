@@ -1,6 +1,6 @@
 package com.hyosakura.bot.dao
 
-import me.lovesasuna.bot.entity.`fun`.KeyWordEntity
+import com.hyosakura.bot.entity.`fun`.KeyWordEntity
 import org.hibernate.Session
 
 /**

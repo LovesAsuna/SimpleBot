@@ -1,6 +1,6 @@
 package com.hyosakura.bot.controller
 
-import me.lovesasuna.bot.data.MessageBox
+import com.hyosakura.bot.data.MessageBox
 import java.io.IOException
 
 /**

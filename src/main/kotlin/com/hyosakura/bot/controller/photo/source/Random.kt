@@ -1,7 +1,7 @@
 package com.hyosakura.bot.controller.photo.source
 
-import me.lovesasuna.bot.data.BotData.objectMapper
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.data.BotData.objectMapper
+import com.hyosakura.bot.util.network.OkHttpUtil
 import java.io.IOException
 
 /**

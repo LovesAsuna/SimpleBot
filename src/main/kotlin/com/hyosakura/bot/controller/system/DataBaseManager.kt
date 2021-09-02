@@ -1,8 +1,8 @@
 package com.hyosakura.bot.controller.system
 
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.util.registerPermission
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.util.registerPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
@@ -13,7 +13,7 @@ import net.mamoe.mirai.message.data.content
  * @author LovesAsuna
  **/
 object DataBaseManager : RawCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "db",
     description = "数据库管理",
     parentPermission = registerPermission("admin", "管理员权限")

@@ -1,9 +1,9 @@
 package com.hyosakura.bot.service.impl
 
-import me.lovesasuna.bot.dao.GroupRecordDao
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.message.MessageEntity
-import me.lovesasuna.bot.service.GroupRecordService
+import com.hyosakura.bot.dao.GroupRecordDao
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.entity.message.MessageEntity
+import com.hyosakura.bot.service.GroupRecordService
 import org.hibernate.Session
 import java.util.*
 

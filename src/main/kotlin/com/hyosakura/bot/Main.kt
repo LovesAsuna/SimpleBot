@@ -1,13 +1,13 @@
 package com.hyosakura.bot
 
-import me.lovesasuna.bot.controller.game.TeamSpeak
-import me.lovesasuna.bot.listener.EventListener
-import me.lovesasuna.bot.listener.GroupMessageListener
-import me.lovesasuna.bot.listener.MemberLeaveListener
-import me.lovesasuna.bot.service.DBService
-import me.lovesasuna.bot.util.ClassUtil
-import me.lovesasuna.bot.util.logger.ContactLogger
-import me.lovesasuna.bot.util.plugin.PluginScheduler
+import com.hyosakura.bot.controller.game.TeamSpeak
+import com.hyosakura.bot.listener.EventListener
+import com.hyosakura.bot.listener.GroupMessageListener
+import com.hyosakura.bot.listener.MemberLeaveListener
+import com.hyosakura.bot.service.DBService
+import com.hyosakura.bot.util.ClassUtil
+import com.hyosakura.bot.util.logger.ContactLogger
+import com.hyosakura.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
@@ -25,7 +25,7 @@ import kotlin.reflect.jvm.jvmName
  */
 object Main : KotlinPlugin(
     JvmPluginDescription(
-        id = "me.lovesasuna.bot",
+        id = "com.hyosakura.bot",
         version = "1.0",
         name = "Mirai-Bot"
     )
@@ -45,8 +45,8 @@ object Main : KotlinPlugin(
         } else {
             logger.info("Unable to read system info")
         }
-        com.hyosakura.bot.Config.reload()
-        ClassUtil.getClasses("me.lovesasuna.bot.controller", com.hyosakura.bot.Main::class.java.classLoader).forEach {
+        Config.reload()
+        ClassUtil.getClasses("com.hyosakura.bot.controller", Main::class.java.classLoader).forEach {
             val kClass = it.kotlin
             if (!kClass.jvmName.contains("$")) {
                 val objectInstance = kClass.objectInstance
@@ -61,7 +61,7 @@ object Main : KotlinPlugin(
     }
 
     override fun onDisable() {
-        ClassUtil.getClasses("me.lovesasuna.bot.service.impl").forEach {
+        ClassUtil.getClasses("com.hyosakura.bot.service.impl").forEach {
             (it.kotlin.objectInstance as DBService).close()
         }
         TeamSpeak.queries.values.forEach {

@@ -2,14 +2,14 @@ package com.hyosakura.bot.util.pictureSearch
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.hyosakura.bot.Config
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.OkHttpUtil
 
 object Saucenao : PictureSearchSource {
     private val api =
-        "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${com.hyosakura.bot.Config.SauceNaoAPI}&numres=16&url="
+        "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.SauceNaoAPI}&numres=16&url="
 
     override fun search(url: String): List<Result> {
-        val results =  OkHttpUtil.getJson(api + url)["results"]
+        val results = OkHttpUtil.getJson(api + url)["results"]
         val resultList = ArrayList<Result>()
         for (i in 0..results.size()) {
             val result = results[i]

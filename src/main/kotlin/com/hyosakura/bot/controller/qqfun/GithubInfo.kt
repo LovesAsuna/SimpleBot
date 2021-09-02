@@ -4,8 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.io.errors.IOException
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
@@ -16,7 +16,7 @@ import java.net.URL
  * @author LovesAsuna
  **/
 object GithubInfo : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "github",
     description = "获取github仓库信息",
     parentPermission = registerDefaultPermission()

@@ -1,11 +1,11 @@
 package com.hyosakura.bot.controller.photo
 
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.logger.debug
-import me.lovesasuna.bot.util.pictureSearch.Ascii2d
-import me.lovesasuna.bot.util.pictureSearch.Saucenao
-import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.logger.debug
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.pictureSearch.Ascii2d
+import com.hyosakura.bot.util.pictureSearch.Saucenao
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -17,7 +17,7 @@ import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object PictureSearch : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "搜图",
     description = "以图搜图",
     parentPermission = registerDefaultPermission()
@@ -49,7 +49,7 @@ object PictureSearch : SimpleCommand(
             result.extUrls.forEach {
                 builder.append(it).append("\n")
             }
-            com.hyosakura.bot.Main.scheduler.withTimeOut(suspend {
+            Main.scheduler.withTimeOut(suspend {
                 val uploadImage =
                     OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(getGroupOrNull()!!) as Message
                 sendMessage(

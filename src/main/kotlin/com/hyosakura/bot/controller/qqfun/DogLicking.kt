@@ -1,10 +1,10 @@
 package com.hyosakura.bot.controller.qqfun
 
+import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
@@ -12,7 +12,7 @@ import net.mamoe.mirai.console.command.SimpleCommand
  * @author LovesAsuna
  **/
 object DogLicking : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "舔狗日记",
     description = "舔狗日记",
     parentPermission = registerDefaultPermission()

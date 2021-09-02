@@ -1,10 +1,10 @@
 package com.hyosakura.bot.util
 
+import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.plugin.PluginScheduler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
-import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.permission.Permission
 import net.mamoe.mirai.console.permission.PermissionId
 import net.mamoe.mirai.console.permission.PermissionService
@@ -41,7 +41,7 @@ object BasicUtil {
         delay: Long,
         unit: TimeUnit
     ): Pair<Job, PluginScheduler.RepeatTaskReceipt> =
-        com.hyosakura.bot.Main.scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit)
+        Main.scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit)
 
     fun debug(message: String): String {
         val reader = OkHttpUtil.getIs(

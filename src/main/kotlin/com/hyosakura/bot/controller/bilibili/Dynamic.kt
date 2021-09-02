@@ -1,18 +1,18 @@
 package com.hyosakura.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.JsonNode
-import kotlinx.coroutines.*
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.service.DynamicService
-import me.lovesasuna.bot.service.LinkService
-import me.lovesasuna.bot.service.impl.DynamicServiceImpl
-import me.lovesasuna.bot.service.impl.LinkServiceImpl
-import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.plugin.PluginScheduler
-import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.bot.util.registerPermission
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.service.DynamicService
+import com.hyosakura.bot.service.LinkService
+import com.hyosakura.bot.service.impl.DynamicServiceImpl
+import com.hyosakura.bot.service.impl.LinkServiceImpl
+import com.hyosakura.bot.util.BasicUtil
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.plugin.PluginScheduler
+import com.hyosakura.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.registerPermission
+import kotlinx.coroutines.*
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -29,7 +29,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object Dynamic : CompositeCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "dynamic",
     description = "B站Up动态订阅",
     parentPermission = registerDefaultPermission()
@@ -42,10 +42,10 @@ object Dynamic : CompositeCommand(
 
     private fun launchTask(): Pair<Job, PluginScheduler.RepeatTaskReceipt> {
         return BasicUtil.scheduleWithFixedDelay({
-            com.hyosakura.bot.Main.scheduler.asyncTask {
+            Main.scheduler.asyncTask {
                 linkService.getUps().forEach {
                     with(it) {
-                        com.hyosakura.bot.Main.scheduler.withTimeOut({
+                        Main.scheduler.withTimeOut({
                             read(it, 0)
                             time = "${Calendar.getInstance().time}"
                         }, 10000) {
@@ -105,7 +105,7 @@ object Dynamic : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.push() {
         sendMessage("开始往订阅群推送消息！")
-        com.hyosakura.bot.Main.scheduler.asyncTask {
+        Main.scheduler.asyncTask {
             linkService.getUps().forEach {
                 runBlocking {
                     read(it, 0)
@@ -153,9 +153,9 @@ object Dynamic : CompositeCommand(
         }
         if (root.toString().contains(Regex("拦截|错误"))) {
             if (!intercept) {
-                com.hyosakura.bot.Main.logger.error("B站动态api请求被拦截")
+                Main.logger.error("B站动态api请求被拦截")
                 linkService.getGroupByUp(uid).forEach {
-                    com.hyosakura.bot.Main.scheduler.asyncTask {
+                    Main.scheduler.asyncTask {
                         val group = Bot.instances[0].getGroup(it)
                         group?.sendMessage("B站动态api请求被拦截，请联系管理员!")
                         this
@@ -172,11 +172,11 @@ object Dynamic : CompositeCommand(
         if (dynamicID != dynamicService.getDynamicID(uid)) {
             dynamicService.update(uid, dynamicID)
             linkService.getGroupByUp(uid).forEach {
-                com.hyosakura.bot.Main.scheduler.asyncTask {
+                Main.scheduler.asyncTask {
                     val group = Bot.instances[0].getGroup(it)
                     if (group != null) {
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        com.hyosakura.bot.Main.scheduler.withTimeOut(suspend {
+                        Main.scheduler.withTimeOut(suspend {
                             // todo 动态解析不完整
                             parse(group, card)
                         }, Duration.ofSeconds(60).toMillis()) {

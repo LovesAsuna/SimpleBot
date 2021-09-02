@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.protocol.QueryUtil
-import me.lovesasuna.bot.util.protocol.SRVConvertUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.protocol.QueryUtil
+import com.hyosakura.bot.util.protocol.SRVConvertUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import java.io.IOException
 
 object McQuery : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "mcquery",
     description = "MC服务器查询",
     parentPermission = registerDefaultPermission()

@@ -1,9 +1,9 @@
 package com.hyosakura.bot.service.impl
 
-import me.lovesasuna.bot.dao.KeyWordDao
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.`fun`.KeyWordEntity
-import me.lovesasuna.bot.service.KeyWordService
+import com.hyosakura.bot.dao.KeyWordDao
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.entity.`fun`.KeyWordEntity
+import com.hyosakura.bot.service.KeyWordService
 import org.hibernate.Session
 
 object KeyWordServiceImpl : KeyWordService {

@@ -1,6 +1,6 @@
 package com.hyosakura.bot.service
 
-import me.lovesasuna.bot.entity.game.TeamSpeakEntity
+import com.hyosakura.bot.entity.game.TeamSpeakEntity
 
 /**
  * @author LovesAsuna

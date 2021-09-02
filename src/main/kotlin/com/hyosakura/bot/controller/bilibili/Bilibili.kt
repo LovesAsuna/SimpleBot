@@ -3,10 +3,10 @@ package com.hyosakura.bot.controller.bilibili
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.util.BasicUtil
+import com.hyosakura.bot.util.network.OkHttpUtil
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 

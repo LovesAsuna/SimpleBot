@@ -1,14 +1,14 @@
 package com.hyosakura.bot.controller.photo
 
-import kotlinx.coroutines.*
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.controller.photo.source.PhotoSource
-import me.lovesasuna.bot.controller.photo.source.Pixiv
-import me.lovesasuna.bot.controller.photo.source.Random
-import me.lovesasuna.bot.util.logger.debug
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
-import me.lovesasuna.bot.util.registerPermission
+import com.hyosakura.bot.controller.photo.source.PhotoSource
+import com.hyosakura.bot.controller.photo.source.Pixiv
+import com.hyosakura.bot.controller.photo.source.Random
+import com.hyosakura.bot.util.logger.debug
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.registerPermission
+import kotlinx.coroutines.*
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -17,14 +17,14 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.*
 
 object ColorPhoto : CompositeCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "色图",
     description = "从多个图源中获取色图",
     parentPermission = registerDefaultPermission()
 ) {
     lateinit var photoSource: PhotoSource
     val bannotice = { sender: CommandSender ->
-        com.hyosakura.bot.Main.scheduler.asyncTask {
+        Main.scheduler.asyncTask {
             sender.sendMessage("该图源已被禁用！")
             this
         }
@@ -104,7 +104,7 @@ object ColorPhoto : CompositeCommand(
 
     private fun changeBanStatus(sender: CommandSender, type: String) {
         if (sender.hasPermission(registerPermission("photo.switch", "图源开关"))) {
-            com.hyosakura.bot.Main.scheduler.asyncTask {
+            Main.scheduler.asyncTask {
                 when (type) {
                     "pixiv" -> {
                         sender.sendMessage("已${if (pixiv) "禁用" else "解禁"}pixiv图源")

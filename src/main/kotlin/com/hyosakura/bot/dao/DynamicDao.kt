@@ -1,6 +1,6 @@
 package com.hyosakura.bot.dao
 
-import me.lovesasuna.bot.entity.dynamic.DynamicEntity
+import com.hyosakura.bot.entity.dynamic.DynamicEntity
 import org.hibernate.Session
 import java.util.*
 

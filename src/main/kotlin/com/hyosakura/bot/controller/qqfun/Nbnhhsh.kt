@@ -3,16 +3,16 @@ package com.hyosakura.bot.controller.qqfun
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 
 object Nbnhhsh : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "nbnhhsh",
     description = "能不能好好说话?",
     parentPermission = registerDefaultPermission()

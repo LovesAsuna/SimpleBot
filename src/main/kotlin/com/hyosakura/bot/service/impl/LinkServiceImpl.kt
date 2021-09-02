@@ -1,9 +1,9 @@
 package com.hyosakura.bot.service.impl
 
-import me.lovesasuna.bot.dao.LinkDao
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.dynamic.LinkEntity
-import me.lovesasuna.bot.service.LinkService
+import com.hyosakura.bot.dao.LinkDao
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.entity.dynamic.LinkEntity
+import com.hyosakura.bot.service.LinkService
 import org.hibernate.Session
 
 object LinkServiceImpl : LinkService {

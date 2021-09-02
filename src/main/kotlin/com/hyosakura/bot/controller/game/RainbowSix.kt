@@ -2,8 +2,8 @@ package com.hyosakura.bot.controller.game
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.data.MessageChain
@@ -14,7 +14,7 @@ import kotlin.system.measureTimeMillis
  * @author LovesAsuna
  */
 object RainbowSix : RawCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "r6",
     description = "彩虹六号战绩查询",
     parentPermission = registerDefaultPermission()

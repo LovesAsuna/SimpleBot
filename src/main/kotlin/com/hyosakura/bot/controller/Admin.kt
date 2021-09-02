@@ -1,9 +1,9 @@
 package com.hyosakura.bot.controller
 
-import kotlinx.coroutines.delay
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.logger.ContactLogger
-import me.lovesasuna.bot.util.registerPermission
+import com.hyosakura.bot.util.logger.ContactLogger
+import com.hyosakura.bot.util.registerPermission
+import kotlinx.coroutines.delay
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.contact.Group
@@ -11,7 +11,7 @@ import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.content
 
 object Admin : RawCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "admin",
     description = "机器人退群(敏感操作)",
     parentPermission = registerPermission("admin", "管理员权限")

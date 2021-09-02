@@ -1,11 +1,11 @@
 package com.hyosakura.bot.controller.qqfun
 
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.service.KeyWordService
-import me.lovesasuna.bot.service.impl.KeyWordServiceImpl
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.service.KeyWordService
+import com.hyosakura.bot.service.impl.KeyWordServiceImpl
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.message.data.PlainText
@@ -21,12 +21,12 @@ import kotlin.random.Random
  */
 // todo 添加全局关键词
 object KeyWord : CompositeCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "keyword",
     description = "关键词回复",
     parentPermission = registerDefaultPermission()
 ), FunctionListener {
-    private val imagePath = "${com.hyosakura.bot.Main.dataFolder.path}${File.separator}image${File.separator}"
+    private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
     private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
     private val keyWordService: KeyWordService = KeyWordServiceImpl
 

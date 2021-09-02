@@ -1,6 +1,6 @@
 package com.hyosakura.bot.dao
 
-import me.lovesasuna.bot.entity.message.*
+import com.hyosakura.bot.entity.message.*
 import org.hibernate.Session
 import java.util.*
 

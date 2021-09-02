@@ -4,12 +4,12 @@ import com.github.theholywaffle.teamspeak3.TS3Config
 import com.github.theholywaffle.teamspeak3.TS3Query
 import com.github.theholywaffle.teamspeak3.api.event.*
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.entity.game.Server
-import me.lovesasuna.bot.entity.game.TeamSpeakEntity
-import me.lovesasuna.bot.service.TeamSpeakService
-import me.lovesasuna.bot.service.impl.TeamSpeakImpl
-import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.entity.game.Server
+import com.hyosakura.bot.entity.game.TeamSpeakEntity
+import com.hyosakura.bot.service.TeamSpeakService
+import com.hyosakura.bot.service.impl.TeamSpeakImpl
+import com.hyosakura.bot.util.BasicUtil
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -17,7 +17,7 @@ import net.mamoe.mirai.console.command.getGroupOrNull
 import java.util.concurrent.TimeUnit
 
 object TeamSpeak : CompositeCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "ts",
     description = "teamspeak客户端",
     parentPermission = registerDefaultPermission()
@@ -83,7 +83,7 @@ object TeamSpeak : CompositeCommand(
             entity.groups?.forEach {
                 val group = Bot.instances[0].getGroup(it)
                 if (group != null) {
-                    com.hyosakura.bot.Main.scheduler.asyncTask {
+                    Main.scheduler.asyncTask {
                         group.sendMessage(message)
                     }
                 }

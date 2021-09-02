@@ -1,10 +1,10 @@
 package com.hyosakura.bot.service.impl
 
-import me.lovesasuna.bot.dao.TeamSpeakDao
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.game.Server
-import me.lovesasuna.bot.entity.game.TeamSpeakEntity
-import me.lovesasuna.bot.service.TeamSpeakService
+import com.hyosakura.bot.dao.TeamSpeakDao
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.entity.game.Server
+import com.hyosakura.bot.entity.game.TeamSpeakEntity
+import com.hyosakura.bot.service.TeamSpeakService
 import org.hibernate.Session
 import java.util.stream.Collectors
 

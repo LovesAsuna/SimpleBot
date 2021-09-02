@@ -1,8 +1,8 @@
 package com.hyosakura.bot.controller.photo.source
 
-import me.lovesasuna.bot.controller.photo.MultiPhoto
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.controller.photo.MultiPhoto
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.util.network.OkHttpUtil
 import java.io.IOException
 
 /**

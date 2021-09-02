@@ -1,10 +1,10 @@
 package com.hyosakura.bot.controller.qqfun
 
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.util.network.OkHttpUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.network.OkHttpUtil
 
 /**
  * @author LovesAsuna

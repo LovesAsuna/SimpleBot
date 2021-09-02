@@ -1,6 +1,6 @@
 package com.hyosakura.bot.controller.photo
 
-import me.lovesasuna.bot.controller.photo.source.PhotoSource
+import com.hyosakura.bot.controller.photo.source.PhotoSource
 
 /**
  * @author LovesAsuna

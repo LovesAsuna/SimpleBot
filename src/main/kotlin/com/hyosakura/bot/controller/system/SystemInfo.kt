@@ -2,7 +2,7 @@ package com.hyosakura.bot.controller.system
 
 import kotlinx.coroutines.delay
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.registerDefaultPermission
+import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import oshi.SystemInfo
@@ -16,7 +16,7 @@ import java.util.*
  * @author LovesAsuna
  **/
 object SystemInfo : SimpleCommand(
-    owner = com.hyosakura.bot.Main,
+    owner = Main,
     primaryName = "统计",
     "运行状态",
     description = "系统信息",

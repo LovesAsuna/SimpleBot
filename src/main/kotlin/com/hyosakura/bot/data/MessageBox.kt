@@ -1,6 +1,6 @@
 package com.hyosakura.bot.data
 
-import me.lovesasuna.bot.util.photo.ImageUtil
+import com.hyosakura.bot.util.photo.ImageUtil
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent

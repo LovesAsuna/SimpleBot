@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hyosakura.bot.Main
-import me.lovesasuna.bot.util.ClassUtil
+import com.hyosakura.bot.util.ClassUtil
 import org.hibernate.cfg.Configuration
 
 /**
@@ -17,7 +17,7 @@ object BotData {
     private val configBlock: (config: Configuration, configFile: String, packages: Array<String>) -> Unit =
         { config, string, packages ->
             packages.forEach {
-                ClassUtil.getClasses(it, com.hyosakura.bot.Main::class.java.classLoader).forEach { c ->
+                ClassUtil.getClasses(it, Main::class.java.classLoader).forEach { c ->
                     config.addAnnotatedClass(c)
                 }
             }
@@ -30,9 +30,9 @@ object BotData {
     val functionConfig: Configuration = Configuration().also {
         configBlock.invoke(
             it, "function.xml", arrayOf(
-                "me.lovesasuna.bot.entity.dynamic",
-                "me.lovesasuna.bot.entity.fun",
-                "me.lovesasuna.bot.entity.game"
+                "com.hyosakura.bot.entity.dynamic",
+                "com.hyosakura.bot.entity.fun",
+                "com.hyosakura.bot.entity.game"
             )
         )
     }
@@ -40,7 +40,7 @@ object BotData {
     val recordConfig: Configuration = Configuration().also {
         configBlock.invoke(
             it, "record.xml", arrayOf(
-                "me.lovesasuna.bot.entity.message"
+                "com.hyosakura.bot.entity.message"
             )
         )
     }

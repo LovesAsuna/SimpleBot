@@ -1,8 +1,8 @@
 package com.hyosakura.bot.controller.misc
 
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.network.UrlUtil
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.util.network.UrlUtil
 import java.net.URLEncoder
 import java.util.*
 

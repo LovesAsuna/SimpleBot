@@ -1,15 +1,12 @@
 package com.hyosakura.bot.controller.qqfun
 
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.util.BasicUtil
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.photo.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.hyosakura.bot.Main
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.BasicUtil
-import me.lovesasuna.bot.util.network.OkHttpUtil
-import me.lovesasuna.bot.util.photo.ImageUtil
-import com.hyosakura.bot.util.photo.gif.AnimatedGifEncoder
-import com.hyosakura.bot.util.photo.gif.GifDecoder
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl

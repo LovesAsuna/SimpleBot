@@ -1,9 +1,9 @@
 package com.hyosakura.bot.service.impl
 
-import me.lovesasuna.bot.dao.NoticeDao
-import me.lovesasuna.bot.data.BotData
-import me.lovesasuna.bot.entity.`fun`.NoticeEntity
-import me.lovesasuna.bot.service.NoticeService
+import com.hyosakura.bot.dao.NoticeDao
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.entity.`fun`.NoticeEntity
+import com.hyosakura.bot.service.NoticeService
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import org.hibernate.Session

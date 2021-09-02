@@ -2,9 +2,9 @@ package com.hyosakura.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.*
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.util.BasicUtil
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.util.BasicUtil
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream

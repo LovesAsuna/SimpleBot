@@ -1,9 +1,9 @@
 package com.hyosakura.bot.controller.system
 
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.service.GroupRecordService
-import me.lovesasuna.bot.service.impl.GroupRecordImpl
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.service.GroupRecordService
+import com.hyosakura.bot.service.impl.GroupRecordImpl
 import net.mamoe.mirai.contact.Group
 import java.util.*
 

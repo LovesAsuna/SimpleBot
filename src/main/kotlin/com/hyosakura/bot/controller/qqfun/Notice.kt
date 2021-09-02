@@ -1,9 +1,9 @@
 package com.hyosakura.bot.controller.qqfun
 
-import me.lovesasuna.bot.controller.FunctionListener
-import me.lovesasuna.bot.data.MessageBox
-import me.lovesasuna.bot.service.NoticeService
-import me.lovesasuna.bot.service.impl.NoticeServiceImpl
+import com.hyosakura.bot.controller.FunctionListener
+import com.hyosakura.bot.data.MessageBox
+import com.hyosakura.bot.service.NoticeService
+import com.hyosakura.bot.service.impl.NoticeServiceImpl
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf

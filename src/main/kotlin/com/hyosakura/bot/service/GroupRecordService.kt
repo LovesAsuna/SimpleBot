@@ -1,6 +1,6 @@
 package com.hyosakura.bot.service
 
-import me.lovesasuna.bot.entity.message.MessageEntity
+import com.hyosakura.bot.entity.message.MessageEntity
 import java.util.*
 
 /**
