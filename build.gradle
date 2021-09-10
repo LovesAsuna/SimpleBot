@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
-    id "org.jetbrains.kotlin.plugin.serialization" version "1.5.21"
+    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.5.30"
 }
 
 description('一个基于Mirai的机器人')
@@ -11,7 +11,7 @@ version '4.1.0'
 
 ext {
     workDir = 'E:\\work\\Mirai-Console\\plugins'
-    mirai_version = '2.6.7'
+    mirai_version = '2.7.0'
     kotlin_version = '1.5.21'
 }
 
@@ -34,7 +34,7 @@ dependencies {
 
 // kotlin
 dependencies {
-    compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt"
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -43,11 +43,11 @@ dependencies {
 
 dependencies {
     implementation 'org.jsoup:jsoup:1.14.2'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5'
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha8'
-    implementation 'com.charleskorn.kaml:kaml:0.35.2'
-    implementation 'com.github.oshi:oshi-core:5.8.1'
+    implementation 'com.charleskorn.kaml:kaml:0.35.3'
+    implementation 'com.github.oshi:oshi-core:5.8.2'
     implementation 'net.java.dev.jna:jna:5.9.0'
     implementation 'net.java.dev.jna:jna-platform:5.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
