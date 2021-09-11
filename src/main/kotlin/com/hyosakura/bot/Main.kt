@@ -34,6 +34,7 @@ object Main : KotlinPlugin(
     val eventChannel = globalEventChannel()
     override fun onEnable() {
         Logger.getLogger("").level = Level.OFF
+        // todo 使用Log4j2接管日志系统
         logger.follower = ContactLogger
         logger.info("[Mirai-Bot] 插件已成功启用!")
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
