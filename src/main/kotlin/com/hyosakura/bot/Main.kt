@@ -72,7 +72,6 @@ object Main : KotlinPlugin(
 }
 
 object Config : AutoSavePluginConfig("config") {
-    val LoliconAPI by value<String>()
     val SauceNaoAPI by value<String>()
     val DisableFunction: List<String> by value()
 }
