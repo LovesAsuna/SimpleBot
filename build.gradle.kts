@@ -16,7 +16,7 @@ repositories {
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
 val kotlinVersion = "1.5.30"
-val miraiVersion = "2.7.0"
+val miraiVersion = "2.7.1"
 
 // log
 dependencies {
@@ -56,7 +56,7 @@ dependencies {
     implementation("net.java.dev.jna:jna-platform:5.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("com.github.theholywaffle:teamspeak3-api:1.3.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
 
 }
 
