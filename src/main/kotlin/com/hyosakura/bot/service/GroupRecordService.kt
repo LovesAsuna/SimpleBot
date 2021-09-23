@@ -13,15 +13,15 @@ interface GroupRecordService : DBService {
 
     fun participationIsNull(memberID: Long, groupID: Long): Boolean
 
-    fun addGroup(groupID: Long, name: String)
+    fun addGroup(groupID: Long, name: String): Boolean
 
-    fun addMember(memberID: Long, name: String)
+    fun addMember(memberID: Long, name: String): Boolean
 
-    fun addRecord(message: String, time: Date, memberID: Long, groupID: Long)
+    fun addRecord(message: String, time: Date, memberID: Long, groupID: Long): Boolean
 
-    fun addParticipation(memberID: Long, groupID: Long, nickName: String)
+    fun addParticipation(memberID: Long, groupID: Long, nickName: String): Boolean
 
-    fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String)
+    fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String): Boolean
 
     fun queryUserRecord(memberID: Long): List<MessageEntity>
 
