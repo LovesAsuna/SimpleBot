@@ -1,7 +1,6 @@
 package com.hyosakura.bot.controller
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.logger.ContactLogger
 import com.hyosakura.bot.util.registerPermission
 import kotlinx.coroutines.delay
 import net.mamoe.mirai.console.command.CommandSender
@@ -32,9 +31,6 @@ object Admin : RawCommand(
                             quit()
                             sendMessage("退群成功,感谢陪伴!")
                         } ?: sendMessage("退群失败！")
-                    }
-                    "setloglevel" -> {
-                        sendMessage("日志等级已设置为: " + ContactLogger.setLevel(args[1].contentToString()))
                     }
                 }
 

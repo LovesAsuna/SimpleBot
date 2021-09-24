@@ -4,7 +4,6 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.controller.photo.source.PhotoSource
 import com.hyosakura.bot.controller.photo.source.Pixiv
 import com.hyosakura.bot.controller.photo.source.Random
-import com.hyosakura.bot.util.logger.debug
 import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
 import com.hyosakura.bot.util.registerPermission
@@ -48,7 +47,7 @@ object ColorPhoto : CompositeCommand(
             coroutineScope {
                 urls.forEach {
                     launch {
-                        try {
+                        runCatching {
                             withTimeout(15000) {
                                 sendMessage(
                                     OkHttpUtil.getIs(OkHttpUtil[it]).run {
@@ -60,12 +59,12 @@ object ColorPhoto : CompositeCommand(
                                     }
                                 )
                                 if (queue.isNotEmpty()) queue.poll()
-                                debug("获取成功，队列大小-1")
+                                Main.logger.debug("获取成功，队列大小-1")
                             }
-                        } catch (e: Exception) {
+                        }.onFailure {
                             sendMessage("获取超时或发生IO错误")
                             if (queue.isNotEmpty()) queue.poll()
-                            debug("获取超时或发生IO错误，队列大小-1")
+                            Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
                         }
                     }
                 }

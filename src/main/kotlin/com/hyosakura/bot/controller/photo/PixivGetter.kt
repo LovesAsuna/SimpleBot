@@ -1,7 +1,6 @@
 package com.hyosakura.bot.controller.photo
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.logger.debug
 import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +37,7 @@ object PixivGetter : CompositeCommand(
         sendMessage("获取中,请稍后..")
         var originInputStream: InputStream?
         if (count == 1) {
-            debug("尝试复制IO流")
+            Main.logger.debug("尝试复制IO流")
             Main.scheduler.withTimeOut(suspend {
                 originInputStream =
                     OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID.jpg"])

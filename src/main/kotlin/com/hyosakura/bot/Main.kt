@@ -6,7 +6,6 @@ import com.hyosakura.bot.listener.GroupMessageListener
 import com.hyosakura.bot.listener.MemberLeaveListener
 import com.hyosakura.bot.service.DBService
 import com.hyosakura.bot.util.ClassUtil
-import com.hyosakura.bot.util.logger.ContactLogger
 import com.hyosakura.bot.util.plugin.PluginScheduler
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
@@ -16,8 +15,6 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.event.globalEventChannel
 import java.lang.management.ManagementFactory
-import java.util.logging.Level
-import java.util.logging.Logger
 import kotlin.reflect.jvm.jvmName
 
 /**
@@ -33,9 +30,6 @@ object Main : KotlinPlugin(
     val scheduler = PluginScheduler()
     val eventChannel = globalEventChannel()
     override fun onEnable() {
-        Logger.getLogger("").level = Level.OFF
-        // todo 使用Log4j2接管日志系统
-        logger.follower = ContactLogger
         logger.info("[Mirai-Bot] 插件已成功启用!")
         val runtimeMX = ManagementFactory.getRuntimeMXBean()
         val osMX = ManagementFactory.getOperatingSystemMXBean()

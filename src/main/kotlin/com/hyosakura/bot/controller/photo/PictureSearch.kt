@@ -1,7 +1,6 @@
 package com.hyosakura.bot.controller.photo
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.logger.debug
 import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.pictureSearch.Ascii2d
 import com.hyosakura.bot.util.pictureSearch.Saucenao
@@ -36,14 +35,14 @@ object PictureSearch : SimpleCommand(
             else -> Saucenao
         }
         val imgUrl = image.queryUrl()
-        debug("图片URL: $imgUrl")
+        Main.logger.debug("图片URL: $imgUrl")
         val results = source.search(imgUrl)
         if (results.isEmpty()) {
             sendMessage("未查找到结果!")
             return
         }
         sendMessage("搜索完成!")
-        debug(results.toString())
+        Main.logger.debug(results.toString())
         results.forEach { result ->
             val builder = StringBuilder()
             result.extUrls.forEach {
