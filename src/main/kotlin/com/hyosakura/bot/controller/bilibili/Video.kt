@@ -1,16 +1,16 @@
 package com.hyosakura.bot.controller.bilibili
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.OkHttpUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
-class Bilibili : FunctionListener {
+class Video : FunctionListener {
     private val avPattern = Pattern.compile("[aA][vV]\\d*")
     private val bvPattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 

@@ -1,4 +1,4 @@
-package com.hyosakura.bot.util.photo.gif;
+package com.hyosakura.bot.util.image.gif;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

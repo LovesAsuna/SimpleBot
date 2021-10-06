@@ -1,6 +1,6 @@
-package com.hyosakura.bot.controller.photo.source
+package com.hyosakura.bot.controller.picture.hpicture
 
-interface PhotoSource {
+interface SinglePictureSource {
     /**
      * 从api获得数据
      * @return 从api获得数据
