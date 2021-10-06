@@ -1,9 +1,9 @@
-package com.hyosakura.bot.controller.photo
+package com.hyosakura.bot.controller.picture.search
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.controller.picture.PixivGetter.work
+import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.OkHttpUtil
-import com.hyosakura.bot.util.pictureSearch.Ascii2d
-import com.hyosakura.bot.util.pictureSearch.Saucenao
 import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -46,6 +46,11 @@ object PictureSearch : SimpleCommand(
         results.forEach { result ->
             val builder = StringBuilder()
             result.extUrls.forEach {
+                if (it.contains("pixiv") && it.contains(Regex("(illust)|(artwork)"))) {
+                    if (result.similarity > 90) {
+                        work(BasicUtil.extractInt(it))
+                    }
+                }
                 builder.append(it).append("\n")
             }
             Main.scheduler.withTimeOut(suspend {
