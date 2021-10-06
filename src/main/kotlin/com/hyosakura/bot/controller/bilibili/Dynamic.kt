@@ -8,8 +8,8 @@ import com.hyosakura.bot.service.LinkService
 import com.hyosakura.bot.service.impl.DynamicServiceImpl
 import com.hyosakura.bot.service.impl.LinkServiceImpl
 import com.hyosakura.bot.util.BasicUtil
+import com.hyosakura.bot.util.coroutine.PluginScheduler
 import com.hyosakura.bot.util.network.OkHttpUtil
-import com.hyosakura.bot.util.plugin.PluginScheduler
 import com.hyosakura.bot.util.registerDefaultPermission
 import com.hyosakura.bot.util.registerPermission
 import kotlinx.coroutines.*
@@ -53,7 +53,7 @@ object Dynamic : CompositeCommand(
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")
                             }
-                        }.join()
+                        }
                     }
                     delay(15000)
                 }

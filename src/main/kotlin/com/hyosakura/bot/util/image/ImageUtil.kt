@@ -1,4 +1,4 @@
-package com.hyosakura.bot.util.photo
+package com.hyosakura.bot.util.image
 
 import java.awt.Dimension
 import java.awt.Rectangle

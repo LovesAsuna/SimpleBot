@@ -1,8 +1,8 @@
 package com.hyosakura.bot.util
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.coroutine.PluginScheduler
 import com.hyosakura.bot.util.network.OkHttpUtil
-import com.hyosakura.bot.util.plugin.PluginScheduler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import net.mamoe.mirai.console.permission.Permission

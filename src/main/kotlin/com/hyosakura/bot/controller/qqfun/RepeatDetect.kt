@@ -4,7 +4,7 @@ import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.OkHttpUtil
-import com.hyosakura.bot.util.photo.ImageUtil
+import com.hyosakura.bot.util.image.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.event.events.MessageEvent
@@ -24,8 +24,8 @@ import javax.imageio.ImageIO
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
-    private val gifDecoder = com.hyosakura.bot.util.photo.gif.GifDecoder()
-    private val gifEncoder = com.hyosakura.bot.util.photo.gif.AnimatedGifEncoder()
+    private val gifDecoder = com.hyosakura.bot.util.image.gif.GifDecoder()
+    private val gifEncoder = com.hyosakura.bot.util.image.gif.AnimatedGifEncoder()
     private val random = Random()
     private val textPattern = "[\\u4e00-\\u9fa5_a-zA-Z0-9]|" +
             "[\\uD83C\\uDF00-\\uD83D\\uDDFF]|" +

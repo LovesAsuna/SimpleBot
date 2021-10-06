@@ -1,4 +1,4 @@
-package com.hyosakura.bot.util.pictureSearch
+package com.hyosakura.bot.controller.picture.search
 
 import org.jsoup.Jsoup
 

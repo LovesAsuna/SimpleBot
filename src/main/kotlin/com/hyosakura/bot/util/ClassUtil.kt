@@ -1,6 +1,5 @@
 package com.hyosakura.bot.util
 
-import com.hyosakura.bot.Main
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
@@ -8,7 +7,6 @@ import java.net.URL
 import java.net.URLDecoder
 import java.util.*
 import java.util.jar.JarFile
-import kotlin.collections.HashSet
 
 class ClassUtil {
     private val jarFile = JarFile(com.hyosakura.bot.Main::class.java.protectionDomain.codeSource.location.path)

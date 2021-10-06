@@ -6,7 +6,7 @@ import com.hyosakura.bot.listener.GroupMessageListener
 import com.hyosakura.bot.listener.MemberLeaveListener
 import com.hyosakura.bot.service.DBService
 import com.hyosakura.bot.util.ClassUtil
-import com.hyosakura.bot.util.plugin.PluginScheduler
+import com.hyosakura.bot.util.coroutine.PluginScheduler
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.data.AutoSavePluginConfig

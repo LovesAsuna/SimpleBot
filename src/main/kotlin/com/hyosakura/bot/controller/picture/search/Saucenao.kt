@@ -1,4 +1,4 @@
-package com.hyosakura.bot.util.pictureSearch
+package com.hyosakura.bot.controller.picture.search
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.hyosakura.bot.Config

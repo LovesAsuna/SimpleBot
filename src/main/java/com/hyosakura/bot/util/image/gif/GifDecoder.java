@@ -1,4 +1,4 @@
-package com.hyosakura.bot.util.photo.gif;
+package com.hyosakura.bot.util.image.gif;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
