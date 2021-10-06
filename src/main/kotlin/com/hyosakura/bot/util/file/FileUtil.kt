@@ -5,6 +5,11 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.BigInteger
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.zip.ZipEntry
@@ -83,12 +88,18 @@ object FileUtil {
         }
     }
 
-    fun delete(file: File) {
-        if (file.isDirectory) {
-            file.listFiles().forEach {
-                delete(it)
+    fun deleteDir(path : Path) {
+        Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
+            @Throws(IOException::class)
+            override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                Files.delete(file)
+                return FileVisitResult.CONTINUE
             }
-        }
-        file.delete()
+
+            @Throws(IOException::class)
+            override fun postVisitDirectory(dir: Path, exc: IOException): FileVisitResult {
+                return FileVisitResult.CONTINUE
+            }
+        })
     }
 }
