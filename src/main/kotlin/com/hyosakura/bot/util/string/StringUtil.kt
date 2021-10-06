@@ -44,7 +44,7 @@ object StringUtil {
                     1
                 }
                 // 左边+1,上边+1, 左上角+temp取最小
-                d[i][j] = Math.min(Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1), d[i - 1][j - 1] + temp)
+                d[i][j] = (d[i - 1][j] + 1).coerceAtMost(d[i][j - 1] + 1).coerceAtMost(d[i - 1][j - 1] + temp)
                 j++
             }
             i++
