@@ -72,8 +72,8 @@ object PixivGetter : CompositeCommand(
                     +"图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者"
                 }
             } else {
-                +"该作品共有${count}张图片,预览前三张"
-                repeat(count) {
+                +"该作品共有${count}张图片${if (count > 5) ",预览前5张" else ""}"
+                repeat(if (count > 5) 5 else count) {
                     Main.scheduler.withTimeOut(suspend {
                         `is` = OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID-${it + 1}.jpg"])
                         +`is`!!.uploadAsImage(getGroupOrNull()!!)
