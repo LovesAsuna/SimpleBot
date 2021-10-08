@@ -23,7 +23,5 @@ class MemberEntity(
     @JoinColumn(name = "member_id")
     var messages: MutableSet<MessageEntity>? = null
 ) {
-    override fun toString(): String {
-        return "MemberEntity(id=$id, name=$name, participation=$participation)"
-    }
+    override fun toString(): String = "$name($id)"
 }

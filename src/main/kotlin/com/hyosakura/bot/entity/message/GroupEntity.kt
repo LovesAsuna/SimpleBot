@@ -23,7 +23,5 @@ class GroupEntity(
     @JoinColumn(name = "group_id")
     var messages: MutableSet<MessageEntity>? = null
 ) {
-    override fun toString(): String {
-        return "GroupEntity(id=$id, name=$name, participation=$participation)"
-    }
+    override fun toString(): String = "$name($id)"
 }

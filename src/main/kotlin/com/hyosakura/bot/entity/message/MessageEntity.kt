@@ -27,8 +27,4 @@ class MessageEntity(
     @ManyToOne(targetEntity = GroupEntity::class)
     @JoinColumn(name = "group_id")
     var group : GroupEntity? = null
-) {
-    override fun toString(): String {
-        return "${time}时 ${member?.name} 在群 [${group?.name}] 说了: $content"
-    }
-}
+)

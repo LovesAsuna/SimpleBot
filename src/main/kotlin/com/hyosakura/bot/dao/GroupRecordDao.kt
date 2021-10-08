@@ -32,12 +32,9 @@ class GroupRecordDao(override val session: Session) : DefaultHibernateDao<Messag
         session.saveOrUpdate(MessageEntity(null, message, time, MemberEntity(memberID), GroupEntity(groupID)))
     }
 
-    fun addParticipation(memberID: Long, groupID: Long, nickName: String) {
-        session.saveOrUpdate(ParticipationEntity(groupID, memberID, nickName))
+    fun addParticipation(memberID: Long, groupID: Long) {
+        session.saveOrUpdate(ParticipationEntity(groupID, memberID))
     }
-
-    fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String) =
-        addParticipation(memberID, groupID, nickName)
 
     fun queryUserRecord(memberID: Long): List<MessageEntity> {
         return queryEntity(

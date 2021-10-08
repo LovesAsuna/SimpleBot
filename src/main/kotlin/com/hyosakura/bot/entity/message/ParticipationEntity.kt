@@ -14,15 +14,7 @@ class ParticipationEntity(
     @Id
     @Column(name = "member_id")
     var memberID: Long? = null,
-
-    @Column(name = "nickname")
-    @Basic
-    var nickname: String? = null,
-) {
-    override fun toString(): String {
-        return "群员 $memberID 在群 $groupID 的昵称为 $nickname"
-    }
-}
+)
 
 
 data class GroupAndMember(
