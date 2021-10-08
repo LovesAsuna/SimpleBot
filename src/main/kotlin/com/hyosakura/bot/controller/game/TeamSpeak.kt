@@ -6,6 +6,7 @@ import com.github.theholywaffle.teamspeak3.api.event.*
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.entity.game.Server
 import com.hyosakura.bot.entity.game.TeamSpeakEntity
+import com.hyosakura.bot.service.ServiceManager
 import com.hyosakura.bot.service.TeamSpeakService
 import com.hyosakura.bot.service.impl.TeamSpeakImpl
 import com.hyosakura.bot.util.BasicUtil
@@ -14,6 +15,7 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
+import java.io.Closeable
 import java.util.concurrent.TimeUnit
 
 object TeamSpeak : CompositeCommand(
@@ -23,21 +25,23 @@ object TeamSpeak : CompositeCommand(
     parentPermission = registerDefaultPermission()
 ) {
     private val teamSpeakService: TeamSpeakService = TeamSpeakImpl
-    val queries = hashMapOf<Server, TS3Query>()
+    val queries = hashMapOf<Server, QueryWrapper>()
 
     init {
         teamSpeakService.getAllServer().forEach {
-            queries[it.server!!] = initQuery(it)
+            queries[it.server!!] = QueryWrapper(initQuery(it)).also {
+                ServiceManager.registerService(it)
+            }
         }
         BasicUtil.scheduleWithFixedDelay({
             while (queries.isNotEmpty()) {
                 queries.forEach { (server, query) ->
-                    if (!query.isConnected) {
-                        try {
+                    if (!query.isConnected()) {
+                        kotlin.runCatching {
                             query.exit()
-                        } catch (e: Exception) {
                         }
-                        queries[server] = initQuery(teamSpeakService.queryServer(server.host!!, server.port!!)!!)
+                        queries[server] =
+                            QueryWrapper(initQuery(teamSpeakService.queryServer(server.host!!, server.port!!)!!))
                     }
                 }
             }
@@ -47,7 +51,9 @@ object TeamSpeak : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.addServer(host: String, port: Int, username: String, password: String) {
         val entity = teamSpeakService.addServer(host, port, username, password, getGroupOrNull()!!.id)
-        queries[Server(host, port)] = initQuery(entity!!)
+        queries[Server(host, port)] = QueryWrapper(initQuery(entity!!)).also {
+            ServiceManager.registerService(it)
+        }
         sendMessage("ts服务器添加成功")
     }
 
@@ -120,4 +126,12 @@ object TeamSpeak : CompositeCommand(
         })
         return query
     }
+}
+
+data class QueryWrapper(val query: TS3Query) : Closeable {
+    override fun close() = query.exit()
+
+    fun isConnected() = query.isConnected
+
+    fun exit() = close()
 }

@@ -4,14 +4,13 @@ import com.hyosakura.bot.dao.TeamSpeakDao
 import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.entity.game.Server
 import com.hyosakura.bot.entity.game.TeamSpeakEntity
+import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.TeamSpeakService
 import org.hibernate.Session
 import java.util.stream.Collectors
 
-object TeamSpeakImpl : TeamSpeakService {
-
+object TeamSpeakImpl : AutoRegisterDBService(), TeamSpeakService {
     override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-
     private val dao: TeamSpeakDao by lazy { TeamSpeakDao(session) }
 
     override fun getAllServer(): List<TeamSpeakEntity> = dao.getAllServer()

@@ -1,11 +1,12 @@
 package com.hyosakura.bot.service
 
 import org.hibernate.Session
+import java.io.Closeable
 
-interface DBService {
+interface DBService : Closeable {
     val session: Session
 
-    fun close() {
+    override fun close() {
         session.close()
     }
 }

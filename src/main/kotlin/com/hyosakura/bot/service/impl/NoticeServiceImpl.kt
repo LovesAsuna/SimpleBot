@@ -3,15 +3,14 @@ package com.hyosakura.bot.service.impl
 import com.hyosakura.bot.dao.NoticeDao
 import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.entity.`fun`.NoticeEntity
+import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.NoticeService
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import org.hibernate.Session
 
-object NoticeServiceImpl : NoticeService {
-
+object NoticeServiceImpl : AutoRegisterDBService(), NoticeService {
     override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-
     private val dao: NoticeDao by lazy { NoticeDao(session) }
 
     override fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {

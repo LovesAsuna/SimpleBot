@@ -1,10 +1,9 @@
 package com.hyosakura.bot
 
-import com.hyosakura.bot.controller.game.TeamSpeak
 import com.hyosakura.bot.listener.EventListener
 import com.hyosakura.bot.listener.GroupMessageListener
 import com.hyosakura.bot.listener.MemberLeaveListener
-import com.hyosakura.bot.service.DBService
+import com.hyosakura.bot.service.ServiceManager
 import com.hyosakura.bot.util.ClassUtil
 import com.hyosakura.bot.util.coroutine.PluginScheduler
 import net.mamoe.mirai.console.command.Command
@@ -56,12 +55,7 @@ object Main : KotlinPlugin(
     }
 
     override fun onDisable() {
-        ClassUtil.getClasses("com.hyosakura.bot.service.impl").forEach {
-            (it.kotlin.objectInstance as DBService).close()
-        }
-        TeamSpeak.queries.values.forEach {
-            it.exit()
-        }
+        ServiceManager.closeAll()
     }
 }
 

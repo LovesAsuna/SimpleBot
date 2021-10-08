@@ -3,14 +3,13 @@ package com.hyosakura.bot.service.impl
 import com.hyosakura.bot.dao.GroupRecordDao
 import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.entity.message.MessageEntity
+import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.GroupRecordService
 import org.hibernate.Session
 import java.util.*
 
-object GroupRecordImpl : GroupRecordService {
-
+object GroupRecordImpl : AutoRegisterDBService(), GroupRecordService {
     override var session: Session = BotData.recordConfig.buildSessionFactory().openSession()
-
     private val dao: GroupRecordDao by lazy { GroupRecordDao(session) }
 
     override fun groupIsNull(groupID: Long): Boolean = dao.queryGroup(groupID) == null
@@ -56,30 +55,12 @@ object GroupRecordImpl : GroupRecordService {
         }
     }
 
-    override fun addParticipation(memberID: Long, groupID: Long, nickName: String): Boolean {
+    override fun addParticipation(memberID: Long, groupID: Long): Boolean {
         if (!session.transaction.isActive) {
             session.beginTransaction()
         }
         try {
-            dao.addParticipation(memberID, groupID, nickName)
-            return true
-        } finally {
-            session.transaction.commit()
-        }
-    }
-
-    override fun updateParticipationNickName(memberID: Long, groupID: Long, nickName: String): Boolean {
-        val entity = dao.queryParticipation(groupID, memberID)
-        if (entity != null && entity.nickname != nickName) {
-            entity.nickname = nickName
-        } else {
-            return false
-        }
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            session.update(entity)
+            dao.addParticipation(memberID, groupID)
             return true
         } finally {
             session.transaction.commit()

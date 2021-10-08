@@ -3,13 +3,12 @@ package com.hyosakura.bot.service.impl
 import com.hyosakura.bot.dao.KeyWordDao
 import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.entity.`fun`.KeyWordEntity
+import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.KeyWordService
 import org.hibernate.Session
 
-object KeyWordServiceImpl : KeyWordService {
-
+object KeyWordServiceImpl : AutoRegisterDBService(), KeyWordService {
     override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-
     private val dao: KeyWordDao by lazy { KeyWordDao(session) }
 
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
