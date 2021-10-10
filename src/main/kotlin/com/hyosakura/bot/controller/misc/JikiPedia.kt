@@ -21,13 +21,12 @@ object JikiPedia : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle(str: String) {
         val text = BotData.objectMapper.createObjectNode().put("phrase", str)
-            .put("page", 1)
-            .put("size", 60)
         val root = withContext(Dispatchers.IO) {
             @Suppress("BlockingMethodInNonBlockingContext")
             OkHttpUtil.postJson(
-                "https://api.jikipedia.com/go/search_entities",
-                text.toString().toRequestBody("application/json".toMediaType())
+                "https://api.jikipedia.com/go/auto_complete",
+                text.toString().toRequestBody("application/json".toMediaType()),
+                OkHttpUtil.addHeaders(mapOf("Client" to "Web"))
             )
         }
         for (data in root["data"]) {
