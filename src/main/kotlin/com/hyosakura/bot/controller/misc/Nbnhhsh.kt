@@ -1,4 +1,4 @@
-package com.hyosakura.bot.controller.qqfun
+package com.hyosakura.bot.controller.misc
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

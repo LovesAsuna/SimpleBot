@@ -1,4 +1,4 @@
-package com.hyosakura.bot.controller.qqfun
+package com.hyosakura.bot.controller.misc
 
 import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
