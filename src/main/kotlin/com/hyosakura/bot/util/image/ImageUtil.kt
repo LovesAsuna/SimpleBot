@@ -1,13 +1,18 @@
 package com.hyosakura.bot.util.image
 
+import net.mamoe.mirai.contact.Member
 import java.awt.Dimension
+import java.awt.Image
 import java.awt.Rectangle
+import java.awt.RenderingHints
+import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
+import java.net.URL
 import javax.imageio.ImageIO
+
 
 object ImageUtil {
     /**
@@ -135,11 +140,55 @@ object ImageUtil {
         } else null
     }
 
-    fun getImageType(file: File) = getImageType(FileInputStream(file))
-
-    fun imageToByte(image : BufferedImage): ByteArray {
+    /**
+     * 将 [BufferedImage] 转换为字节数组
+     *
+     * @param image 图像
+     * @return 字节数组
+     */
+    fun imageToByte(image: BufferedImage): ByteArray {
         val out = ByteArrayOutputStream()
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out))
         return out.toByteArray()
+    }
+
+    /**
+     * 将 [BufferedImage] 转换为输入流
+     *
+     * @param image 图像
+     * @return 输入流
+     */
+    fun imageToStream(image: BufferedImage): InputStream = ByteArrayInputStream(imageToByte(image))
+
+    /**
+     * 获取成员的头像
+     *
+     * @param target 目标成员
+     * @return 头像对应的 [BufferedImage]
+     */
+    fun getMemberAvatar(target: Member, size: Int): BufferedImage {
+        val head = ImageIO.read(URL(target.avatarUrl))
+        val formattedHead = BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR).also {
+            it.createGraphics().apply {
+                setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+                val shape = Ellipse2D.Double(
+                    0.0,
+                    0.0,
+                    size.toDouble(),
+                    size.toDouble()
+                )
+                clip = shape
+                drawImage(
+                    head.getScaledInstance(size, size, Image.SCALE_SMOOTH),
+                    0,
+                    0,
+                    size,
+                    size,
+                    null
+                )
+                dispose()
+            }
+        }
+        return formattedHead
     }
 }

@@ -1,10 +1,13 @@
 package com.hyosakura.bot.controller.qqfun
 
+import com.hyosakura.bot.Main
 import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
-import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.image.ImageUtil
+import com.hyosakura.bot.util.image.gif.AnimatedGifEncoder
+import com.hyosakura.bot.util.image.gif.GifDecoder
+import com.hyosakura.bot.util.network.OkHttpUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.event.events.MessageEvent
@@ -24,8 +27,8 @@ import javax.imageio.ImageIO
  */
 class RepeatDetect : FunctionListener {
     private val maps: MutableMap<Long, MutableList<MessageChain>> = HashMap()
-    private val gifDecoder = com.hyosakura.bot.util.image.gif.GifDecoder()
-    private val gifEncoder = com.hyosakura.bot.util.image.gif.AnimatedGifEncoder()
+    private val gifDecoder = GifDecoder()
+    private val gifEncoder = AnimatedGifEncoder()
     private val random = Random()
     private val textPattern = "[\\u4e00-\\u9fa5_a-zA-Z0-9]|" +
             "[\\uD83C\\uDF00-\\uD83D\\uDDFF]|" +
@@ -68,7 +71,7 @@ class RepeatDetect : FunctionListener {
         }
 
         if (isRepeat(messageList)) {
-            com.hyosakura.bot.Main.scheduler.asyncTask {
+            Main.scheduler.asyncTask {
 
                 val messageChain = box.event.message
                 box.reply(buildMessageChain {
@@ -135,7 +138,7 @@ class RepeatDetect : FunctionListener {
                 "gif" -> {
                     val type = random.nextInt(4)
                     val out = ByteArrayOutputStream()
-                    try {
+                    kotlin.runCatching {
                         gifDecoder.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
                         gifEncoder.start(out)
                         gifEncoder.setDelay(gifDecoder.getDelay(0))
@@ -143,9 +146,10 @@ class RepeatDetect : FunctionListener {
                             gifEncoder.addFrame(getOperatedImageByType(it, type))
                         }
                         gifEncoder.finish()
-                    } catch (e: Exception) {
-                        +"发生未知错误: ${e.javaClass}"
-                        +e.message!!.run {
+                    }.onFailure {
+                        Main.logger.error(it)
+                        +"发生未知错误: $it"
+                        +it.message!!.run {
                             "堆栈信息: ${BasicUtil.debug(this)}"
                         }
                         return@buildMessageChain
