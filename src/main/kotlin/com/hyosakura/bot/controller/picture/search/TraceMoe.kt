@@ -11,7 +11,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
-object TraceMoe : AnimeSearchSource {
+object TraceMoe : SearchSource<AnimeResult> {
     private val client = OkHttpClient()
     private val queryString =
         "query (${"$"}ids: [Int]) {Page(page: 1, perPage: 50) {media(id_in: ${"$"}ids, type: ANIME) {id title{native}startDate{year month day}endDate{year month day}season episodes duration coverImage{large medium}bannerImage externalLinks{id url site}}}}"
@@ -47,11 +47,11 @@ object TraceMoe : AnimeSearchSource {
         repeat(size) {
             val id = resultNode[it]["anilist"].asInt()
             array.add(id)
-            val similarity = resultNode[it]["similarity"].asDouble() * 100
+            val similarity = format.format(resultNode[it]["similarity"].asDouble() * 100)
             val from = getTime(resultNode[it]["from"].asDouble())
             val to = getTime(resultNode[it]["to"].asDouble())
             val result = AnimeResult()
-            result.similarity = similarity
+            result.similarity = similarity.toDouble()
             result.from = from
             result.to = to
             results.add(result)
@@ -92,7 +92,7 @@ object TraceMoe : AnimeSearchSource {
             val banner = currentResult["bannerImage"].asText()
             val extUrls = mutableListOf<List<String>>().apply {
                 val externalLinks = currentResult["externalLinks"]
-                repeat(externalLinks.size()) {index->
+                repeat(externalLinks.size()) { index ->
                     add(listOf(externalLinks[index]["site"].asText(), externalLinks[index]["url"].asText()))
                 }
             }

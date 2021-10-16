@@ -10,7 +10,6 @@ import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.buildMessageChain
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
@@ -34,16 +33,8 @@ object PictureSearch : SimpleCommand(
             }
             else -> Saucenao
         }
-        val imgUrl = image.queryUrl()
-        Main.logger.debug("图片URL: $imgUrl")
-        val results = source.search(imgUrl)
-        if (results.isEmpty()) {
-            sendMessage("未查找到结果!")
-            return
-        }
-        sendMessage("搜索完成!")
-        Main.logger.debug(results.toString())
-        fun MessageChainBuilder.add(result : PictureResult) {
+        val results = getResult(source, image) ?: return
+        fun MessageChainBuilder.add(result: PictureResult) {
             +"相似度: ${result.similarity}\n"
             +"画师名: ${result.memberName}\n"
             +"相关链接:\n"

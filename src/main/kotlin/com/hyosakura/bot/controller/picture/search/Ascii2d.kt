@@ -2,7 +2,7 @@ package com.hyosakura.bot.controller.picture.search
 
 import org.jsoup.Jsoup
 
-object Ascii2d : PictureSearchSource {
+object Ascii2d : SearchSource<PictureResult> {
     private val ascii2d = "https://ascii2d.net/search/url/"
     override fun search(url: String): List<PictureResult> {
         val request = Jsoup.connect("$ascii2d$url")

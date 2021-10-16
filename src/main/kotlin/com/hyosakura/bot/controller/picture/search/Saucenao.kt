@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.hyosakura.bot.Config
 import com.hyosakura.bot.util.network.OkHttpUtil
 
-object Saucenao : PictureSearchSource {
+object Saucenao : SearchSource<PictureResult> {
     private val api =
         "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.SauceNaoAPI}&numres=16&url="
 

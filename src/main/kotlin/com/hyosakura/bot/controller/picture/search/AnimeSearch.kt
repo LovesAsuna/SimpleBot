@@ -9,7 +9,6 @@ import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.buildMessageChain
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
@@ -23,18 +22,11 @@ object AnimeSearch : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle(image: Image) {
         val source = TraceMoe
-        val imgUrl = image.queryUrl()
-        Main.logger.debug("图片URL: $imgUrl")
-        val results = source.search(imgUrl)
-        if (results.isEmpty()) {
-            sendMessage("未查找到结果!")
-            return
-        }
-        sendMessage("搜索完成!")
-        Main.logger.debug(results.toString())
+        val results = getResult(source, image) ?: return
         fun MessageChainBuilder.add(result: AnimeResult) {
-            +"${result.episodes}集 每集${result.duration}分钟\n"
             +"${result.startDate} to ${result.endDate}\n"
+            +"季度: ${result.season}\n"
+            +"${result.episodes}集 每集${result.duration}分钟\n"
             +"相关链接:\n"
             for (url in result.extUrls!!) {
                 +"${url[0]}\n"
@@ -47,7 +39,7 @@ object AnimeSearch : SimpleCommand(
                 sendMessage(
                     buildMessageChain {
                         +"相似度: ${result.similarity}\n"
-                        + "目标画面所处时长: ${result.from}-${result.to}\n"
+                        +"目标画面所处时长: ${result.from}-${result.to}\n"
                         +"番名: ${result.title}\n"
                         +"Cover:\n"
                         +withContext(Dispatchers.IO) {
@@ -59,11 +51,12 @@ object AnimeSearch : SimpleCommand(
                         }
                     }
                 )
-            }, 15000) {
+            }, 20000) {
                 sendMessage("缩略图上传超时")
                 sendMessage(
                     buildMessageChain {
                         +"相似度: ${result.similarity}\n"
+                        +"目标画面所处时长: ${result.from}-${result.to}\n"
                         +"番名: ${result.title}\n"
                         +"Cover:\n"
                         +"上传失败\n"
