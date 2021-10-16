@@ -11,8 +11,8 @@ import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
-import net.mamoe.mirai.message.data.Message
-import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.MessageChainBuilder
+import net.mamoe.mirai.message.data.buildMessageChain
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object PictureSearch : SimpleCommand(
@@ -43,36 +43,39 @@ object PictureSearch : SimpleCommand(
         }
         sendMessage("搜索完成!")
         Main.logger.debug(results.toString())
-        results.forEach { result ->
-            val builder = StringBuilder()
-            result.extUrls.forEach {
-                if (it.contains("pixiv") && it.contains(Regex("(illust)|(artwork)"))) {
-                    if (result.similarity > 90) {
-                        work(BasicUtil.extractInt(it))
-                    }
-                }
-                builder.append(it).append("\n")
+        fun MessageChainBuilder.add(result : PictureResult) {
+            +"相似度: ${result.similarity}\n"
+            +"画师名: ${result.memberName}\n"
+            +"相关链接:\n"
+            result.extUrls!!.forEach {
+                +"$it\n"
             }
+        }
+        results.forEach { result ->
             Main.scheduler.withTimeOut(suspend {
-                val uploadImage =
-                    OkHttpUtil.getIs(OkHttpUtil[result.thumbnail]).uploadAsImage(getGroupOrNull()!!) as Message
+                val uploadImage = OkHttpUtil.getIs(OkHttpUtil[result.thumbnail!!]).uploadAsImage(getGroupOrNull()!!)
                 sendMessage(
-                    uploadImage + PlainText(
-                        "\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${
-                            builder.toString().replace(Regex("\n$"), "")
-                        }"
-                    )
+                    buildMessageChain {
+                        +uploadImage
+                        add(result)
+                    }
                 )
                 uploadImage
             }, 7500) {
                 sendMessage("缩略图上传超时")
                 sendMessage(
-                    PlainText(
-                        "空图像(上传失败)\n相似度: ${result.similarity} \n画师名: ${result.memberName} \n相关链接: \n${
-                            builder.toString().replace(Regex("\n$"), "")
-                        }"
-                    )
+                    buildMessageChain {
+                        +"空图像(上传失败)\n"
+                        add(result)
+                    }
                 )
+            }
+            result.extUrls!!.forEach {
+                if (it.contains("pixiv") && it.contains(Regex("(illust)|(artwork)"))) {
+                    if (result.similarity!! > 90) {
+                        work(BasicUtil.extractInt(it))
+                    }
+                }
             }
         }
     }

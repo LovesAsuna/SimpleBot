@@ -8,13 +8,13 @@ object Saucenao : PictureSearchSource {
     private val api =
         "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key=${Config.SauceNaoAPI}&numres=16&url="
 
-    override fun search(url: String): List<Result> {
+    override fun search(url: String): List<PictureResult> {
         val results = OkHttpUtil.getJson(api + url)["results"]
-        val resultList = ArrayList<Result>()
+        val pictureResultList = ArrayList<PictureResult>()
         for (i in 0..results.size()) {
             val result = results[i]
             if (result != null) {
-                val similarity = result["header"]["similarity"].asInt()
+                val similarity = result["header"]["similarity"].asDouble()
                 if (similarity < 57.5) continue
                 val extUrlsList = ArrayList<String>()
                 val exeUrls: JsonNode? = result["data"]["ext_urls"]
@@ -26,11 +26,11 @@ object Saucenao : PictureSearchSource {
                 if (!extUrlsList.parallelStream().anyMatch { it.contains("pixiv") }) continue
                 val thumbnail = result["header"]["thumbnail"].asText()
                 val memberName = result["data"]["member_name"].asText()
-                resultList.add(Result(similarity, thumbnail, extUrlsList, memberName))
+                pictureResultList.add(PictureResult(similarity, thumbnail, extUrlsList, memberName))
             }
         }
 
-        return resultList
+        return pictureResultList
     }
 
 }

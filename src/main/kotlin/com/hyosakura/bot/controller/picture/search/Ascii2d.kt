@@ -4,12 +4,12 @@ import org.jsoup.Jsoup
 
 object Ascii2d : PictureSearchSource {
     private val ascii2d = "https://ascii2d.net/search/url/"
-    override fun search(url: String): List<Result> {
+    override fun search(url: String): List<PictureResult> {
         val request = Jsoup.connect("$ascii2d$url")
         request.followRedirects(true)
         val html = request.get()
         val elements = html.body().getElementsByClass("container")
-        val resultList = ArrayList<Result>()
+        val pictureResultList = ArrayList<PictureResult>()
         for (i in 1..2) {
             val sources = elements.select("div.row.item-box")[i]
             val thumbnail = "https://ascii2d.net" + sources.select("img[loading=lazy]").attr("src")
@@ -19,9 +19,9 @@ object Ascii2d : PictureSearchSource {
                     extUrlsList.add(this[j].attr("href"))
                 }
             }
-            resultList.add(Result(-1, thumbnail, extUrlsList, "Ascii2d不显示"))
+            pictureResultList.add(PictureResult(-1.0, thumbnail, extUrlsList, "Ascii2d不显示"))
         }
 
-        return resultList
+        return pictureResultList
     }
 }
