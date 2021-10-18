@@ -42,7 +42,7 @@ object Main : KotlinPlugin(
         Config.reload()
         ClassUtil.getClasses("com.hyosakura.bot.controller", Main::class.java.classLoader).forEach {
             val kClass = it.kotlin
-            if (!kClass.jvmName.contains("$")) {
+            if (!kClass.jvmName.contains("$") && !kClass.jvmName.endsWith("Kt")) {
                 val objectInstance = kClass.objectInstance
                 if (objectInstance != null && Command::class.isInstance(objectInstance)) {
                     CommandManager.registerCommand(objectInstance as Command)
