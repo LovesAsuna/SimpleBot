@@ -69,16 +69,16 @@ object PixivGetter : CompositeCommand(
                         OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID.jpg"])
                     +`is`!!.uploadAsImage(getGroupOrNull()!!)
                 }, 60000) {
-                    +"图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者"
+                    +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
                 }
             } else {
                 +"该作品共有${count}张图片${if (count > 5) ",预览前5张" else ""}"
                 repeat(if (count > 5) 5 else count) {
                     Main.scheduler.withTimeOut(suspend {
-                        `is` = OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID-${it + 1}.jpg"])
+                        `is` = OkHttpUtil.getIs(OkHttpUtil["https://pixiv.re/$ID-${it + 1}.jpg"])
                         +`is`!!.uploadAsImage(getGroupOrNull()!!)
                     }, 60000) {
-                        +"图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者"
+                        +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
                     }
                 }
             }
@@ -89,7 +89,7 @@ object PixivGetter : CompositeCommand(
             收藏数: $mark
             查看数: $view
             R18: $r18
-            直连链接: https://pixiv.cat/${
+            直连链接: https://pixiv.re/${
                 if (count == 1) {
                     ID
                 } else {
