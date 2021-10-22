@@ -66,7 +66,7 @@ object PixivGetter : CompositeCommand(
             if (count == 1) {
                 Main.scheduler.withTimeOut(suspend {
                     `is` =
-                        OkHttpUtil.getIs(OkHttpUtil["https://pixiv.cat/$ID.jpg"])
+                        OkHttpUtil.getIs(OkHttpUtil["https://pixiv.re/$ID.jpg"])
                     +`is`!!.uploadAsImage(getGroupOrNull()!!)
                 }, 60000) {
                     +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
