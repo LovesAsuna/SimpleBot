@@ -15,10 +15,18 @@ interface SearchSource<T> {
 suspend fun <T> getResult(source: SearchSource<T>, image: Image): List<T>? {
     val imgUrl = image.queryUrl()
     Main.logger.debug("图片URL: $imgUrl")
-    val results = source.search(imgUrl)
-    if (results.isEmpty()) {
-        sendMessage("未查找到结果!")
+    val results = Main.scheduler.withTimeOut(suspend {
+        source.search(imgUrl)
+    }, 10000) {
+        sendMessage("搜索超时!")
+    }
+    if (results == null) {
         return null
+    } else {
+        if (results.isEmpty()) {
+            sendMessage("未查找到结果!")
+            return null
+        }
     }
     sendMessage("搜索完成!")
     return results
