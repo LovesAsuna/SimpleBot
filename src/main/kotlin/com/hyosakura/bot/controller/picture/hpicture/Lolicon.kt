@@ -16,8 +16,8 @@ class Lolicon : MultiPictureSource {
         return mutableListOf<String>().apply {
             try {
                 repeat(num) {
-                    val url = root["data"][it]["urls"]["original"]
-                    this.add(url.asText())
+                    val url = root["data"][it]["urls"]["original"].asText().replace("cat", "re")
+                    this.add(url)
                 }
             } catch (e: IOException) {
                 Main.logger.error(e)
