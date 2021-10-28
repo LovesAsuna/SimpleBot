@@ -56,7 +56,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
     /**
      * 异步执行一个任务, 没有返回
      */
-    fun asyncTask(runnable: suspend () -> Any) {
+    fun asyncTask(runnable: suspend () -> Any?) {
         this.launch {
             withContext(Dispatchers.IO) {
                 runnable.invoke()
