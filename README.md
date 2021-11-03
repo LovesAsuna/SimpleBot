@@ -63,3 +63,10 @@ git clone https://github.com/LovesAsuna/Mirai-Bot.git
 ## 📜 协议
 
 [AGPLv3 with Mamoe Exceptions](https://github.com/mamoe/mirai/blob/master/LICENSE)
+
+## 鸣谢
+
+> [IntelliJ IDEA](https://zh.wikipedia.org/zh-hans/IntelliJ_IDEA) 是一个在各个方面都最大程度地提高开发人员的生产力的 IDE，适用于 JVM 平台语言。
+
+特别感谢 [JetBrains](https://www.jetbrains.com/) 为开源项目提供免费的 [IntelliJ IDEA](https://www.jetbrains.com/idea/) 等 IDE 的授权  
+[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=200&v=4)](https://www.jetbrains.com/)
