@@ -1,0 +1,41 @@
+package com.hyosakura.bot.controller.misc
+
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.hyosakura.bot.Main
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.registerDefaultPermission
+import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.SimpleCommand
+import okhttp3.RequestBody.Companion.toRequestBody
+
+object AdultDetector : SimpleCommand(
+    owner = Main,
+    primaryName = "adult",
+    description = "未成年查询",
+    parentPermission = registerDefaultPermission()
+) {
+    @Handler
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun CommandSender.handle(qq: Long) {
+        val url = "https://www.wegame.com.cn/api/middle/lua/realname/check_user_real_name"
+        val mapper = BotData.objectMapper
+        val body = mapper.createObjectNode()
+        body.set<ObjectNode>(
+            "qq_login_key", mapper.createObjectNode().put("qq_key_type", 3)
+                .put("uint64_uin", qq)
+        ).put("acc_type", 1)
+        val response = OkHttpUtil.postJson(url, body.toString().toRequestBody())
+        val result = response["result"]
+        if (result.asInt() != 0) {
+            sendMessage("查询失败！Q号不存在或Q号有误")
+        } else {
+            val builder = StringBuilder()
+            val isRealName = if (response["is_realname"].asInt() == 1) "true" else "false"
+            val isAdult = if (response["is_adult"].asInt() == 1) "true" else "false"
+            builder.append("是否实名: $isRealName\n")
+                .append("成年: $isAdult")
+            sendMessage(builder.toString())
+        }
+    }
+}
