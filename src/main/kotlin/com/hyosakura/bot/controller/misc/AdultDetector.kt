@@ -7,6 +7,7 @@ import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
+import net.mamoe.mirai.contact.Member
 import okhttp3.RequestBody.Companion.toRequestBody
 
 object AdultDetector : SimpleCommand(
@@ -17,13 +18,13 @@ object AdultDetector : SimpleCommand(
 ) {
     @Handler
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun CommandSender.handle(qq: Long) {
+    suspend fun CommandSender.handle(member : Member) {
         val url = "https://www.wegame.com.cn/api/middle/lua/realname/check_user_real_name"
         val mapper = BotData.objectMapper
         val body = mapper.createObjectNode()
         body.set<ObjectNode>(
             "qq_login_key", mapper.createObjectNode().put("qq_key_type", 3)
-                .put("uint64_uin", qq)
+                .put("uint64_uin", member.id)
         ).put("acc_type", 1)
         val response = OkHttpUtil.postJson(url, body.toString().toRequestBody())
         val result = response["result"]
