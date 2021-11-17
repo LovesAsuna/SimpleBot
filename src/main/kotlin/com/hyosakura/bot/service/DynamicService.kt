@@ -2,7 +2,7 @@ package com.hyosakura.bot.service
 
 interface DynamicService : DBService {
 
-    fun update(upID: Long, dynamicID: String)
+    fun update(upID: Long, dynamicID: String): Int
 
-    fun getDynamicID(upID: Long): String
+    fun getDynamicID(upID: Long): String?
 }

@@ -4,9 +4,9 @@ import net.mamoe.mirai.message.data.MessageChain
 
 interface NoticeService : DBService {
 
-    fun getMatchMessage(groupID: Long, targetID: Long): MessageChain?
+    fun getMatchMessage(groupId: Long, targetId: Long): MessageChain?
 
-    fun addNotice(groupID: Long, targetID: Long, message: MessageChain)
+    fun addNotice(groupId: Long, targetId: Long, message: MessageChain): Boolean
 
-    fun removeNotice(groupID: Long, targetID: Long): Boolean
+    fun removeNotice(groupId: Long, targetId: Long): Boolean
 }

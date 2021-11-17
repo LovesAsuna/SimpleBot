@@ -82,7 +82,7 @@ object Dynamic : CompositeCommand(
 
     @SubCommand
     suspend fun CommandSender.list() {
-        sendMessage("当前订阅的up: ${linkService.getUPByGroup(getGroupOrNull()!!.id)}")
+        sendMessage("当前订阅的up: ${linkService.getUpByGroup(getGroupOrNull()!!.id)}")
     }
 
     @SubCommand
@@ -93,7 +93,7 @@ object Dynamic : CompositeCommand(
 
     @SubCommand
     suspend fun CommandSender.remove(upID: Long) {
-        linkService.deleteUp(upID, getGroupOrNull()!!.id)
+        linkService.deleteUpByGroup(upID, getGroupOrNull()!!.id)
         sendMessage("up动态取消订阅成功!")
     }
 

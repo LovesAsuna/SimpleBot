@@ -39,13 +39,13 @@ dependencies {
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("com.h2database:h2:1.4.200")
-    implementation("org.hibernate.orm:hibernate-core:6.0.0.Alpha8")
+    implementation("org.ktorm:ktorm-core:3.4.1")
+    implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("com.charleskorn.kaml:kaml:0.36.0")
     implementation("com.github.oshi:oshi-core:5.8.3")
     implementation("net.java.dev.jna:jna:5.9.0")
     implementation("net.java.dev.jna:jna-platform:5.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.2")
-    implementation("com.github.theholywaffle:teamspeak3-api:1.3.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 

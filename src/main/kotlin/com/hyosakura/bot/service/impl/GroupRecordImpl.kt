@@ -2,76 +2,63 @@ package com.hyosakura.bot.service.impl
 
 import com.hyosakura.bot.dao.GroupRecordDao
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.entity.message.MessageEntity
-import com.hyosakura.bot.service.AutoRegisterDBService
+import com.hyosakura.bot.entity.message.Message
 import com.hyosakura.bot.service.GroupRecordService
-import org.hibernate.Session
-import java.util.*
+import org.ktorm.database.Database
+import java.time.LocalTime
 
-object GroupRecordImpl : AutoRegisterDBService(), GroupRecordService {
-    override var session: Session = BotData.recordConfig.buildSessionFactory().openSession()
-    private val dao: GroupRecordDao by lazy { GroupRecordDao(session) }
+object GroupRecordImpl : GroupRecordService {
+    override val database: Database = BotData.messageDatabase
+    private val dao: GroupRecordDao by lazy { GroupRecordDao(database) }
 
     override fun groupIsNull(groupID: Long): Boolean = dao.queryGroup(groupID) == null
 
     override fun memberIsNull(memberID: Long): Boolean = dao.queryMember(memberID) == null
 
-    override fun participationIsNull(memberID: Long, groupID: Long): Boolean =
-        dao.queryParticipation(memberID, groupID) == null
+    override fun relationIsNull(memberID: Long, groupID: Long): Boolean =
+        dao.queryRelation(memberID, groupID) == null
 
     override fun addGroup(groupID: Long, name: String): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            dao.addGroup(groupID, name)
-            return true
-        } finally {
-            session.transaction.commit()
-        }
+        return database.useTransaction {
+            if (groupIsNull(groupID)) {
+                dao.addGroup(groupID, name)
+            } else {
+                -1
+            }
+        } > 0
     }
 
     override fun addMember(memberID: Long, name: String): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            dao.addMember(memberID, name)
-            return true
-        } finally {
-            session.transaction.commit()
-        }
+        return database.useTransaction {
+            if (memberIsNull(memberID)) {
+                dao.addMember(memberID, name)
+            } else {
+                -1
+            }
+        } > 0
     }
 
-    override fun addRecord(message: String, time: Date, memberID: Long, groupID: Long): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
+    override fun addRecord(message: String, time: LocalTime, memberID: Long, groupID: Long): Boolean {
+        return database.useTransaction {
             dao.addRecord(message, time, memberID, groupID)
-            return true
-        } finally {
-            session.transaction.commit()
-        }
+        } > 0
     }
 
-    override fun addParticipation(memberID: Long, groupID: Long): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            dao.addParticipation(memberID, groupID)
-            return true
-        } finally {
-            session.transaction.commit()
-        }
+    override fun addRelation(memberID: Long, groupID: Long): Boolean {
+        return database.useTransaction {
+            if (relationIsNull(memberID, groupID)) {
+                dao.addRelation(memberID, groupID)
+            } else {
+                -1
+            }
+        } > 0
     }
 
-    override fun queryUserRecord(memberID: Long): List<MessageEntity> = dao.queryUserRecord(memberID)
+    override fun queryUserRecord(memberID: Long): List<Message> = dao.queryUserRecord(memberID)
 
-    override fun queryGroupRecord(groupID: Long): List<MessageEntity> = dao.queryGroupRecord(groupID)
+    override fun queryGroupRecord(groupID: Long): List<Message> = dao.queryGroupRecord(groupID)
 
-    override fun queryUserRecordInGroup(memberID: Long, groupID: Long): List<MessageEntity> =
+    override fun queryUserRecordInGroup(memberID: Long, groupID: Long): List<Message> =
         dao.queryUserRecordInGroup(memberID, groupID)
 
 }

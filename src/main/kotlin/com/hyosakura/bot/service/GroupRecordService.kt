@@ -1,7 +1,7 @@
 package com.hyosakura.bot.service
 
-import com.hyosakura.bot.entity.message.MessageEntity
-import java.util.*
+import com.hyosakura.bot.entity.message.Message
+import java.time.LocalTime
 
 /**
  * @author LovesAsuna
@@ -11,19 +11,19 @@ interface GroupRecordService : DBService {
 
     fun memberIsNull(memberID: Long): Boolean
 
-    fun participationIsNull(memberID: Long, groupID: Long): Boolean
+    fun relationIsNull(memberID: Long, groupID: Long): Boolean
 
     fun addGroup(groupID: Long, name: String): Boolean
 
     fun addMember(memberID: Long, name: String): Boolean
 
-    fun addRecord(message: String, time: Date, memberID: Long, groupID: Long): Boolean
+    fun addRecord(message: String, time: LocalTime, memberID: Long, groupID: Long): Boolean
 
-    fun addParticipation(memberID: Long, groupID: Long): Boolean
+    fun addRelation(memberID: Long, groupID: Long): Boolean
 
-    fun queryUserRecord(memberID: Long): List<MessageEntity>
+    fun queryUserRecord(memberID: Long): List<Message>
 
-    fun queryGroupRecord(groupID: Long): List<MessageEntity>
+    fun queryGroupRecord(groupID: Long): List<Message>
 
-    fun queryUserRecordInGroup(memberID: Long, groupID: Long): List<MessageEntity>
+    fun queryUserRecordInGroup(memberID: Long, groupID: Long): List<Message>
 }

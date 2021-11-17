@@ -1,37 +1,24 @@
 package com.hyosakura.bot.dao
 
-import com.hyosakura.bot.entity.dynamic.DynamicEntity
-import org.hibernate.Session
-import java.util.*
+import com.hyosakura.bot.entity.dynamic.Dynamics
+import com.hyosakura.bot.entity.dynamic.dynamics
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.update
+import org.ktorm.entity.find
 
-class DynamicDao(override val session: Session) : DefaultHibernateDao<DynamicEntity>(session) {
+class DynamicDao(override val database: Database) : DefaultDao {
 
-    fun updateDynamic(entity: DynamicEntity) {
-        session.saveOrUpdate(entity)
-    }
-
-    fun getDynamicID(upID: Long): Optional<String> {
-        return getField(upID, "dynamicID", String::class.java)
-    }
-
-    private fun <T> getField(upID: Long, fieldName: String, clazz: Class<T>): Optional<T> {
-        return queryField(
-            "select distinct e.${fieldName} from DynamicEntity as e where upID = ?1",
-            clazz,
-            upID
-        ).let {
-            Optional.ofNullable(it.getOrNull(0))
+    fun updateDynamic(upID: Long, dynamicID: String): Int {
+        return database.update(Dynamics) {
+            set(it.dynamicId, dynamicID)
+            where { it.upId eq upID }
         }
     }
 
-
-    fun getEntity(upID: Long): DynamicEntity? {
-        return queryEntity("from DynamicEntity as e where e.upID = ?1", DynamicEntity::class.java, upID).let {
-            if (it.isEmpty()) {
-                null
-            } else {
-                it[0]
-            }
-        }
+    fun getDynamicID(upID: Long): String? {
+        return database.dynamics.find {
+            it.upId eq upID
+        }?.dynamicId
     }
 }

@@ -2,51 +2,40 @@ package com.hyosakura.bot.service.impl
 
 import com.hyosakura.bot.dao.LinkDao
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.entity.dynamic.LinkEntity
-import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.LinkService
-import org.hibernate.Session
+import org.ktorm.database.Database
 
-object LinkServiceImpl : AutoRegisterDBService(), LinkService {
-    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-    private val dao: LinkDao by lazy { LinkDao(session) }
+object LinkServiceImpl : LinkService {
+    override val database: Database = BotData.botDatabase
+    private val dao: LinkDao by lazy { LinkDao(database) }
 
-    override fun addLink(upID: Long, groupID: Long) {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            dao.addLink(LinkEntity(null, groupID, upID))
-        } finally {
-            session.transaction.commit()
-        }
+    override fun addLink(upID: Long, groupID: Long): Boolean {
+        return database.useTransaction {
+            if (!dao.existLink(upID, groupID)) {
+                dao.addLink(upID, groupID)
+            } else {
+                -1
+            }
+        } > 0
     }
 
-    override fun getUPByGroup(groupID: Long) = dao.getUPByGroup(groupID)
+    override fun getUpByGroup(groupID: Long): List<Long> {
+        return database.useTransaction {
+            dao.getUpByGroup(groupID)
+        }
+    }
 
     override fun getGroupByUp(upID: Long) = dao.getGroupByUp(upID)
 
     override fun deleteGroup(groupID: Long): Int {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            require(getGroups().contains(groupID))
-            return dao.deleteGroup(groupID)
-        } finally {
-            session.transaction.commit()
+        return database.useTransaction {
+            dao.deleteGroup(groupID)
         }
     }
 
-    override fun deleteUp(upID: Long, groupID: Long): Int {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            require(getUps().contains(upID))
-            return dao.deleteUp(upID, groupID)
-        } finally {
-            session.transaction.commit()
+    override fun deleteUpByGroup(upID: Long, groupID: Long): Int {
+        return database.useTransaction {
+            dao.deleteUp(upID, groupID)
         }
     }
 

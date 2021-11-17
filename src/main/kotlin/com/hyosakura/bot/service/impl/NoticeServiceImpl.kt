@@ -2,45 +2,30 @@ package com.hyosakura.bot.service.impl
 
 import com.hyosakura.bot.dao.NoticeDao
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.entity.`fun`.NoticeEntity
-import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.NoticeService
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
-import org.hibernate.Session
+import org.ktorm.database.Database
 
-object NoticeServiceImpl : AutoRegisterDBService(), NoticeService {
-    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-    private val dao: NoticeDao by lazy { NoticeDao(session) }
+object NoticeServiceImpl : NoticeService {
+    override val database: Database = BotData.botDatabase
+    private val dao: NoticeDao by lazy { NoticeDao(database) }
 
-    override fun getMatchMessage(groupID: Long, targetID: Long): MessageChain? {
-        return dao.getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID))?.deserializeMiraiCode()
-    }
-
-    override fun addNotice(groupID: Long, targetID: Long, message: MessageChain) {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            dao.addNotice(NoticeEntity(null, groupID, targetID, message.toString()))
-        } finally {
-            session.transaction.commit()
+    override fun getMatchMessage(groupId: Long, targetId: Long): MessageChain? {
+        return database.useTransaction {
+            dao.getMatchMessage(groupId, targetId)?.deserializeMiraiCode()
         }
     }
 
-    override fun removeNotice(groupID: Long, targetID: Long): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            return if (dao.getMatchMessage(NoticeEntity(groupID = groupID, targetID = targetID)) == null) {
-                false
-            } else {
-                dao.removeNotice(NoticeEntity(groupID = groupID, targetID = targetID))
-                true
-            }
-        } finally {
-            session.transaction.commit()
-        }
+    override fun addNotice(groupId: Long, targetId: Long, message: MessageChain): Boolean {
+        return database.useTransaction {
+            dao.addNotice(groupId, targetId, message.serializeToMiraiCode())
+        } > 0
+    }
+
+    override fun removeNotice(groupId: Long, targetId: Long): Boolean {
+        return database.useTransaction {
+            dao.removeNotice(groupId, targetId)
+        } > 0
     }
 }

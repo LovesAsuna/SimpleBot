@@ -2,45 +2,31 @@ package com.hyosakura.bot.service.impl
 
 import com.hyosakura.bot.dao.KeyWordDao
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.entity.`fun`.KeyWordEntity
-import com.hyosakura.bot.service.AutoRegisterDBService
 import com.hyosakura.bot.service.KeyWordService
-import org.hibernate.Session
+import org.ktorm.database.Database
 
-object KeyWordServiceImpl : AutoRegisterDBService(), KeyWordService {
-    override val session: Session = BotData.functionConfig.buildSessionFactory().openSession()
-    private val dao: KeyWordDao by lazy { KeyWordDao(session) }
+object KeyWordServiceImpl : KeyWordService {
+    override val database: Database = BotData.botDatabase
+    private val dao: KeyWordDao by lazy { KeyWordDao(database) }
 
     override fun addKeyWord(groupID: Long, wordRegex: String, reply: String, chance: Int): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            return if (dao.checkKeyWordExist(groupID, wordRegex)) {
-                false
+        return database.useTransaction {
+            if (!dao.checkKeyWordExist(groupID, wordRegex)) {
+                dao.addKeyWord(groupID, wordRegex, reply, chance)
             } else {
-                dao.addKeyWord(KeyWordEntity(null, groupID, wordRegex, reply, chance))
-                true
+                -1
             }
-        } finally {
-            session.transaction.commit()
-        }
+        } > 0
     }
 
     override fun removeKeyWord(id: Int): Boolean {
-        if (!session.transaction.isActive) {
-            session.beginTransaction()
-        }
-        try {
-            return if (!dao.checkKeyWordExist(id)) {
-                false
+        return database.useTransaction {
+            if (dao.checkKeyWordExist(id)) {
+                dao.removeKeyWordById(id)
             } else {
-                dao.removeKeyWord(KeyWordEntity(id))
-                true
+                -1
             }
-        } finally {
-            session.transaction.commit()
-        }
+        } > 0
     }
 
     override fun getKeyWordsByGroup(groupID: Long) = dao.getKeyWordsByGroup(groupID)

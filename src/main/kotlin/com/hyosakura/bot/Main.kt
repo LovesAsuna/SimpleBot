@@ -1,9 +1,9 @@
 package com.hyosakura.bot
 
+import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.listener.EventListener
 import com.hyosakura.bot.listener.GroupMessageListener
 import com.hyosakura.bot.listener.MemberLeaveListener
-import com.hyosakura.bot.service.ServiceManager
 import com.hyosakura.bot.util.ClassUtil
 import com.hyosakura.bot.util.coroutine.PluginScheduler
 import net.mamoe.mirai.console.command.Command
@@ -55,7 +55,8 @@ object Main : KotlinPlugin(
     }
 
     override fun onDisable() {
-        ServiceManager.closeAll()
+        BotData.botDataSource.close()
+        BotData.messageDataSource.close()
     }
 }
 

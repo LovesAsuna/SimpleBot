@@ -81,7 +81,7 @@ object KeyWord : CompositeCommand(
         keyWordService.getKeyWordsByGroup(groupID).forEach {
             val regex = Regex(it.wordRegex)
             val reply = it.reply
-            val chance = it.chance ?: 0
+            val chance = it.chance
             var messageChain = messageChainOf()
             if (regex.matches(message) && canReply(chance)) {
                 val sm = photoRegex.split(reply)
