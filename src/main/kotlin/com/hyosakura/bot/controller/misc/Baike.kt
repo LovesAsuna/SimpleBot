@@ -1,12 +1,13 @@
 package com.hyosakura.bot.controller.misc
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
+import org.jsoup.Jsoup
+import java.net.URL
 import java.net.URLEncoder
 
 object Baike : SimpleCommand(
@@ -19,16 +20,9 @@ object Baike : SimpleCommand(
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun CommandSender.handle(context : String) {
         val url = "https://baike.baidu.com/item/${URLEncoder.encode(context, "UTF-8")}"
-        val reader = OkHttpUtil.getIs(OkHttpUtil[url]).bufferedReader()
-        val desc = withContext(Dispatchers.IO) {
-            for (i in 0 until 10) reader.readLine()
-            reader.readLine()
+        val root = withContext(Dispatchers.IO) {
+            Jsoup.parse(URL(url), 5000)
         }
-        val args = desc.split("\"")
-        if (args.size > 1) {
-            sendMessage(args[3].replace(Regex("...$"), ""))
-        } else {
-            sendMessage("百度百科未收录此词条!")
-        }
+        sendMessage(root.select("meta[name=description]").attr("content"))
     }
 }
