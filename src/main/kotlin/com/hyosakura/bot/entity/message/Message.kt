@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.javatime.time
  * @author LovesAsuna
  **/
 object Messages : IntIdTable("message") {
-    val content = varchar("content", 255)
+    val content = varchar("content", 500)
     val time = time("time")
     val member = reference("member_id", Members)
     val group = reference("group_id", Groups)
