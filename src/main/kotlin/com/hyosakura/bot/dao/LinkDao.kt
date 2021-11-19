@@ -1,74 +1,69 @@
 package com.hyosakura.bot.dao
 
-import com.hyosakura.bot.entity.dynamic.Link
-import com.hyosakura.bot.entity.dynamic.dynamics
-import com.hyosakura.bot.entity.dynamic.links
-import org.ktorm.database.Database
-import org.ktorm.dsl.and
-import org.ktorm.dsl.eq
-import org.ktorm.entity.*
+import com.hyosakura.bot.entity.dynamic.Links
+import org.jetbrains.exposed.sql.*
+
 
 /**
  * @author LovesAsuna
  **/
 class LinkDao(override val database: Database) : DefaultDao {
     fun existLink(upId: Long, groupId: Long): Boolean {
-        return database.links.find {
-            (it.upId eq upId) and (it.groupId eq groupId)
-        } != null
+        return Links.select {
+            (Links.dynamic eq upId) and (Links.groupId eq groupId)
+        }.any()
     }
 
     fun existGroup(groupId: Long): Boolean {
-        return database.links.find {
-            it.groupId eq groupId
-        } != null
+        return Links.select {
+            Links.groupId eq groupId
+        }.any()
     }
 
     fun getUpByGroup(groupId: Long): List<Long> {
-        return database.links.filter {
-            it.groupId eq groupId
+        return Links.slice(Links.dynamic).select {
+            Links.groupId eq groupId
         }.map {
-            it.dynamic.upId
+            it[Links.dynamic]
         }
     }
 
     fun getGroupByUp(upId: Long): List<Long> {
-        return database.links.filter {
-            it.upId eq upId
+        return Links.slice(Links.groupId).select {
+            Links.dynamic eq upId
         }.map {
-            it.groupId
+            it[Links.groupId]
         }
     }
 
     fun deleteUp(upId: Long, groupId: Long): Int {
-        return database.links.removeIf {
-            (it.upId eq upId) and (it.groupId eq groupId)
+        return Links.deleteWhere {
+            (Links.dynamic eq upId) and (Links.groupId eq groupId)
         }
     }
 
     fun deleteGroup(groupId: Long): Int {
-        return database.links.removeIf {
-            it.groupId eq groupId
+        return Links.deleteWhere {
+            Links.groupId eq groupId
         }
     }
 
     fun addLink(upId: Long, groupId: Long): Int {
-        val link = Link {
-            this.groupId = groupId
-            this.dynamic = database.dynamics.find { it.upId eq upId }!!
-        }
-        return database.links.add(link)
+        return Links.insertAndGetId {
+            it[this.dynamic] = upId
+            it[this.groupId] = groupId
+        }.value
     }
 
     fun getGroups(): List<Long> {
-        return database.links.map {
-            it.groupId
+        return Links.slice(Links.groupId).selectAll().map {
+            it[Links.groupId]
         }
     }
 
     fun getUps(): List<Long> {
-        return database.links.map {
-            it.dynamic.upId
+        return Links.slice(Links.dynamic).selectAll().map {
+            it[Links.dynamic]
         }
     }
 }

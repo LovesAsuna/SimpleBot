@@ -1,30 +1,23 @@
 package com.hyosakura.bot.entity.`fun`
 
-import org.ktorm.database.Database
-import org.ktorm.entity.Entity
-import org.ktorm.entity.sequenceOf
-import org.ktorm.schema.Table
-import org.ktorm.schema.int
-import org.ktorm.schema.long
-import org.ktorm.schema.varchar
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
 /**
  * @author LovesAsuna
  **/
-object Notices : Table<Notice>("NOTICE") {
-    val id = int("ID").primaryKey().bindTo { it.id }
-    val groupId = long("GROUP_ID").bindTo { it.groupId }
-    val targetId = long("TARGET_ID").bindTo { it.targetId }
-    val message = varchar("MESSAGE").bindTo { it.message }
+object Notices : IntIdTable("notice") {
+    val groupId = long("group_id")
+    val targetId = long("target_id")
+    val message = varchar("message", 255)
 }
 
-interface Notice : Entity<Notice> {
-    companion object : Entity.Factory<Notice>()
+class Notice(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Notice>(Notices)
 
-    val id: Int
-    var groupId: Long
-    var targetId: Long
-    var message: String
+    var groupId by Notices.groupId
+    var targetId by Notices.targetId
+    var message by Notices.message
 }
-
-val Database.notices get() = this.sequenceOf(Notices)

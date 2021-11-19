@@ -1,30 +1,26 @@
 package com.hyosakura.bot.entity.message
 
-import org.ktorm.database.Database
-import org.ktorm.entity.Entity
-import org.ktorm.entity.sequenceOf
-import org.ktorm.schema.*
-import java.time.LocalTime
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.time
 
 /**
  * @author LovesAsuna
  **/
-object Messages : Table<Message>("MESSAGE") {
-    val id = int("ID").primaryKey().bindTo { it.id }
-    val content = varchar("CONTENT").bindTo { it.content }
-    val time = time("TIME").bindTo { it.time }
-    val memberId = long("MEMBER_ID").references(Members) { it.member }
-    val groupId = long("GROUP_ID").references(Groups) { it.group }
+object Messages : IntIdTable("message") {
+    val content = varchar("content", 255)
+    val time = time("time")
+    val member = reference("member_id", Members)
+    val group = reference("group_id", Groups)
 }
 
-interface Message : Entity<Message> {
-    companion object : Entity.Factory<Message>()
+class Message(id: EntityID<Int>) : IntEntity(id)  {
+    companion object : IntEntityClass<Message>(Messages)
 
-    var id: Int
-    var content: String
-    var time: LocalTime
-    var member: Member
-    var group: Group
+    var content by Messages.content
+    var time by Messages.time
+    var member by Member referencedOn Messages.member
+    var group by Group referencedOn Messages.group
 }
-
-val Database.messages get() = this.sequenceOf(Messages)

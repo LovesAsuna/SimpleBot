@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.ktorm.database.Database
+import org.jetbrains.exposed.sql.Database
 
 /**
  * @author LovesAsuna

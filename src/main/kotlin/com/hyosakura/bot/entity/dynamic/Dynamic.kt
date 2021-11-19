@@ -1,28 +1,24 @@
 package com.hyosakura.bot.entity.dynamic
 
-import org.ktorm.database.Database
-import org.ktorm.entity.Entity
-import org.ktorm.entity.sequenceOf
-import org.ktorm.schema.Table
-import org.ktorm.schema.int
-import org.ktorm.schema.long
-import org.ktorm.schema.varchar
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
 /**
  * @author LovesAsuna
  **/
-object Dynamics : Table<Dynamic>("DYNAMIC") {
-    val id = int("ID").primaryKey().bindTo { it.id }
-    val upId = long("UP_ID").bindTo { it.upId }
-    val dynamicId = varchar("DYNAMIC_ID").bindTo { it.dynamicId }
+object Dynamics : IntIdTable("dynamic") {
+    val upId = long("up_id").uniqueIndex()
+    val dynamicId = varchar("dynamic_id", 50).uniqueIndex()
 }
 
-interface Dynamic : Entity<Dynamic> {
-    companion object : Entity.Factory<Dynamic>()
+class Dynamic(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Dynamic>(Dynamics)
 
-    val id: Int
-    val upId: Long
-    val dynamicId: String
+    var upId by Dynamics.upId
+    var dynamicId by Dynamics.dynamicId
+    override fun toString(): String {
+        return "Dynamic(upId=$upId, dynamicId='$dynamicId')"
+    }
 }
-
-val Database.dynamics get() = this.sequenceOf(Dynamics)

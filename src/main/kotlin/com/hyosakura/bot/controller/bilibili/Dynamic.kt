@@ -170,7 +170,7 @@ object Dynamic : CompositeCommand(
         val dynamicID = cards[num]["desc"]["dynamic_id_str"].asText()
         val card = dequate(cards[num]["card"])
         if (dynamicID != dynamicService.getDynamicID(uid)) {
-            dynamicService.update(uid, dynamicID)
+            dynamicService.insertOrUpdate(uid, dynamicID)
             linkService.getGroupByUp(uid).forEach {
                 Main.scheduler.asyncTask {
                     val group = Bot.instances[0].getGroup(it)

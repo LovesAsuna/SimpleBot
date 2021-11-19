@@ -1,6 +1,7 @@
 package com.hyosakura.bot.service
 
-import org.ktorm.database.Database
+import org.jetbrains.exposed.sql.Database
+
 
 interface DBService {
     val database: Database

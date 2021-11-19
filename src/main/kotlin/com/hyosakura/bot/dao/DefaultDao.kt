@@ -1,6 +1,7 @@
 package com.hyosakura.bot.dao
 
-import org.ktorm.database.Database
+import org.jetbrains.exposed.sql.Database
+
 
 /**
  * @author LovesAsuna

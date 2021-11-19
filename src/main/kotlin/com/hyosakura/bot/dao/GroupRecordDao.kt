@@ -1,13 +1,10 @@
 package com.hyosakura.bot.dao
 
 import com.hyosakura.bot.entity.message.*
-import org.ktorm.database.Database
-import org.ktorm.dsl.and
-import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.filter
-import org.ktorm.entity.find
-import org.ktorm.entity.toList
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import java.time.LocalTime
 
 /**
@@ -15,72 +12,62 @@ import java.time.LocalTime
  **/
 class GroupRecordDao(override val database: Database) : DefaultDao {
     fun queryGroup(groupID: Long): Group? {
-        return database.groups.find {
-            it.id eq groupID
-        }
+        return Group.findById(groupID)
     }
 
     fun queryMember(memberID: Long): Member? {
-        return database.members.find {
-            it.id eq memberID
-        }
+        return Member.findById(memberID)
     }
 
-    fun queryRelation(memberID: Long, groupID: Long): Relation? {
-        return database.relations.find {
-            (it.memberId eq memberID) and (it.groupId eq groupID)
-        }
+    fun queryRelation(memberID: Long, groupID: Long): Boolean {
+        return Relations.select {
+            Relations.member eq memberID and (Relations.group eq groupID)
+        }.any()
     }
 
-    fun addGroup(groupID: Long, groupName: String): Int {
-        val group = Group {
-            id = groupID
+    fun addGroup(groupID: Long, groupName: String): Long {
+        return Group.new(groupID) {
             name = groupName
-        }
-        return database.groups.add(group)
+        }.id.value
     }
 
-    fun addMember(memberID: Long, memberName: String): Int {
-        val member = Member {
-            id = memberID
+    fun addMember(memberID: Long, memberName: String): Long {
+        return Member.new(memberID) {
             name = memberName
-        }
-        return database.members.add(member)
+        }.id.value
     }
 
     fun addRecord(content: String, time: LocalTime, memberID: Long, groupID: Long): Int {
-        val message = Message {
+        return Message.new {
             this.content = content
             this.time = time
-            member = database.members.find { it.id eq memberID }!!
-            group = database.groups.find { it.id eq groupID }!!
-        }
-        return database.messages.add(message)
+            this.member = Member.findById(memberID)!!
+            this.group = Group.findById(groupID)!!
+        }.id.value
     }
 
     fun addRelation(memberID: Long, groupID: Long): Int {
-        val relation = Relation {
-            this.groupId = groupID
-            this.memberId = memberID
-        }
-        return database.relations.add(relation)
+        return Relations.insert {
+            it[this.member] = Member.findById(memberID)!!.id
+            it[this.group] = Group.findById(groupID)!!.id
+        }.insertedCount
     }
 
     fun queryUserRecord(memberID: Long): List<Message> {
-        return database.messages.filter {
-            it.memberId eq memberID
+        return Message.find {
+            Messages.member eq memberID
         }.toList()
     }
 
     fun queryGroupRecord(groupID: Long): List<Message> {
-        return database.messages.filter {
-            it.groupId eq groupID
+        return Message.find {
+            Messages.group eq groupID
         }.toList()
     }
 
     fun queryUserRecordInGroup(memberID: Long, groupID: Long): List<Message> {
-        return database.messages.filter {
-            (it.memberId eq memberID) and (it.groupId eq groupID)
+        return Message.find {
+            (Messages.group eq groupID) and (Messages.member eq memberID)
         }.toList()
     }
 }

@@ -1,32 +1,25 @@
 package com.hyosakura.bot.entity.`fun`
 
-import org.ktorm.database.Database
-import org.ktorm.entity.Entity
-import org.ktorm.entity.sequenceOf
-import org.ktorm.schema.Table
-import org.ktorm.schema.int
-import org.ktorm.schema.long
-import org.ktorm.schema.varchar
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
 /**
  * @author LovesAsuna
  **/
-object KeyWords : Table<KeyWord>("KEYWORD") {
-    val id = int("ID").primaryKey().bindTo { it.id }
-    val groupId = long("GROUP_ID").bindTo { it.groupId }
-    val wordRegex = varchar("WORD_REGEX").bindTo { it.wordRegex }
-    val reply = varchar("REPLY").bindTo { it.reply }
-    val chance = int("CHANCE").bindTo { it.chance }
+object KeyWords : IntIdTable("keyword") {
+    val groupId = long("group_id")
+    val wordRegex = varchar("word_regex", 50)
+    val reply = varchar("reply", 50)
+    val chance = integer("change")
 }
 
-interface KeyWord : Entity<KeyWord> {
-    companion object : Entity.Factory<KeyWord>()
+class KeyWord(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<KeyWord>(KeyWords)
 
-    val id: Int
-    var groupId: Long
-    var wordRegex: String
-    var reply: String
-    var chance: Int
+    var groupId by KeyWords.groupId
+    var wordRegex by KeyWords.wordRegex
+    var reply by KeyWords.reply
+    var chance by KeyWords.chance
 }
-
-val Database.keyWords get() = this.sequenceOf(KeyWords)

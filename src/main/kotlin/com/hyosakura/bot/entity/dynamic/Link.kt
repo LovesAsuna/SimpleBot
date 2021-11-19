@@ -1,28 +1,23 @@
 package com.hyosakura.bot.entity.dynamic
 
-import org.ktorm.database.Database
-import org.ktorm.entity.Entity
-import org.ktorm.entity.sequenceOf
-import org.ktorm.schema.Table
-import org.ktorm.schema.int
-import org.ktorm.schema.long
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
 /**
  * @author LovesAsuna
  **/
-object Links : Table<Link>("link") {
-    val id = int("ID").primaryKey().bindTo { it.id }
-    val groupId = long("GROUP_ID").bindTo { it.groupId }
-    // TODO 无法绑定Dynamic表的非主键
-    val upId = long("UP_ID").references(Dynamics) { it.dynamic }
+object Links : IntIdTable("link") {
+    val groupId = long("group_id")
+    val dynamic = reference("up_id", Dynamics.upId)
 }
 
-interface Link : Entity<Link> {
-    companion object : Entity.Factory<Link>()
-
-    val id: Int
-    var groupId: Long
-    var dynamic: Dynamic
+class Link(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Link>(Links)
+    var groupId by Links.groupId
+    var dynamic by Dynamic referencedOn Links.dynamic
+    override fun toString(): String {
+        return "Link(groupId=$groupId, dybamic=$dynamic)"
+    }
 }
-
-val Database.links get() = this.sequenceOf(Links)
