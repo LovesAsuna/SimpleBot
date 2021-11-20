@@ -4,7 +4,6 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import net.mamoe.mirai.console.command.CommandSender
@@ -24,7 +23,7 @@ object HPicture : CompositeCommand(
 
     @SubCommand
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun CommandSender.lolicon(num : Int) {
+    suspend fun CommandSender.lolicon(num: Int) {
         if (num > 5) {
             sendMessage("一次最大只能同时获取5张图片")
             return
@@ -38,26 +37,24 @@ object HPicture : CompositeCommand(
         queue.addAll(urls)
         withContext(this.coroutineContext) {
             urls.forEach {
-                launch {
-                    runCatching {
-                        withTimeout(15000) {
-                            sendMessage(
-                                OkHttpUtil.getIs(OkHttpUtil[it]).run {
-                                    val image = uploadAsImage(getGroupOrNull()!!)
-                                    withContext(Dispatchers.IO) {
-                                        this@run.close()
-                                    }
-                                    image
+                runCatching {
+                    withTimeout(15000) {
+                        sendMessage(
+                            OkHttpUtil.getIs(OkHttpUtil[it]).run {
+                                val image = uploadAsImage(getGroupOrNull()!!)
+                                withContext(Dispatchers.IO) {
+                                    this@run.close()
                                 }
-                            )
-                            if (queue.isNotEmpty()) queue.poll()
-                            Main.logger.debug("获取成功，队列大小-1")
-                        }
-                    }.onFailure {
-                        sendMessage("获取超时或发生IO错误")
+                                image
+                            }
+                        )
                         if (queue.isNotEmpty()) queue.poll()
-                        Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
+                        Main.logger.debug("获取成功，队列大小-1")
                     }
+                }.onFailure {
+                    sendMessage("获取超时或发生IO错误")
+                    if (queue.isNotEmpty()) queue.poll()
+                    Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
                 }
             }
         }
