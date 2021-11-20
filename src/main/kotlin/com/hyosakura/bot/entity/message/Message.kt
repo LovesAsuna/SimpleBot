@@ -16,7 +16,7 @@ object Messages : IntIdTable("message") {
     val group = reference("group_id", Groups)
 }
 
-class Message(id: EntityID<Int>) : IntEntity(id)  {
+class Message(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Message>(Messages)
 
     var content by Messages.content

@@ -15,6 +15,7 @@ object Links : IntIdTable("link") {
 
 class Link(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Link>(Links)
+
     var groupId by Links.groupId
     var dynamic by Dynamic referencedOn Links.dynamic
     override fun toString(): String {

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode
 /**
  * @author LovesAsuna
  **/
-data class JikiPediaEntity(val title : String, val content : String) {
+data class JikiPediaEntity(val title: String, val content: String) {
     companion object {
         fun parse(json: JsonNode): JikiPediaEntity? {
             val entity = json["entities"][0] ?: return null

@@ -169,8 +169,10 @@ object RainbowSix : RawCommand(
     }
 
     private fun getRoot(username: String): JsonNode {
-        return OkHttpUtil.getJson("https://www.r6s.cn/Stats?username=$username", mapOf(
-            "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
-        ))
+        return OkHttpUtil.getJson(
+            "https://www.r6s.cn/Stats?username=$username", mapOf(
+                "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
+            )
+        )
     }
 }

@@ -18,7 +18,7 @@ object Baike : SimpleCommand(
 ) {
     @Handler
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun CommandSender.handle(context : String) {
+    suspend fun CommandSender.handle(context: String) {
         val url = "https://baike.baidu.com/item/${URLEncoder.encode(context, "UTF-8")}"
         val root = withContext(Dispatchers.IO) {
             Jsoup.parse(URL(url), 5000)

@@ -1,10 +1,10 @@
 package com.hyosakura.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.*
 import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
+import kotlinx.coroutines.*
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
@@ -73,7 +73,7 @@ class Danmu : FunctionListener {
                     val out = DataOutputStream(socket.getOutputStream())
                     PacketManager.sendHeartPacket(out)
                 } else {
-                    CoroutineScope(Dispatchers.Default). launch {
+                    CoroutineScope(Dispatchers.Default).launch {
                         when {
                             socket.isClosed -> event.subject.sendMessage("socket is closed")
                             closed -> event.subject.sendMessage("live is closed")

@@ -20,7 +20,7 @@ class GroupRecord : FunctionListener {
             recordService.addMember(member.id, member.nick)
             recordService.addRelation(member.id, group.id)
             recordService.addRecord(event.message.serializeToMiraiCode(), LocalTime.now(), member.id, group.id)
-        } .onFailure {
+        }.onFailure {
             Main.logger.error(it)
             return false
         }

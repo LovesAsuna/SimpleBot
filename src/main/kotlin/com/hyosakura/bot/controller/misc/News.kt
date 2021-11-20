@@ -8,11 +8,11 @@ import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
-object News  : SimpleCommand(
-owner = Main,
-primaryName = "60s",
-description = "每日新闻",
-parentPermission = registerDefaultPermission()
+object News : SimpleCommand(
+    owner = Main,
+    primaryName = "60s",
+    description = "每日新闻",
+    parentPermission = registerDefaultPermission()
 ) {
     @Handler
     suspend fun CommandSender.handle() {

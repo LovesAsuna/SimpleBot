@@ -1,11 +1,11 @@
 package com.hyosakura.bot.controller.misc
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlinx.io.errors.IOException
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.OkHttpUtil
 import com.hyosakura.bot.util.registerDefaultPermission
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.io.errors.IOException
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
@@ -31,7 +31,7 @@ object GithubInfo : SimpleCommand(
                     .getElementsByAttributeValue("property", "og:image")
                     .attr("content")
             }]).uploadAsImage(this.subject!!))
-        } catch (e : IOException) {
+        } catch (e: IOException) {
             sendMessage("仓库不存在或连接超时！")
         }
     }

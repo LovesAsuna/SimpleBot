@@ -1,8 +1,8 @@
 package com.hyosakura.bot.controller.system
 
-import kotlinx.coroutines.delay
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.registerDefaultPermission
+import kotlinx.coroutines.delay
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import oshi.SystemInfo

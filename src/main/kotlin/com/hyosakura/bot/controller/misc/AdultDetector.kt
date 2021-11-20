@@ -18,7 +18,7 @@ object AdultDetector : SimpleCommand(
 ) {
     @Handler
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun CommandSender.handle(member : Member) {
+    suspend fun CommandSender.handle(member: Member) {
         val url = "https://www.wegame.com.cn/api/middle/lua/realname/check_user_real_name"
         val mapper = BotData.objectMapper
         val body = mapper.createObjectNode()
