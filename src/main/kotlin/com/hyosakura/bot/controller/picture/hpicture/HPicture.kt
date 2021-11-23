@@ -40,7 +40,7 @@ object HPicture : CompositeCommand(
                 runCatching {
                     withTimeout(15000) {
                         sendMessage(
-                            OkHttpUtil.getIs(OkHttpUtil[it]).run {
+                            OkHttpUtil.getIs(it).run {
                                 val image = uploadAsImage(getGroupOrNull()!!)
                                 withContext(Dispatchers.IO) {
                                     this@run.close()
@@ -64,7 +64,7 @@ object HPicture : CompositeCommand(
     suspend fun CommandSender.random() {
         source = Misc()
         sendMessage(
-            source.fetchData()?.let { OkHttpUtil.getIs(OkHttpUtil[it]) }!!.uploadAsImage(getGroupOrNull()!!)
+            source.fetchData()?.let { OkHttpUtil.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
         )
     }
 
@@ -72,7 +72,7 @@ object HPicture : CompositeCommand(
     suspend fun CommandSender.girl() {
         source = Girl()
         sendMessage(
-            source.fetchData()?.let { OkHttpUtil.getIs(OkHttpUtil[it]) }!!.uploadAsImage(getGroupOrNull()!!)
+            source.fetchData()?.let { OkHttpUtil.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
         )
     }
 }

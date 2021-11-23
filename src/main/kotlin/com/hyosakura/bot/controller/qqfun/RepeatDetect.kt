@@ -132,7 +132,7 @@ class RepeatDetect : FunctionListener {
 
     private suspend fun randomImage(box: MessageBox, image: Image): MessageChain {
         val url = image.queryUrl()
-        val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(OkHttpUtil[url]))!!
+        val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(url))!!
         return buildMessageChain {
             when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
                 "gif" -> {

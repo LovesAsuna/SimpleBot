@@ -20,7 +20,7 @@ class Misc : SinglePictureSource {
 
     private fun mty(): String? {
         val source = "https://api.mtyqx.cn/api/random.php?return=json"
-        val result = OkHttpUtil.getIs(OkHttpUtil[source])
+        val result = OkHttpUtil.getIs(source)
         return try {
             val root = objectMapper.readTree(result)
             root["imgurl"].asText()

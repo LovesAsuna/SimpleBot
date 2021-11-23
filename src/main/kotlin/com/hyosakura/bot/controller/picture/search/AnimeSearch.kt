@@ -43,11 +43,11 @@ object AnimeSearch : SimpleCommand(
                         +"番名: ${result.title}\n"
                         +"Cover:\n"
                         +withContext(Dispatchers.IO) {
-                            OkHttpUtil.getIs(OkHttpUtil[result.cover!!]).uploadAsImage(getGroupOrNull()!!)
+                            OkHttpUtil.getIs(result.cover!!).uploadAsImage(getGroupOrNull()!!)
                         }
                         add(result)
                         +withContext(Dispatchers.IO) {
-                            OkHttpUtil.getIs(OkHttpUtil[result.banner!!]).uploadAsImage(getGroupOrNull()!!)
+                            OkHttpUtil.getIs(result.banner!!).uploadAsImage(getGroupOrNull()!!)
                         }
                     }
                 )

@@ -24,13 +24,13 @@ object GithubInfo : SimpleCommand(
     @SimpleCommand.Handler
     suspend fun CommandSender.handle(url: String) {
         try {
-            sendMessage(OkHttpUtil.getIs(OkHttpUtil[withContext(Dispatchers.IO) {
+            sendMessage(OkHttpUtil.getIs(withContext(Dispatchers.IO) {
                 @Suppress("BlockingMethodInNonBlockingContext")
                 Jsoup.parse(URL("https://hub.fastgit.org/$url"), 10000)
                     .head()
                     .getElementsByAttributeValue("property", "og:image")
                     .attr("content")
-            }]).uploadAsImage(this.subject!!))
+            }).uploadAsImage(this.subject!!))
         } catch (e: IOException) {
             sendMessage("仓库不存在或连接超时！")
         }

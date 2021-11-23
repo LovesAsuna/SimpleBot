@@ -12,7 +12,7 @@ object KeyWords : IntIdTable("keyword") {
     val groupId = long("group_id")
     val wordRegex = varchar("word_regex", 50)
     val reply = varchar("reply", 50)
-    val chance = integer("change")
+    val chance = integer("chance")
 }
 
 class KeyWord(id: EntityID<Int>) : IntEntity(id) {

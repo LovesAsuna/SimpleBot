@@ -145,7 +145,7 @@ object Dynamic : CompositeCommand(
 
     private suspend fun read(uid: Long, num: Int) {
         val reader =
-            OkHttpUtil.getIs(OkHttpUtil["https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid"])
+            OkHttpUtil.getIs("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")
                 .bufferedReader()
         val root = withContext(Dispatchers.IO) {
             @Suppress("BlockingMethodInNonBlockingContext")
@@ -226,7 +226,7 @@ object Dynamic : CompositeCommand(
         val pictures = origin["item"]["pictures"]
         var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
         for (i in 0 until pictures.size()) {
-            messageChain += OkHttpUtil.getIs(OkHttpUtil[pictures[i]["img_src"].asText()]).uploadAsImage(group)
+            messageChain += OkHttpUtil.getIs(pictures[i]["img_src"].asText()).uploadAsImage(group)
         }
         return messageChain
     }

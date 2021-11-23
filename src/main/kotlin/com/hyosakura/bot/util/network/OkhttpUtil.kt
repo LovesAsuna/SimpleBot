@@ -152,6 +152,10 @@ object OkHttpUtil {
         return response.body!!.byteStream()
     }
 
+    fun getIs(url: String): InputStream {
+        return getIs(get(url))
+    }
+
     @Throws(IOException::class)
     fun getStr(url: String, headers: Headers): String {
         val response: Response = get(url, headers)

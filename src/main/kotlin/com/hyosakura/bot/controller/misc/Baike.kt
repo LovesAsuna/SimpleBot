@@ -23,6 +23,10 @@ object Baike : SimpleCommand(
         val root = withContext(Dispatchers.IO) {
             Jsoup.parse(URL(url), 5000)
         }
-        sendMessage(root.select("meta[name=description]").attr("content"))
+        sendMessage(root.select("meta[name=description]").attr("content").run {
+            this.ifEmpty {
+                "百度百科未收录此词条!"
+            }
+        })
     }
 }

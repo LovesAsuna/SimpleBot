@@ -17,7 +17,7 @@ object News : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle() {
         val url = "https://api.03c3.cn/zb/"
-        sendMessage(OkHttpUtil.getIs(OkHttpUtil[url]).run {
+        sendMessage(OkHttpUtil.getIs(url).run {
             uploadAsImage(getGroupOrNull()!!)
         })
 

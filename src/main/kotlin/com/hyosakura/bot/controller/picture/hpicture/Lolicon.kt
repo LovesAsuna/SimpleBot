@@ -11,7 +11,7 @@ import java.io.IOException
 class Lolicon : MultiPictureSource {
     override fun fetchData(num: Int): List<String> {
         val source = "https://api.lolicon.app/setu/v2?num=${if (num > 10) 10 else num}"
-        val result = OkHttpUtil.getIs(OkHttpUtil[source])
+        val result = OkHttpUtil.getIs(source)
         val root = BotData.objectMapper.readTree(result)
         return mutableListOf<String>().apply {
             try {

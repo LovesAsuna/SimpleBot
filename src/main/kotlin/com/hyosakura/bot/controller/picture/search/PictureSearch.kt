@@ -44,7 +44,7 @@ object PictureSearch : SimpleCommand(
         }
         results.forEach { result ->
             Main.scheduler.withTimeOut(suspend {
-                val uploadImage = OkHttpUtil.getIs(OkHttpUtil[result.thumbnail!!]).uploadAsImage(getGroupOrNull()!!)
+                val uploadImage = OkHttpUtil.getIs(result.thumbnail!!).uploadAsImage(getGroupOrNull()!!)
                 sendMessage(
                     buildMessageChain {
                         +uploadImage
