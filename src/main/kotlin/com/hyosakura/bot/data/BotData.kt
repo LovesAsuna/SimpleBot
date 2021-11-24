@@ -3,9 +3,13 @@ package com.hyosakura.bot.data
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.hyosakura.bot.entity.message.Messages
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.LocalDateTime
 
 /**
  * @author LovesAsuna
@@ -23,6 +27,16 @@ object BotData {
         driverClassName = "org.h2.Driver"
     })
 
-    val botDatabase = Database.connect(botDataSource)
-    val messageDatabase = Database.connect(messageDataSource)
+    val botDatabase by lazy {
+        Database.connect(botDataSource)
+    }
+    val messageDatabase by lazy {
+        Database.connect(messageDataSource).also {
+            transaction(it) {
+                Messages.deleteWhere {
+                    Messages.time.less(LocalDateTime.now().minusDays(30))
+                }
+            }
+        }
+    }
 }
