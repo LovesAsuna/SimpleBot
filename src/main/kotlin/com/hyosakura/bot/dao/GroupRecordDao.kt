@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 /**
  * @author LovesAsuna
@@ -37,7 +37,7 @@ class GroupRecordDao(override val database: Database) : DefaultDao {
         }.id.value
     }
 
-    fun addRecord(content: String, time: LocalTime, memberID: Long, groupID: Long): Int {
+    fun addRecord(content: String, time: LocalDateTime, memberID: Long, groupID: Long): Int {
         return Message.new {
             this.content = content
             this.time = time

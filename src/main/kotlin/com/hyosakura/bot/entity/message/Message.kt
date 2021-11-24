@@ -4,14 +4,14 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.javatime.time
+import org.jetbrains.exposed.sql.javatime.datetime
 
 /**
  * @author LovesAsuna
  **/
 object Messages : IntIdTable("message") {
     val content = text("content")
-    val time = time("time")
+    val time = datetime("time")
     val member = reference("member_id", Members)
     val group = reference("group_id", Groups)
 }

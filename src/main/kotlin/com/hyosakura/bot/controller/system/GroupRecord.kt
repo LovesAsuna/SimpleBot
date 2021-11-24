@@ -6,7 +6,7 @@ import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.service.GroupRecordService
 import com.hyosakura.bot.service.impl.GroupRecordImpl
 import net.mamoe.mirai.contact.Group
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 class GroupRecord : FunctionListener {
     private val recordService: GroupRecordService = GroupRecordImpl
@@ -19,7 +19,7 @@ class GroupRecord : FunctionListener {
             recordService.addGroup(group.id, group.name)
             recordService.addMember(member.id, member.nick)
             recordService.addRelation(member.id, group.id)
-            recordService.addRecord(event.message.serializeToMiraiCode(), LocalTime.now(), member.id, group.id)
+            recordService.addRecord(event.message.serializeToMiraiCode(), LocalDateTime.now(), member.id, group.id)
         }.onFailure {
             Main.logger.error(it)
             return false

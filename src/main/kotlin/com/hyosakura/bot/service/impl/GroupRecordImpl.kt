@@ -6,7 +6,7 @@ import com.hyosakura.bot.entity.message.Message
 import com.hyosakura.bot.service.GroupRecordService
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 object GroupRecordImpl : GroupRecordService {
     override val database: Database = BotData.messageDatabase
@@ -40,7 +40,7 @@ object GroupRecordImpl : GroupRecordService {
         } > 0
     }
 
-    override fun addRecord(message: String, time: LocalTime, memberID: Long, groupID: Long): Boolean = transaction(database) {
+    override fun addRecord(message: String, time: LocalDateTime, memberID: Long, groupID: Long): Boolean = transaction(database) {
         dao.addRecord(message, time, memberID, groupID) > 0
     }
 

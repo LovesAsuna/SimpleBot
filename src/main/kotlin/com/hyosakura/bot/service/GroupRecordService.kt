@@ -1,7 +1,7 @@
 package com.hyosakura.bot.service
 
 import com.hyosakura.bot.entity.message.Message
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 /**
  * @author LovesAsuna
@@ -17,7 +17,7 @@ interface GroupRecordService : DBService {
 
     fun addMember(memberID: Long, name: String): Boolean
 
-    fun addRecord(message: String, time: LocalTime, memberID: Long, groupID: Long): Boolean
+    fun addRecord(message: String, time: LocalDateTime, memberID: Long, groupID: Long): Boolean
 
     fun addRelation(memberID: Long, groupID: Long): Boolean
 
