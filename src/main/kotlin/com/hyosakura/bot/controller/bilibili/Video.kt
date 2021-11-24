@@ -7,17 +7,18 @@ import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.OkHttpUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
+@Suppress("BlockingMethodInNonBlockingContext")
 class Video : FunctionListener {
     private val avPattern = Pattern.compile("[aA][vV]\\d*")
     private val bvPattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
 
     override suspend fun execute(box: MessageBox): Boolean {
-
-        lateinit var av: String
-        lateinit var bv: String
+        var av: String? = null
+        var bv: String? = null
         val args = box.text()
         val url = when {
             args.lowercase().contains("av") -> {
@@ -44,7 +45,6 @@ class Video : FunctionListener {
             }
         }
 
-        @Suppress("BlockingMethodInNonBlockingContext")
         val line = withContext(Dispatchers.IO) {
             OkHttpUtil.getStr(url)
         }
@@ -53,7 +53,6 @@ class Video : FunctionListener {
         }
         val mapper = ObjectMapper()
 
-        @Suppress("BlockingMethodInNonBlockingContext")
         val jsonNode = withContext(Dispatchers.IO) {
             mapper.readTree(line)
         }
@@ -95,7 +94,10 @@ class Video : FunctionListener {
             .append(like)
             .append("\n")
             .append(desc)
-        box.reply(OkHttpUtil.getIs(OkHttpUtil[pic]).uploadAsImage(box.group!!) + builder.toString())
+        box.reply(
+            PlainText("链接: https://www.bilibili.com/video/${if (av != null) "${av}" else "${bv}"}") + OkHttpUtil.getIs(pic)
+                .uploadAsImage(box.group!!) + builder.toString()
+        )
         return true
     }
 
