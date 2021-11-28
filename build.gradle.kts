@@ -1,9 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.6.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
+    id("io.ebean") version "12.13.1"
+    kotlin("kapt") version "1.6.0"
 }
 
 description = "一个基于Mirai的机器人"
@@ -43,6 +45,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
     implementation("org.jetbrains.exposed:exposed-java-time:0.36.2")
+    implementation("io.ebean:ebean:12.13.1")
+    kapt("io.ebean:kotlin-querybean-generator:12.13.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("com.charleskorn.kaml:kaml:0.37.0")
     implementation("com.github.oshi:oshi-core:5.8.3")
