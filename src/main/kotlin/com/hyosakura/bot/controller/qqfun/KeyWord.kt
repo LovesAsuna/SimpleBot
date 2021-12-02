@@ -27,7 +27,7 @@ object KeyWord : CompositeCommand(
     parentPermission = registerDefaultPermission()
 ), FunctionListener {
     private val imagePath = "${Main.dataFolder.path}${File.separator}image${File.separator}"
-    private val photoRegex = Regex("#\\{\\w+\\.(jpg|png|gif)}")
+    private val photoRegex = Regex("#\\{(\\w+\\.(jpg|png|gif))}")
     private val keyWordService: KeyWordService = KeyWordServiceImpl
 
     @SubCommand
@@ -89,7 +89,7 @@ object KeyWord : CompositeCommand(
                 sm.forEach { s ->
                     messageChain += PlainText(s)
                     result?.apply {
-                        val value = this.value.replace("#{", "").replace("}", "")
+                        val value = groupValues[1]
                         messageChain += box.uploadImage(File(imagePath((value))).inputStream())
                         result = result?.next()
                     }
