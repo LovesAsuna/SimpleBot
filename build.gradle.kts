@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm") version "1.6.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
@@ -56,12 +54,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
-tasks.withType<JavaCompile>() {
+tasks.compileJava {
     sourceCompatibility = "11"
     targetCompatibility = "11"
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.compileKotlin {
     kotlinOptions.jvmTarget = "11"
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
 }
