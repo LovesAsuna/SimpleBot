@@ -18,7 +18,7 @@ repositories {
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
 val kotlinVersion = "1.5.30"
-val miraiVersion = "2.7.1"
+val miraiVersion = "2.8.3"
 
 // mirai
 dependencies {
@@ -40,7 +40,7 @@ dependencies {
 dependencies {
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
-    implementation("com.h2database:h2:1.4.200")
+    implementation("com.h2database:h2:2.0.202")
     implementation("org.jetbrains.exposed:exposed-core:0.36.2")
     implementation("org.jetbrains.exposed:exposed-dao:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
@@ -49,11 +49,11 @@ dependencies {
     kapt("io.ebean:kotlin-querybean-generator:12.13.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("com.charleskorn.kaml:kaml:0.37.0")
-    implementation("com.github.oshi:oshi-core:5.8.3")
+    implementation("com.github.oshi:oshi-core:5.8.5")
     implementation("net.java.dev.jna:jna:5.9.0")
     implementation("net.java.dev.jna:jna-platform:5.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 tasks.withType<JavaCompile>() {
