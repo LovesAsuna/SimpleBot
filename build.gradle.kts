@@ -1,8 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
-    kotlin("kapt") version "1.6.0"
+    kotlin("kapt") version "1.6.10"
 }
 
 description = "一个基于Mirai的机器人"
@@ -37,7 +36,7 @@ dependencies {
 dependencies {
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
-    implementation("com.h2database:h2:2.0.202")
+    implementation("com.h2database:h2:1.4.200")
     implementation("org.jetbrains.exposed:exposed-core:0.36.2")
     implementation("org.jetbrains.exposed:exposed-dao:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
@@ -47,7 +46,8 @@ dependencies {
     implementation("com.github.oshi:oshi-core:5.8.5")
     implementation("net.java.dev.jna:jna:5.9.0")
     implementation("net.java.dev.jna:jna-platform:5.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("io.ktor:ktor-client-core:1.6.7")
+    implementation("io.ktor:ktor-client-okhttp:1.6.7")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
