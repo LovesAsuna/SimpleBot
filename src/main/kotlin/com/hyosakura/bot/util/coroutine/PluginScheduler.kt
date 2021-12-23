@@ -72,7 +72,11 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
      * @param notCompletedAction 超时动作
      */
     @Throws(TimeoutException::class)
-    suspend fun <R> withTimeOut(consumer: suspend () -> R, delayMs: Long, notCompletedAction: suspend () -> Unit): R? {
+    suspend inline fun <R> withTimeOut(
+        crossinline consumer: suspend () -> R,
+        delayMs: Long,
+        notCompletedAction: () -> Unit
+    ): R? {
         return runCatching {
             withTimeout(delayMs) {
                 consumer.invoke()
