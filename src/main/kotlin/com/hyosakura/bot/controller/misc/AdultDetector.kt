@@ -3,12 +3,12 @@ package com.hyosakura.bot.controller.misc
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.toJson
 import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.contact.Member
-import okhttp3.RequestBody.Companion.toRequestBody
 
 object AdultDetector : SimpleCommand(
     owner = Main,
@@ -26,7 +26,7 @@ object AdultDetector : SimpleCommand(
             "qq_login_key", mapper.createObjectNode().put("qq_key_type", 3)
                 .put("uint64_uin", member.id)
         ).put("acc_type", 1)
-        val response = OkHttpUtil.postJson(url, body.toString().toRequestBody())
+        val response = Request.postJson(url, body).toJson()
         val result = response["result"]
         if (result.asInt() != 0) {
             sendMessage("查询失败！Q号不存在或Q号有误")

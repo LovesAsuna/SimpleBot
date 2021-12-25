@@ -4,7 +4,9 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.image.ImageUtil
 import com.hyosakura.bot.util.image.gif.AnimatedGifEncoder
 import com.hyosakura.bot.util.image.gif.GifDecoder
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import io.ktor.client.statement.*
+import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.data.Message
@@ -69,7 +71,10 @@ class Chew(val contact: Contact) : AnimatedAction() {
 
     companion object : AnimatedFrame {
         val gifBytes: ByteArray by lazy {
-            OkHttpUtil.downloadBytes("https://cdn.jsdelivr.net/gh/coide-SaltedFish/SereinFish@6aecc3a21d/src/main/resources/image/jiao/jiao.gif")
+            runBlocking {
+                Request.get("https://cdn.jsdelivr.net/gh/coide-SaltedFish/SereinFish@6aecc3a21d/src/main/resources/image/jiao/jiao.gif")
+                    .readBytes()
+            }
         }
 
         override val animatedFrames: List<BufferedImage> by lazy {

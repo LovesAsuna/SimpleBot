@@ -2,7 +2,7 @@ package com.hyosakura.bot.controller.game
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
@@ -168,9 +168,9 @@ object RainbowSix : RawCommand(
         sender.sendMessage(builder.append(String.format("查询耗时%.2f秒", (end - start).toDouble() / 1000)).toString())
     }
 
-    private fun getRoot(username: String): JsonNode {
-        return OkHttpUtil.getJson(
-            "https://www.r6s.cn/Stats?username=$username", mapOf(
+    private suspend fun getRoot(username: String): JsonNode {
+        return Request.getJson(
+            "https://www.r6s.cn/Stats?username=$username", 10000, mapOf(
                 "referer" to "https://www.r6s.cn/stats.jsp?username=$username"
             )
         )

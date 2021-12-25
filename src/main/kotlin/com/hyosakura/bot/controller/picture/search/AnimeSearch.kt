@@ -1,7 +1,7 @@
 package com.hyosakura.bot.controller.picture.search
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,7 +35,7 @@ object AnimeSearch : SimpleCommand(
             +"Banner:\n"
         }
         results.forEach { result ->
-            Main.scheduler.withTimeOut(suspend {
+            Main.scheduler.withTimeOut({
                 sendMessage(
                     buildMessageChain {
                         +"相似度: ${result.similarity}\n"
@@ -43,11 +43,11 @@ object AnimeSearch : SimpleCommand(
                         +"番名: ${result.title}\n"
                         +"Cover:\n"
                         +withContext(Dispatchers.IO) {
-                            OkHttpUtil.getIs(result.cover!!).uploadAsImage(getGroupOrNull()!!)
+                            Request.getIs(result.cover!!).uploadAsImage(getGroupOrNull()!!)
                         }
                         add(result)
                         +withContext(Dispatchers.IO) {
-                            OkHttpUtil.getIs(result.banner!!).uploadAsImage(getGroupOrNull()!!)
+                            Request.getIs(result.banner!!).uploadAsImage(getGroupOrNull()!!)
                         }
                     }
                 )

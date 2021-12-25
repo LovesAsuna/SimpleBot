@@ -9,7 +9,7 @@ import com.hyosakura.bot.service.impl.DynamicServiceImpl
 import com.hyosakura.bot.service.impl.LinkServiceImpl
 import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.coroutine.PluginScheduler
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import com.hyosakura.bot.util.registerPermission
 import kotlinx.coroutines.*
@@ -145,7 +145,7 @@ object Dynamic : CompositeCommand(
 
     private suspend fun read(uid: Long, num: Int) {
         val reader =
-            OkHttpUtil.getIs("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")
+            Request.getIs("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")
                 .bufferedReader()
         val root = withContext(Dispatchers.IO) {
             @Suppress("BlockingMethodInNonBlockingContext")
@@ -176,7 +176,7 @@ object Dynamic : CompositeCommand(
                     val group = Bot.instances[0].getGroup(it)
                     if (group != null) {
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        Main.scheduler.withTimeOut(suspend {
+                        Main.scheduler.withTimeOut({
                             // todo 动态解析不完整
                             parse(group, card)
                         }, Duration.ofSeconds(60).toMillis()) {
@@ -226,7 +226,7 @@ object Dynamic : CompositeCommand(
         val pictures = origin["item"]["pictures"]
         var messageChain = messageChainOf(PlainText(description.asText() + "\n"))
         for (i in 0 until pictures.size()) {
-            messageChain += OkHttpUtil.getIs(pictures[i]["img_src"].asText()).uploadAsImage(group)
+            messageChain += Request.getIs(pictures[i]["img_src"].asText()).uploadAsImage(group)
         }
         return messageChain
     }

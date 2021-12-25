@@ -2,7 +2,8 @@ package com.hyosakura.bot.util
 
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.coroutine.PluginScheduler
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.getInputStream
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import net.mamoe.mirai.console.permission.Permission
@@ -43,22 +44,21 @@ object BasicUtil {
     ): Pair<Job, PluginScheduler.RepeatTaskReceipt> =
         Main.scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit)
 
-    fun debug(message: String): String {
-        val reader = OkHttpUtil.getIs(
-            OkHttpUtil.post(
-                "https://paste.ubuntu.com/", mapOf(
-                    "poster" to "Bot",
-                    "syntax" to "text",
-                    "expiration" to "day",
-                    "content" to message,
-                ), OkHttpUtil.addHeaders(
-                    mapOf(
-                        "host" to "paste.ubuntu.com",
-                        "cookie" to "sessionid=6h8n5um9l2tyk9guhf7b0mvz2qie2uuh"
-                    )
-                )
+    suspend fun debug(message: String): String {
+        val reader = Request.submitForm(
+            "https://paste.ubuntu.com/",
+            mapOf(
+                "poster" to "Bot",
+                "syntax" to "text",
+                "expiration" to "day",
+                "content" to message,
+            ),
+            10000,
+            mapOf(
+                "host" to "paste.ubuntu.com",
+                "cookie" to "sessionid=6h8n5um9l2tyk9guhf7b0mvz2qie2uuh"
             )
-        ).bufferedReader()
+        ).getInputStream().bufferedReader()
         val text = reader.lines().skip(52).filter {
             it.contains("p-button--neutral")
         }.findFirst().get()

@@ -1,7 +1,7 @@
 package com.hyosakura.bot.controller.misc
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +21,7 @@ object DogLicking : SimpleCommand(
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun CommandSender.handle() {
         sendMessage(withContext(Dispatchers.IO) {
-            OkHttpUtil.getStr("https://v2.alapi.cn/api/dog?format=text&token=dppfgmdxhKZlt6vB")
+            Request.getStr("https://v2.alapi.cn/api/dog?format=text&token=dppfgmdxhKZlt6vB")
         })
     }
 }

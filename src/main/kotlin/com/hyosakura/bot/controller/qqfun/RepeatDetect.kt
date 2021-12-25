@@ -7,7 +7,8 @@ import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.image.ImageUtil
 import com.hyosakura.bot.util.image.gif.AnimatedGifEncoder
 import com.hyosakura.bot.util.image.gif.GifDecoder
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.clone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.event.events.MessageEvent
@@ -132,7 +133,7 @@ class RepeatDetect : FunctionListener {
 
     private suspend fun randomImage(box: MessageBox, image: Image): MessageChain {
         val url = image.queryUrl()
-        val cloneInputStream = OkHttpUtil.inputStreamClone(OkHttpUtil.getIs(url))!!
+        val cloneInputStream = Request.getIs(url).clone()
         return buildMessageChain {
             when (ImageUtil.getImageType(ByteArrayInputStream(cloneInputStream.toByteArray()))) {
                 "gif" -> {

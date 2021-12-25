@@ -9,13 +9,13 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
  * @author LovesAsuna
  **/
 interface SearchSource<T> {
-    fun search(url: String): List<T>
+    suspend fun search(url: String): List<T>
 }
 
 suspend fun <T> CommandSender.getResult(source: SearchSource<T>, image: Image): List<T>? {
     val imgUrl = image.queryUrl()
     Main.logger.debug("图片URL: $imgUrl")
-    val results = Main.scheduler.withTimeOut(suspend {
+    val results = Main.scheduler.withTimeOut({
         source.search(imgUrl)
     }, 10000) {
         sendMessage("搜索超时!")

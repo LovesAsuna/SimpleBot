@@ -1,18 +1,16 @@
 package com.hyosakura.bot.controller.picture.hpicture
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import java.io.IOException
 
 /**
  * @author LovesAsuna
  */
 class Lolicon : MultiPictureSource {
-    override fun fetchData(num: Int): List<String> {
+    override suspend fun fetchData(num: Int): List<String> {
         val source = "https://api.lolicon.app/setu/v2?num=${if (num > 10) 10 else num}"
-        val result = OkHttpUtil.getIs(source)
-        val root = BotData.objectMapper.readTree(result)
+        val root = Request.getJson(source)
         return mutableListOf<String>().apply {
             try {
                 repeat(num) {

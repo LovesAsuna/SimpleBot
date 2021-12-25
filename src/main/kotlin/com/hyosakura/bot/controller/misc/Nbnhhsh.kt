@@ -2,14 +2,13 @@ package com.hyosakura.bot.controller.misc
 
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.data.BotData
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.toJson
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 
 object Nbnhhsh : SimpleCommand(
     owner = Main,
@@ -24,10 +23,10 @@ object Nbnhhsh : SimpleCommand(
             "可能的结果: ${
                 withContext(Dispatchers.IO) {
                     @Suppress("BlockingMethodInNonBlockingContext")
-                    OkHttpUtil.postJson(
+                    Request.postJson(
                         "https://lab.magiconch.com/api/nbnhhsh/guess",
-                        text.toString().toRequestBody("application/json".toMediaType())
-                    )[0]["trans"] ?: "[]"
+                        text
+                    ).toJson()[0]["trans"] ?: "[]"
                 }
             }"
         )

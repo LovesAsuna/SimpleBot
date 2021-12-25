@@ -3,14 +3,13 @@ package com.hyosakura.bot.controller.misc
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.data.BotData
 import com.hyosakura.bot.entity.misc.JikiPediaEntity
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.toJson
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 
 object JikiPedia : SimpleCommand(
     owner = Main,
@@ -23,12 +22,13 @@ object JikiPedia : SimpleCommand(
         val text = BotData.objectMapper.createObjectNode().put("phrase", str)
         val root = withContext(Dispatchers.IO) {
             @Suppress("BlockingMethodInNonBlockingContext")
-            OkHttpUtil.postJson(
+            Request.postJson(
                 "https://api.jikipedia.com/go/auto_complete",
-                text.toString().toRequestBody("application/json".toMediaType()),
-                OkHttpUtil.addHeaders(mapOf("Client" to "Web"))
+                text,
+                10000,
+                mapOf("Client" to "Web")
             )
-        }
+        }.toJson()
         for (data in root["data"]) {
             JikiPediaEntity.parse(data)?.let {
                 sendMessage(it.toString())

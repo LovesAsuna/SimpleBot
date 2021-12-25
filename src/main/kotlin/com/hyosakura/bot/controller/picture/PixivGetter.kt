@@ -1,7 +1,7 @@
 package com.hyosakura.bot.controller.picture
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,10 +25,10 @@ object PixivGetter : CompositeCommand(
     suspend fun CommandSender.work(ID: Int) {
         val root = withContext(Dispatchers.IO) {
             @Suppress("BlockingMethodInNonBlockingContext")
-            OkHttpUtil.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
+            Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
         }
         if (root["error"] != null) {
-            sendMessage("该作品不存在或已被删除!")
+            sendMessage("Error: ${root["error"]["message"].asText()}")
             return
         }
         val illustration = root["illust"]
@@ -64,9 +64,9 @@ object PixivGetter : CompositeCommand(
             原图: 
             """.trimIndent()
             if (count == 1) {
-                Main.scheduler.withTimeOut(suspend {
+                Main.scheduler.withTimeOut({
                     `is` =
-                        OkHttpUtil.getIs("https://pixiv.re/$ID.jpg")
+                        Request.getIs("https://pixiv.re/$ID.jpg")
                     +`is`!!.uploadAsImage(getGroupOrNull()!!)
                 }, 60000) {
                     +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
@@ -74,8 +74,8 @@ object PixivGetter : CompositeCommand(
             } else {
                 +"该作品共有${count}张图片${if (count > 5) ",预览前5张" else ""}"
                 repeat(if (count > 5) 5 else count) {
-                    Main.scheduler.withTimeOut(suspend {
-                        `is` = OkHttpUtil.getIs("https://pixiv.re/$ID-${it + 1}.jpg")
+                    Main.scheduler.withTimeOut({
+                        `is` = Request.getIs("https://pixiv.re/$ID-${it + 1}.jpg")
                         +`is`!!.uploadAsImage(getGroupOrNull()!!)
                     }, 60000) {
                         +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"

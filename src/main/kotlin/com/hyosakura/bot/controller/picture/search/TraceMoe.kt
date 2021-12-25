@@ -1,18 +1,18 @@
 package com.hyosakura.bot.controller.picture.search
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.hyosakura.bot.util.network.OkHttpUtil
-import com.hyosakura.bot.util.network.OkHttpUtil.mapper
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
+import com.hyosakura.bot.data.BotData
+import com.hyosakura.bot.util.network.Request
+import com.hyosakura.bot.util.network.Request.toJson
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 object TraceMoe : SearchSource<AnimeResult> {
     private val client = OkHttpClient()
+    private val mapper = BotData.objectMapper
     private val queryString =
         "query (${"$"}ids: [Int]) {Page(page: 1, perPage: 50) {media(id_in: ${"$"}ids, type: ANIME) {id title{native}startDate{year month day}endDate{year month day}season episodes duration coverImage{large medium}bannerImage externalLinks{id url site}}}}"
     private val format = DecimalFormat().also {
@@ -20,24 +20,17 @@ object TraceMoe : SearchSource<AnimeResult> {
         it.roundingMode = RoundingMode.FLOOR
     }
 
-    override fun search(url: String): List<AnimeResult> {
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("image", "blob",
-                OkHttpUtil.downloadBytes(url)
-                    .let {
-                        it.toRequestBody("multipart/form-data".toMediaType(), 0, it.size)
-                    }
-            )
-            .build()
-
-        val request = Request.Builder()
-            .url("https://api.trace.moe/search")
-            .post(requestBody)
-            .build()
-
-        val response = client.newCall(request).execute()
-        var resultNode = OkHttpUtil.getJson(response)["result"]
+    override suspend fun search(url: String): List<AnimeResult> {
+        val response = Request.submitFormWithBinaryData(
+            "https://api.trace.moe/search",
+            emptyMap(),
+            Request.get(url).readBytes(),
+            "image",
+            {
+                append(HttpHeaders.ContentDisposition, "filename=blob")
+            }
+        )
+        var resultNode = response.toJson()["result"]
         var size = resultNode.size().let {
             if (it > 3) 3 else it
         }
@@ -64,10 +57,10 @@ object TraceMoe : SearchSource<AnimeResult> {
                         "ids", array
                     )
             )
-        resultNode = OkHttpUtil.postJson(
+        resultNode = Request.postJson(
             "https://trace.moe/anilist/",
-            body.toString().toRequestBody("application/json".toMediaType())
-        )["data"]["Page"]["media"]
+            body
+        ).toJson()["data"]["Page"]["media"]
         size = resultNode.size()
         repeat(size) {
             val index = size - 1 - it

@@ -5,5 +5,5 @@ interface SinglePictureSource {
      * 从api获得数据
      * @return 从api获得数据
      */
-    fun fetchData(): String?
+    suspend fun fetchData(): String?
 }

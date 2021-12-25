@@ -1,7 +1,7 @@
 package com.hyosakura.bot.controller.picture.hpicture
 
 import com.hyosakura.bot.Main
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -40,7 +40,7 @@ object HPicture : CompositeCommand(
                 runCatching {
                     withTimeout(15000) {
                         sendMessage(
-                            OkHttpUtil.getIs(it).run {
+                            Request.getIs(it).run {
                                 val image = uploadAsImage(getGroupOrNull()!!)
                                 withContext(Dispatchers.IO) {
                                     this@run.close()
@@ -64,7 +64,7 @@ object HPicture : CompositeCommand(
     suspend fun CommandSender.random() {
         source = Misc()
         sendMessage(
-            source.fetchData()?.let { OkHttpUtil.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
+            source.fetchData()?.let { Request.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
         )
     }
 
@@ -72,7 +72,7 @@ object HPicture : CompositeCommand(
     suspend fun CommandSender.girl() {
         source = Girl()
         sendMessage(
-            source.fetchData()?.let { OkHttpUtil.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
+            source.fetchData()?.let { Request.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
         )
     }
 }

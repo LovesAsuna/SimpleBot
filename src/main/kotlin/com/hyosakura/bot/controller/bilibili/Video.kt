@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.message.data.PlainText
@@ -46,7 +46,7 @@ class Video : FunctionListener {
         }
 
         val line = withContext(Dispatchers.IO) {
-            OkHttpUtil.getStr(url)
+            Request.getStr(url)
         }
         if (!line.startsWith("{\"code\":0")) {
             return false
@@ -95,8 +95,10 @@ class Video : FunctionListener {
             .append("\n")
             .append(desc)
         box.reply(
-            PlainText("链接: https://www.bilibili.com/video/${if (av != null) "${av}" else "${bv}"}") + OkHttpUtil.getIs(pic)
-                .uploadAsImage(box.group!!) + builder.toString()
+            PlainText("链接: https://www.bilibili.com/video/${if (av != null) "${av}" else "${bv}"}") +
+                    Request.getIs(
+                        pic
+                    ).uploadAsImage(box.group!!) + builder.toString()
         )
         return true
     }

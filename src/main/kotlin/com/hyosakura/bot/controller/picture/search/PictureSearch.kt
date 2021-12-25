@@ -3,7 +3,7 @@ package com.hyosakura.bot.controller.picture.search
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.controller.picture.PixivGetter.work
 import com.hyosakura.bot.util.BasicUtil
-import com.hyosakura.bot.util.network.OkHttpUtil
+import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -43,8 +43,8 @@ object PictureSearch : SimpleCommand(
             }
         }
         results.forEach { result ->
-            Main.scheduler.withTimeOut(suspend {
-                val uploadImage = OkHttpUtil.getIs(result.thumbnail!!).uploadAsImage(getGroupOrNull()!!)
+            Main.scheduler.withTimeOut({
+                val uploadImage = Request.getIs(result.thumbnail!!).uploadAsImage(getGroupOrNull()!!)
                 sendMessage(
                     buildMessageChain {
                         +uploadImage
