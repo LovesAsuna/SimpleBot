@@ -28,7 +28,11 @@ object PixivGetter : CompositeCommand(
             Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
         }
         if (root["error"] != null) {
-            sendMessage("Error: ${root["error"]["message"].asText()}")
+            var text = root["error"]["message"].asText()
+            if (text.isEmpty()) {
+                text = root["error"]["user_message"].asText()
+            }
+            sendMessage("Error: $text")
             return
         }
         val illustration = root["illust"]
