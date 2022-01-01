@@ -13,7 +13,6 @@ import io.ktor.http.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
-import kotlin.coroutines.Continuation
 
 
 object Request {
@@ -190,7 +189,6 @@ object Request {
     suspend fun HttpResponse.getInputStream(): InputStream = this.receive()
 
     suspend fun HttpResponse.toJson(): JsonNode {
-        println(HttpClientCall::class.java.getDeclaredMethod("receive", TypeInfo::class.java, Continuation::class.java))
         val str: String = this.receive()
         return mapper.readTree(str)
     }
