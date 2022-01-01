@@ -21,6 +21,7 @@ object Request {
     private val client = HttpClient(OkHttp) {
         BrowserUserAgent()
         install(HttpTimeout)
+        expectSuccess = false
     }
 
     private val mapper = jacksonObjectMapper()
