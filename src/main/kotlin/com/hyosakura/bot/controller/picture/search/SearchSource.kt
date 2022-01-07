@@ -18,7 +18,7 @@ suspend fun <T> CommandSender.getResult(source: SearchSource<T>, image: Image): 
     val results = Main.scheduler.withTimeOut({
         source.search(imgUrl)
     }, 10000) {
-        sendMessage("搜索超时!")
+        sendMessage("搜索超时或发生异常!")
     }
     if (results == null) {
         return null
