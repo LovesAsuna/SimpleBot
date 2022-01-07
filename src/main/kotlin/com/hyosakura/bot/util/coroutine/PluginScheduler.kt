@@ -1,5 +1,6 @@
 package com.hyosakura.bot.util.coroutine
 
+import com.hyosakura.bot.Main
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -82,6 +83,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
                 consumer.invoke()
             }
         }.onFailure {
+            Main.logger.error(it)
             notCompletedAction.invoke()
         }.getOrNull()
     }
