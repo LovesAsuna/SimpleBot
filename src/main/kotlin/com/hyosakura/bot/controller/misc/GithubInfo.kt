@@ -21,7 +21,7 @@ object GithubInfo : SimpleCommand(
     description = "获取github仓库信息",
     parentPermission = registerDefaultPermission()
 ) {
-    @SimpleCommand.Handler
+    @Handler
     suspend fun CommandSender.handle(url: String) {
         try {
             sendMessage(Request.getIs(withContext(Dispatchers.IO) {
