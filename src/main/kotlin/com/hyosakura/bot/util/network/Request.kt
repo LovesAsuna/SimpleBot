@@ -25,11 +25,16 @@ object Request {
 
     private val mapper = jacksonObjectMapper()
 
+    private fun HttpRequestBuilder.setTimeout(timeout: Long) {
+       timeout {
+           requestTimeoutMillis = timeout
+           socketTimeoutMillis = timeout
+       }
+    }
+
     suspend fun get(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): HttpResponse {
         return client.get(url) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
@@ -55,9 +60,7 @@ object Request {
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
@@ -72,9 +75,7 @@ object Request {
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
@@ -90,9 +91,7 @@ object Request {
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
@@ -116,9 +115,7 @@ object Request {
             },
             encodeInQuery = true
         ) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
@@ -166,9 +163,7 @@ object Request {
                 })
             }
         ) {
-            timeout {
-                requestTimeoutMillis = timeout
-            }
+            setTimeout(timeout)
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
