@@ -1,13 +1,13 @@
 package com.hyosakura.bot.controller.picture.search
 
+import com.hyosakura.bot.util.network.Request
+import io.ktor.client.statement.*
 import org.jsoup.Jsoup
 
 object Ascii2d : SearchSource<PictureResult> {
-    private val ascii2d = "https://ascii2d.net/search/url/"
+    private const val base_url = "https://ascii2d.net/search/url/"
     override suspend fun search(url: String): List<PictureResult> {
-        val request = Jsoup.connect("$ascii2d$url")
-        request.followRedirects(true)
-        val html = request.get()
+        val html = Jsoup.parse(Request.get("$base_url$url").readText())
         val elements = html.body().getElementsByClass("container")
         val pictureResultList = ArrayList<PictureResult>()
         for (i in 1..2) {
