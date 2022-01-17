@@ -1,4 +1,4 @@
-package com.hyosakura.bot.controller
+package com.hyosakura.bot.controller.misc
 
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
