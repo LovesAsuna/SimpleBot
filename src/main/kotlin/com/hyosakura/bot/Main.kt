@@ -61,7 +61,7 @@ object Main : KotlinPlugin(
 }
 
 object Config : AutoSavePluginConfig("config") {
-    val SauceNaoAPI by value<String>()
+    val SauceNaoAPI by value("")
     val DisableFunction: List<String> by value()
-    val BangumiCookie by value<String>()
+    val BangumiCookie by value("")
 }
