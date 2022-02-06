@@ -10,13 +10,11 @@ import kotlinx.coroutines.flow.flow
 class Mirlkoi : MultiPictureSource {
     override suspend fun fetchData(num: Int): Flow<String> {
         val source = "http://mobile.fgimaxl2.vipnps.vip/API/GHS/3233161559.php?type=json"
-        val root = Request.getJson(source)
         return flow {
-            for (i in 0 until num) {
-                repeat(num) {
-                    val url = root["pic"].asText()
-                    emit(url)
-                }
+            repeat(num) {
+                val root = Request.getJson(source)
+                val url = root["pic"].asText()
+                emit(url)
             }
         }
     }
