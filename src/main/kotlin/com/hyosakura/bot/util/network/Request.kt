@@ -26,10 +26,10 @@ object Request {
     private val mapper = jacksonObjectMapper()
 
     private fun HttpRequestBuilder.setTimeout(timeout: Long) {
-       timeout {
-           requestTimeoutMillis = timeout
-           socketTimeoutMillis = timeout
-       }
+        timeout {
+            requestTimeoutMillis = timeout
+            socketTimeoutMillis = timeout
+        }
     }
 
     suspend fun get(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): HttpResponse {
@@ -184,7 +184,7 @@ object Request {
     suspend fun HttpResponse.getInputStream(): InputStream = this.receive()
 
     suspend fun HttpResponse.toJson(): JsonNode {
-        val str: String = this.receive()
-        return mapper.readTree(str)
+        val `is` = getInputStream()
+        return mapper.readTree(`is`)
     }
 }
