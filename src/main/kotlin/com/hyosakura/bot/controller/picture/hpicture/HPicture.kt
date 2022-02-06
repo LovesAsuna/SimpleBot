@@ -3,8 +3,8 @@ package com.hyosakura.bot.controller.picture.hpicture
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withTimeout
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -18,51 +18,52 @@ object HPicture : CompositeCommand(
     description = "从多个图源中获取色图",
     parentPermission = registerDefaultPermission()
 ) {
-    lateinit var source: SinglePictureSource
     private var queue: Queue<String> = LinkedList()
 
     @SubCommand
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun CommandSender.lolicon(num: Int) {
+        multiPhoto(Lolicon(), num)
+    }
+
+    @SubCommand
+    suspend fun CommandSender.mirlkoi(num: Int) {
+        multiPhoto(Mirlkoi(), num)
+    }
+
+    private suspend fun CommandSender.multiPhoto(source: MultiPictureSource, num: Int) {
         if (num > 5) {
             sendMessage("一次最大只能同时获取5张图片")
             return
         }
-        source = Lolicon()
         if (queue.size >= 5) {
             sendMessage("队列中剩余${queue.size}张图片未发送")
             return
         }
-        val urls = (source as MultiPictureSource).fetchData(num)
-        queue.addAll(urls)
-        withContext(this.coroutineContext) {
-            urls.forEach {
-                runCatching {
-                    withTimeout(15000) {
-                        sendMessage(
-                            Request.getIs(it).run {
-                                val image = uploadAsImage(getGroupOrNull()!!)
-                                withContext(Dispatchers.IO) {
-                                    this@run.close()
-                                }
-                                image
-                            }
-                        )
-                        if (queue.isNotEmpty()) queue.poll()
-                        Main.logger.debug("获取成功，队列大小-1")
-                    }
-                }.onFailure {
-                    sendMessage("获取超时或发生IO错误")
+        source.fetchData(num).catch { e ->
+            Main.logger.error(e)
+        }.collect {
+            runCatching {
+                withTimeout(15000) {
+                    sendMessage(
+                        Request.getIs(it).use {
+                            val image = it.uploadAsImage(getGroupOrNull()!!)
+                            image
+                        }
+                    )
                     if (queue.isNotEmpty()) queue.poll()
-                    Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
+                    Main.logger.debug("获取成功，队列大小-1")
                 }
+            }.onFailure {
+                sendMessage("获取超时或发生IO错误")
+                if (queue.isNotEmpty()) queue.poll()
+                Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
             }
         }
     }
 
     @SubCommand
     suspend fun CommandSender.random() {
-        source = Misc()
+        val source = Misc()
         sendMessage(
             source.fetchData()?.let { Request.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
         )
@@ -70,9 +71,9 @@ object HPicture : CompositeCommand(
 
     @SubCommand
     suspend fun CommandSender.girl() {
-        source = Girl()
+        val source = Girl()
         sendMessage(
-            source.fetchData()?.let { Request.getIs(it) }!!.uploadAsImage(getGroupOrNull()!!)
+            source.fetchData().let { Request.getIs(it) }.uploadAsImage(getGroupOrNull()!!)
         )
     }
 }
