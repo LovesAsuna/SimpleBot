@@ -26,7 +26,7 @@ object GithubInfo : SimpleCommand(
         try {
             sendMessage(Request.getIs(withContext(Dispatchers.IO) {
                 @Suppress("BlockingMethodInNonBlockingContext")
-                Jsoup.parse(URL("https://hub.fastgit.org/$url"), 10000)
+                Jsoup.parse(URL("https://hub.fastgit.xyz/$url"), 10000)
                     .head()
                     .getElementsByAttributeValue("property", "og:image")
                     .attr("content")
