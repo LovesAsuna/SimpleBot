@@ -4,7 +4,6 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withTimeout
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -23,11 +22,6 @@ object HPicture : CompositeCommand(
     @SubCommand
     suspend fun CommandSender.lolicon(num: Int) {
         multiPhoto(Lolicon(), num)
-    }
-
-    @SubCommand
-    suspend fun CommandSender.mirlkoi(num: Int) {
-        multiPhoto(Mirlkoi(), num)
     }
 
     private suspend fun CommandSender.multiPhoto(source: MultiPictureSource, num: Int) {
