@@ -34,20 +34,20 @@ dependencies {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-client-core-jvm:2.0.0")
+    implementation("io.ktor:ktor-client-okhttp-jvm:2.0.0")
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("com.h2database:h2:1.4.200")
-    implementation("org.jetbrains.exposed:exposed-core:0.36.2")
-    implementation("org.jetbrains.exposed:exposed-dao:0.36.2")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.36.2")
-    implementation("com.zaxxer:HikariCP:5.0.0")
-    implementation("com.charleskorn.kaml:kaml:0.37.0")
-    implementation("com.github.oshi:oshi-core:5.8.5")
-    implementation("net.java.dev.jna:jna:5.9.0")
-    implementation("net.java.dev.jna:jna-platform:5.9.0")
-    implementation("io.ktor:ktor-client-core:1.6.7")
-    implementation("io.ktor:ktor-client-okhttp:1.6.7")
+    implementation("org.jetbrains.exposed:exposed-core:0.37.3")
+    implementation("org.jetbrains.exposed:exposed-dao:0.37.3")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.37.3")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("com.charleskorn.kaml:kaml:0.43.0")
+    implementation("com.github.oshi:oshi-core:6.1.5")
+    implementation("net.java.dev.jna:jna:5.11.0")
+    implementation("net.java.dev.jna:jna-platform:5.11.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
