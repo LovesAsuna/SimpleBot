@@ -18,22 +18,21 @@ object Admin : RawCommand(
     private var confim = false
 
     override suspend fun CommandSender.onCommand(args: MessageChain) {
-        when (args.size) {
-            1 -> {
-                sendMessage("请在十秒内输入/admin quit confirm进行确认！")
-                confim = true
-                delay(10000)
-            }
-            2 -> {
-                when (args[0].content.lowercase()) {
-                    "confirm" -> {
-                        (this.subject as? Group)?.run {
-                            quit()
-                            sendMessage("退群成功,感谢陪伴!")
-                        } ?: sendMessage("退群失败！")
-                    }
+        if (args.size == 1) {
+            val stringArgs = args[0].content.split(" ")
+            if (stringArgs.size == 1) {
+                if (stringArgs[0] == "quit") {
+                    sendMessage("请在十秒内输入/admin quit confirm进行确认！")
+                    confim = true
+                    delay(10000)
                 }
-
+            } else if (stringArgs.size == 2) {
+                if (stringArgs[0] == "quit" && stringArgs[0] == "confirm") {
+                    (this.subject as? Group)?.run {
+                        quit()
+                        sendMessage("退群成功,感谢陪伴!")
+                    } ?: sendMessage("退群失败！")
+                }
             }
         }
         confim = false
