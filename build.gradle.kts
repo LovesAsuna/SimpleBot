@@ -13,7 +13,7 @@ repositories {
 }
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
-val kotlinVersion = "1.5.30"
+val kotlinVersion = "1.6.10"
 val miraiVersion = "2.10.1"
 
 // mirai
@@ -34,8 +34,8 @@ dependencies {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-client-core-jvm:2.0.0")
-    implementation("io.ktor:ktor-client-okhttp-jvm:2.0.0")
+    implementation("io.ktor:ktor-client-core:2.0.0")
+    implementation("io.ktor:ktor-client-okhttp:2.0.0")
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("com.h2database:h2:1.4.200")

@@ -28,13 +28,13 @@ object GalGame : BangumiFunction {
             flow {
                 val response =
                     Request.get("https://bangumi.tv/subject_search/${keyword}?cat=${type.id}", 10000, headers)
-                val root = Jsoup.parse(response.readText())
+                val root = Jsoup.parse(response.bodyAsText())
                 root.select("#browserItemList > li").run { subList(0, if (size > 3) 3 else size) }.forEach { outer ->
                     kotlin.runCatching {
                         withTimeout(30000) {
                             val link = "https://bangumi.tv/" + outer.select("a:first-child").attr("href")
                             val innerResponse = Request.get(link, 10000, headers)
-                            val innerRoot = Jsoup.parse(innerResponse.readText())
+                            val innerRoot = Jsoup.parse(innerResponse.bodyAsText())
                             val need = listOf("中文名", "开发", "剧本", "原画", "平台", "发行日期")
                             val img = innerRoot.select("#bangumiInfo a").attr("href")
                             val message = buildMessageChain {
