@@ -12,6 +12,10 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URL
 import javax.imageio.ImageIO
+import kotlin.math.atan
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 
 object ImageUtil {
@@ -64,13 +68,13 @@ object ImageUtil {
             }
             revisedAngel %= 90
         }
-        val r = Math.sqrt((src.height * src.height + src.width * src.width).toDouble()) / 2
-        val len = 2 * Math.sin(Math.toRadians(revisedAngel.toDouble()) / 2) * r
+        val r = sqrt((src.height * src.height + src.width * src.width).toDouble()) / 2
+        val len = 2 * sin(Math.toRadians(revisedAngel.toDouble()) / 2) * r
         val angelAlpha = (Math.PI - Math.toRadians(revisedAngel.toDouble())) / 2
-        val angelDaltaWidth = Math.atan(src.height.toDouble() / src.width)
-        val angelDaltaHeight = Math.atan(src.width.toDouble() / src.height)
-        val lenDaltaWidth = (len * Math.cos(Math.PI - angelAlpha - angelDaltaWidth)).toInt()
-        val lenDaltaHeight = (len * Math.cos(Math.PI - angelAlpha - angelDaltaHeight)).toInt()
+        val angelDaltaWidth = atan(src.height.toDouble() / src.width)
+        val angelDaltaHeight = atan(src.width.toDouble() / src.height)
+        val lenDaltaWidth = (len * cos(Math.PI - angelAlpha - angelDaltaWidth)).toInt()
+        val lenDaltaHeight = (len * cos(Math.PI - angelAlpha - angelDaltaHeight)).toInt()
         val desWidth = src.width + lenDaltaWidth * 2
         val desHeight = src.height + lenDaltaHeight * 2
         return Rectangle(Dimension(desWidth, desHeight))
