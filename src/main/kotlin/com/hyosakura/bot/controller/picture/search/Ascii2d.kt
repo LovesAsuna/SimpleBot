@@ -7,7 +7,7 @@ import org.jsoup.Jsoup
 object Ascii2d : SearchSource<PictureResult> {
     private const val base_url = "https://ascii2d.net/search/url/"
     override suspend fun search(url: String): List<PictureResult> {
-        val html = Jsoup.parse(Request.get("$base_url$url").bodyAsText())
+        val html = Jsoup.parse(Request.get("$base_url$url").readText())
         val elements = html.body().getElementsByClass("container")
         val pictureResultList = ArrayList<PictureResult>()
         for (i in 1..2) {

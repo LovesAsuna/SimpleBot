@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.*
+import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -42,7 +42,7 @@ object Request {
     }
 
     suspend fun getStr(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): String {
-        return get(url, timeout, headers).body()
+        return get(url, timeout, headers).receive()
     }
 
     suspend fun getIs(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): InputStream {
@@ -64,7 +64,7 @@ object Request {
             headers?.forEach { (key, value) ->
                 header(key, value)
             }
-            setBody(text)
+            body = text
         }
     }
 
@@ -80,7 +80,7 @@ object Request {
                 header(key, value)
             }
             contentType(ContentType.Application.Json)
-            setBody(jsonNode.toString())
+            body = jsonNode.toString()
         }
     }
 
@@ -96,7 +96,7 @@ object Request {
                 header(key, value)
             }
             contentType(ContentType.Application.Json)
-            setBody(jsonText)
+            body = jsonText
         }
     }
 
@@ -181,7 +181,7 @@ object Request {
         return byteArrayOutputStream
     }
 
-    suspend fun HttpResponse.getInputStream(): InputStream = this.body()
+    suspend fun HttpResponse.getInputStream(): InputStream = this.receive()
 
     suspend fun HttpResponse.toJson(): JsonNode {
         val `is` = getInputStream()

@@ -34,11 +34,11 @@ dependencies {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-client-core:2.0.0")
-    implementation("io.ktor:ktor-client-okhttp:2.0.0")
+    implementation("io.ktor:ktor-client-core:1.6.7")
+    implementation("io.ktor:ktor-client-okhttp:1.6.7")
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
-    implementation("com.h2database:h2:1.4.200")
+    implementation("com.h2database:h2:2.1.212")
     implementation("org.jetbrains.exposed:exposed-core:0.37.3")
     implementation("org.jetbrains.exposed:exposed-dao:0.37.3")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
