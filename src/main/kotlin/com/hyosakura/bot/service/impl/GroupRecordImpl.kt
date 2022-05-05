@@ -21,7 +21,7 @@ object GroupRecordImpl : GroupRecordService {
     }
 
     override fun relationIsNull(memberID: Long, groupID: Long): Boolean = transaction(database) {
-        dao.queryRelation(memberID, groupID)
+        !dao.queryRelation(memberID, groupID)
     }
 
     override fun addGroup(groupID: Long, name: String): Boolean = transaction(database) {
