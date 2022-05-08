@@ -1,10 +1,10 @@
 package com.hyosakura.bot.util.coroutine
 
-import com.hyosakura.bot.Main
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
 
 class PluginScheduler(override val coroutineContext: CoroutineContext = SupervisorJob() + Dispatchers.Default) :
     CoroutineScope {
@@ -73,17 +73,22 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
      * @param notCompletedAction 超时动作
      */
     @Throws(TimeoutException::class)
-    suspend inline fun <R> withTimeOut(
-        crossinline consumer: suspend () -> R,
+    suspend fun <R> withTimeOut(
+        consumer: suspend () -> R,
         delayMs: Long,
-        notCompletedAction: () -> Unit
+        notCompletedAction: suspend () -> Unit
     ): R? {
         return runCatching {
-            withTimeout(delayMs) {
-                consumer.invoke()
+            suspendCancellableCoroutine<R> {
+                launch {
+                    delay(delayMs)
+                    it.cancel()
+                }
+                launch {
+                    it.resume(consumer.invoke())
+                }
             }
         }.onFailure {
-            Main.logger.error(it)
             notCompletedAction.invoke()
         }.getOrNull()
     }
