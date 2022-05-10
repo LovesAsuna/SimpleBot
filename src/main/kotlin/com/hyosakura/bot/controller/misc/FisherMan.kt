@@ -9,8 +9,8 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 
 object FisherMan : SimpleCommand(
     owner = Main,
-    primaryName = "摸鱼日历",
-    description = "摸鱼日历",
+    primaryName = "摸鱼人日历",
+    description = "摸鱼人日历",
     parentPermission = registerDefaultPermission()
 ) {
     @Handler
