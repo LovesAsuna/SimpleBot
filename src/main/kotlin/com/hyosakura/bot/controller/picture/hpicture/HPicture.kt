@@ -4,7 +4,6 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.withTimeout
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -36,18 +35,16 @@ object HPicture : CompositeCommand(
         source.fetchData(num).catch { e ->
             Main.logger.error(e)
         }.collect {
-            runCatching {
-                withTimeout(15000) {
-                    sendMessage(
-                        Request.getIs(it).use {
-                            val image = it.uploadAsImage(getGroupOrNull()!!)
-                            image
-                        }
-                    )
-                    if (queue.isNotEmpty()) queue.poll()
-                    Main.logger.debug("获取成功，队列大小-1")
-                }
-            }.onFailure {
+            Main.scheduler.withTimeOut({
+                sendMessage(
+                    Request.getIs(it).use {
+                        val image = it.uploadAsImage(getGroupOrNull()!!)
+                        image
+                    }
+                )
+                if (queue.isNotEmpty()) queue.poll()
+                Main.logger.debug("获取成功，队列大小-1")
+            }, 15000) {
                 sendMessage("获取超时或发生IO错误")
                 if (queue.isNotEmpty()) queue.poll()
                 Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
