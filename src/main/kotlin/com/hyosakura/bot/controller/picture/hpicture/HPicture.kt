@@ -1,12 +1,15 @@
 package com.hyosakura.bot.controller.picture.hpicture
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.MessageUtil
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
 import kotlinx.coroutines.flow.catch
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
+import net.mamoe.mirai.message.data.Message
+import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.*
 
@@ -32,24 +35,25 @@ object HPicture : CompositeCommand(
             sendMessage("队列中剩余${queue.size}张图片未发送")
             return
         }
+        val messageList = mutableListOf<Message>()
         source.fetchData(num).catch { e ->
             Main.logger.error(e)
-        }.collect {
+        }.collect { s ->
             Main.scheduler.withTimeOut({
-                sendMessage(
-                    Request.getIs(it).use {
-                        val image = it.uploadAsImage(getGroupOrNull()!!)
-                        image
+                messageList.add(
+                    Request.getIs(s).use {
+                        it.uploadAsImage(getGroupOrNull()!!)
                     }
                 )
                 if (queue.isNotEmpty()) queue.poll()
                 Main.logger.debug("获取成功，队列大小-1")
             }, 15000) {
-                sendMessage("获取超时或发生IO错误")
+                messageList.add(PlainText("获取超时或发生IO错误"))
                 if (queue.isNotEmpty()) queue.poll()
                 Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
             }
         }
+        sendMessage(MessageUtil.buildForwardsMessage(user!!, messageList))
     }
 
     @SubCommand
