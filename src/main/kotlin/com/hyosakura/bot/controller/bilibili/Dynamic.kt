@@ -49,7 +49,7 @@ object Dynamic : CompositeCommand(
                             read(it, 0)
                             time = "${Calendar.getInstance().time}"
                         }, 10000) {
-                            linkService.getGroupByUp(it).forEach {
+                            linkService.getGroupByUp(this).forEach {
                                 val group = Bot.instances[0].getGroup(it)
                                 group?.sendMessage("查询${this}动态时超时!")
                             }
