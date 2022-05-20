@@ -14,7 +14,7 @@ repositories {
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
 val kotlinVersion = "1.6.10"
-val miraiVersion = "2.10.2"
+val miraiVersion = "2.11.0"
 
 // mirai
 dependencies {
