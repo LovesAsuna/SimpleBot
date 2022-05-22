@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.6.10"
 }
 
@@ -26,7 +26,7 @@ dependencies {
 
 // kotlin
 dependencies {
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
@@ -37,15 +37,15 @@ dependencies {
     implementation("io.ktor:ktor-client-core:1.6.7")
     implementation("io.ktor:ktor-client-okhttp:1.6.7")
     implementation("org.jsoup:jsoup:1.14.3")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
     implementation("com.h2database:h2:2.1.212")
-    implementation("org.jetbrains.exposed:exposed-core:0.37.3")
-    implementation("org.jetbrains.exposed:exposed-dao:0.37.3")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.37.3")
+    implementation("org.jetbrains.exposed:exposed-core:0.38.2")
+    implementation("org.jetbrains.exposed:exposed-dao:0.38.2")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.38.2")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.38.2")
     implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("com.charleskorn.kaml:kaml:0.43.0")
-    implementation("com.github.oshi:oshi-core:6.1.5")
+    implementation("com.charleskorn.kaml:kaml:0.44.0")
+    implementation("com.github.oshi:oshi-core:6.1.6")
     implementation("net.java.dev.jna:jna:5.11.0")
     implementation("net.java.dev.jna:jna-platform:5.11.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
