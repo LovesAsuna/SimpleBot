@@ -10,6 +10,8 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -32,14 +34,15 @@ object Request {
         }
     }
 
-    suspend fun get(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): HttpResponse {
-        return client.get(url) {
-            setTimeout(timeout)
-            headers?.forEach { (key, value) ->
-                header(key, value)
+    suspend fun get(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): HttpResponse =
+        withContext(Dispatchers.IO) {
+            client.get(url) {
+                setTimeout(timeout)
+                headers?.forEach { (key, value) ->
+                    header(key, value)
+                }
             }
         }
-    }
 
     suspend fun getStr(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): String {
         return get(url, timeout, headers).receive()

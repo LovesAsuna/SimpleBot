@@ -50,7 +50,6 @@ class Danmu : FunctionListener {
         return true
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun connect(event: MessageEvent) = withContext(Dispatchers.IO) {
         val url = URL("https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id=$roomID")
         conn = url.openConnection() as HttpURLConnection
@@ -67,6 +66,7 @@ class Danmu : FunctionListener {
 
         socket = Socket(host, port.toInt())
         PacketManager.sendJoinChannel(event, roomID, DataOutputStream(socket.getOutputStream()), token)
+        @Suppress("BlockingMethodInNonBlockingContext")
         BasicUtil.scheduleWithFixedDelay({
             try {
                 if (!socket.isClosed && !closed) {
@@ -124,7 +124,6 @@ class Danmu : FunctionListener {
     }
 
     @Throws(IOException::class)
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun process(event: MessageEvent, packetType: Int, `in`: DataInputStream) {
         //3是人气回调 无视无视（
         when (packetType) {
@@ -136,20 +135,18 @@ class Danmu : FunctionListener {
                 try {
                     val bulletData = DanmuData(jsonNode, roomID, 2)
                     if (bulletData.type != null) {
-                        coroutineScope {
-                            when (bulletData.type) {
-                                DanmuData.COMMENT_TYPE -> {
-                                    event.subject.sendMessage(bulletData.toString())
-                                }
-                                DanmuData.LIVE_START_TYPE -> {
-                                    event.subject.sendMessage("${roomID}开启了直播")
-                                }
-                                DanmuData.LIVE_STOP_TYPE -> {
-                                    event.subject.sendMessage("${roomID}关闭了直播")
-                                }
-                                else -> {
-                                    event.subject.sendMessage("未知类型！")
-                                }
+                        when (bulletData.type) {
+                            DanmuData.COMMENT_TYPE -> {
+                                event.subject.sendMessage(bulletData.toString())
+                            }
+                            DanmuData.LIVE_START_TYPE -> {
+                                event.subject.sendMessage("${roomID}开启了直播")
+                            }
+                            DanmuData.LIVE_STOP_TYPE -> {
+                                event.subject.sendMessage("${roomID}关闭了直播")
+                            }
+                            else -> {
+                                event.subject.sendMessage("未知类型！")
                             }
                         }
                     }

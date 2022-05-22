@@ -5,13 +5,10 @@ import com.hyosakura.bot.controller.FunctionListener
 import com.hyosakura.bot.data.MessageBox
 import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.Request
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import java.util.regex.Pattern
 
-@Suppress("BlockingMethodInNonBlockingContext")
 class Video : FunctionListener {
     private val avPattern = Pattern.compile("[aA][vV]\\d*")
     private val bvPattern = Pattern.compile("BV(\\d|[a-z]|[A-Z]){10}")
@@ -45,17 +42,13 @@ class Video : FunctionListener {
             }
         }
 
-        val line = withContext(Dispatchers.IO) {
-            Request.getStr(url)
-        }
+        val line = Request.getStr(url)
         if (!line.startsWith("{\"code\":0")) {
             return false
         }
         val mapper = ObjectMapper()
 
-        val jsonNode = withContext(Dispatchers.IO) {
-            mapper.readTree(line)
-        }
+        val jsonNode = mapper.readTree(line)
         val dataObject = jsonNode["data"]
         val pic = dataObject["pic"].asText()
         val title = dataObject["title"].asText()
@@ -95,7 +88,7 @@ class Video : FunctionListener {
             .append("\n")
             .append(desc)
         box.reply(
-            PlainText("链接: https://www.bilibili.com/video/${if (av != null) "${av}" else "${bv}"}") +
+            PlainText("链接: https://www.bilibili.com/video/${if (av != null) "$av" else "$bv"}") +
                     Request.getIs(
                         pic
                     ).uploadAsImage(box.group!!) + builder.toString()

@@ -44,6 +44,12 @@ object BasicUtil {
     ): Pair<Job, PluginScheduler.RepeatTaskReceipt> =
         Main.scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit)
 
+    suspend fun <R> withTimeOut(
+        consumer: suspend () -> R,
+        delayMs: Long,
+        notCompletedAction: suspend (Throwable) -> Unit
+    ): R? = Main.scheduler.withTimeOut(consumer, delayMs, notCompletedAction)
+
     suspend fun debug(message: String): String {
         val reader = Request.submitForm(
             "https://paste.ubuntu.com/",

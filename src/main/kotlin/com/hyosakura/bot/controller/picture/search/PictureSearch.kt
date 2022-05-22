@@ -43,7 +43,7 @@ object PictureSearch : SimpleCommand(
             }
         }
         results.forEach { result ->
-            Main.scheduler.withTimeOut({
+            BasicUtil.withTimeOut({
                 val uploadImage = Request.getIs(result.thumbnail!!).uploadAsImage(getGroupOrNull()!!)
                 sendMessage(
                     buildMessageChain {

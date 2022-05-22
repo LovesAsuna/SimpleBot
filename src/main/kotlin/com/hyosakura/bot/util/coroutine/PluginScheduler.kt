@@ -35,7 +35,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
                 delay(unit.toMillis(delay))
             }
         }
-        return Pair(job, receipt)
+        return job to receipt
     }
 
     /**

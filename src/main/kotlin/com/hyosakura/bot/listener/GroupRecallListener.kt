@@ -5,7 +5,7 @@ import net.mamoe.mirai.event.events.MessageRecallEvent
 
 object GroupRecallListener : EventListener {
     override fun onAction() {
-        com.hyosakura.bot.Main.eventChannel.subscribeAlways(MessageRecallEvent::class) {
+        Main.eventChannel.subscribeAlways(MessageRecallEvent::class) {
             TODO("撤回消息处理")
         }
     }

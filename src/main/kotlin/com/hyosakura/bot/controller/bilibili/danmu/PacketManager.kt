@@ -2,8 +2,6 @@ package com.hyosakura.bot.controller.bilibili.danmu
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.event.events.MessageEvent
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -14,7 +12,6 @@ import java.nio.charset.StandardCharsets
 
 object PacketManager {
     @Throws(IOException::class)
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun sendJoinChannel(event: MessageEvent, roomID: Int, out: DataOutputStream, key: String) {
         val mapper = ObjectMapper()
         val objectNode: ObjectNode = mapper.createObjectNode()
@@ -23,9 +20,7 @@ object PacketManager {
             .put("key", key)
             .put("platform", "MC BC M/P")
             .put("protover", 2)
-        withContext(Dispatchers.IO) {
-            sendPacket(out, 7, objectNode.toString())
-        }
+        sendPacket(out, 7, objectNode.toString())
         event.subject.sendMessage("成功连接直播间: $roomID")
     }
 

@@ -6,8 +6,6 @@ import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.protocol.QueryUtil
 import com.hyosakura.bot.util.protocol.SRVConvertUtil
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import java.io.IOException
@@ -67,56 +65,54 @@ object McQuery : SimpleCommand(
     }
 
     @Throws(IOException::class)
-    @Suppress("BlockingMethodInNonBlockingContext")
-    private suspend fun query(sender: CommandSender, ipAndPort: String, SRV: Boolean): Boolean =
-        withContext(Dispatchers.IO) {
-            val host: String
-            val port: Int
-            if (SRV) {
-                val newIpAndport = SRVConvertUtil.convert(ipAndPort)
-                host = newIpAndport ?: ipAndPort.split(":").toTypedArray()[0]
-                port = (newIpAndport ?: ipAndPort).split(":").toTypedArray()[1].toInt()
-            } else {
-                host = ipAndPort.split(":").toTypedArray()[0]
-                port = ipAndPort.split(":").toTypedArray()[1].toInt()
+    private suspend fun query(sender: CommandSender, ipAndPort: String, SRV: Boolean): Boolean {
+        val host: String
+        val port: Int
+        if (SRV) {
+            val newIpAndport = SRVConvertUtil.convert(ipAndPort)
+            host = newIpAndport ?: ipAndPort.split(":").toTypedArray()[0]
+            port = (newIpAndport ?: ipAndPort).split(":").toTypedArray()[1].toInt()
+        } else {
+            host = ipAndPort.split(":").toTypedArray()[0]
+            port = ipAndPort.split(":").toTypedArray()[1].toInt()
+        }
+        val json: String? = try {
+            QueryUtil.query(host, port)
+        } catch (e: IOException) {
+            return false
+        }
+        val objectMapper = ObjectMapper()
+        val mod = false
+        val root = objectMapper.readTree(json)
+        val version = root["version"]
+        val players = root["players"]
+        val description = root["description"]
+        val modinfo = root["modinfo"]
+        val text = description["text"]
+        val extra = description["extra"]
+        val translate = description["translate"]
+        var texts = ""
+        var mods = ""
+        if (extra != null) {
+            for (i in 0 until extra.size()) {
+                val node = extra[i]
+                texts += nodeProcess(node)
             }
-            val json: String? = try {
-                QueryUtil.query(host, port)
-            } catch (e: IOException) {
-                return@withContext false
-            }
-            val objectMapper = ObjectMapper()
-            val mod = false
-            val root = objectMapper.readTree(json)
-            val version = root["version"]
-            val players = root["players"]
-            val description = root["description"]
-            val modinfo = root["modinfo"]
-            val text = description["text"]
-            val extra = description["extra"]
-            val translate = description["translate"]
-            var texts = ""
-            var mods = ""
-            if (extra != null) {
-                for (i in 0 until extra.size()) {
-                    val node = extra[i]
-                    texts += nodeProcess(node)
-                }
-            } else if (text != null) {
-                texts = description["text"].asText()
-            } else if (translate != null) {
-                texts = description["translate"].asText()
-            }
-            if (modinfo != null) {
-                val type = modinfo["type"]
-                val modList = modinfo["modList"]
-                mods += """
+        } else if (text != null) {
+            texts = description["text"].asText()
+        } else if (translate != null) {
+            texts = description["translate"].asText()
+        }
+        if (modinfo != null) {
+            val type = modinfo["type"]
+            val modList = modinfo["modList"]
+            mods += """
                 
                 服务器Mod类型: ${type.asText()}${modeProcess(modList)}
                 """.trimIndent()
-            }
-            sender.sendMessage(
-                """
+        }
+        sender.sendMessage(
+            """
                     服务器IP:  $host:$port
                     是否使用SRV域名解析:  $SRV
                     服务器版本:  ${version["name"].asText()}
@@ -127,9 +123,9 @@ object McQuery : SimpleCommand(
                     MOTD:
                     $texts$mods
                     """.trimIndent()
-            )
-            return@withContext true
-        }
+        )
+        return true
+    }
 
     private fun modeProcess(modList: JsonNode): String {
         val size = modList.size()

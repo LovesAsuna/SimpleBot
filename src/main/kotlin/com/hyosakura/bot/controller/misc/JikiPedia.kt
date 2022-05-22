@@ -6,8 +6,6 @@ import com.hyosakura.bot.entity.misc.JikiPediaEntity
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.network.Request.toJson
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
@@ -20,15 +18,12 @@ object JikiPedia : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle(str: String) {
         val text = BotData.objectMapper.createObjectNode().put("phrase", str)
-        val root = withContext(Dispatchers.IO) {
-            @Suppress("BlockingMethodInNonBlockingContext")
-            Request.postJson(
-                "https://api.jikipedia.com/go/auto_complete",
-                text,
-                10000,
-                mapOf("Client" to "Web")
-            )
-        }.toJson()
+        val root = Request.postJson(
+            "https://api.jikipedia.com/go/auto_complete",
+            text,
+            10000,
+            mapOf("Client" to "Web")
+        ).toJson()
         for (data in root["data"]) {
             JikiPediaEntity.parse(data)?.let {
                 sendMessage(it.toString())

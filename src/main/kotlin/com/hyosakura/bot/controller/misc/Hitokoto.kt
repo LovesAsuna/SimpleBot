@@ -3,8 +3,6 @@ package com.hyosakura.bot.controller.misc
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.data.MessageChain
@@ -48,10 +46,7 @@ object Hitokoto : RawCommand(
     }
 
     private suspend fun getResult(url: String, sender: CommandSender) {
-        val `object` = withContext(Dispatchers.IO) {
-            @Suppress("BlockingMethodInNonBlockingContext")
-            Request.getJson(url)
-        }
+        val `object` = Request.getJson(url)
         val hitokoto = `object`["hitokoto"].asText()
         val from = `object`["from"].asText()
         sender.sendMessage("『 $hitokoto 』- 「$from」")

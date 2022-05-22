@@ -1,10 +1,9 @@
 package com.hyosakura.bot.controller.picture.search
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -35,20 +34,16 @@ object AnimeSearch : SimpleCommand(
             +"Banner:\n"
         }
         results.forEach { result ->
-            Main.scheduler.withTimeOut({
+            BasicUtil.withTimeOut({
                 sendMessage(
                     buildMessageChain {
                         +"相似度: ${result.similarity}\n"
                         +"目标画面所处时长: ${result.from}-${result.to}\n"
                         +"番名: ${result.title}\n"
                         +"Cover:\n"
-                        +withContext(Dispatchers.IO) {
-                            Request.getIs(result.cover!!).uploadAsImage(getGroupOrNull()!!)
-                        }
+                        +Request.getIs(result.cover!!).uploadAsImage(getGroupOrNull()!!)
                         add(result)
-                        +withContext(Dispatchers.IO) {
-                            Request.getIs(result.banner!!).uploadAsImage(getGroupOrNull()!!)
-                        }
+                        +Request.getIs(result.banner!!).uploadAsImage(getGroupOrNull()!!)
                     }
                 )
             }, 20000) {

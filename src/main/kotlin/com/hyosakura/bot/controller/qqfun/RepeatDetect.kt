@@ -158,10 +158,8 @@ class RepeatDetect : FunctionListener {
                     +box.uploadImage(ByteArrayInputStream(out.toByteArray()))
                 }
                 else -> {
-                    @Suppress("BlockingMethodInNonBlockingContext")
-                    val bufferedImage = getOperatedImage(withContext(Dispatchers.Default) {
-                        ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray()))
-                    })
+                    val bufferedImage =
+                        getOperatedImage(ImageIO.read(ByteArrayInputStream(cloneInputStream.toByteArray())))
                     +box.uploadImage(bufferedImage)
                 }
             }
@@ -173,24 +171,25 @@ class RepeatDetect : FunctionListener {
      * @param type 指定的处理类型
      * @return 返回随机处理后的图片
      */
-    private fun getOperatedImageByType(image: BufferedImage, type: Int): BufferedImage {
-        return image.let {
-            when (type) {
-                0 -> ImageUtil.rotateImage(it, 180)
-                1 -> ImageUtil.mirrorImage(it)
-                2 -> ImageUtil.reverseImage(it, 1)
-                3 -> ImageUtil.reverseImage(it, 2)
-                else -> it
+    private suspend fun getOperatedImageByType(image: BufferedImage, type: Int): BufferedImage =
+        withContext(Dispatchers.Default) {
+            image.let {
+                when (type) {
+                    0 -> ImageUtil.rotateImage(it, 180)
+                    1 -> ImageUtil.mirrorImage(it)
+                    2 -> ImageUtil.reverseImage(it, 1)
+                    3 -> ImageUtil.reverseImage(it, 2)
+                    else -> it
+                }
             }
         }
-    }
 
 
     /**
      * @param image 图片
      * @return 返回随机处理后的图片
      */
-    private fun getOperatedImage(image: BufferedImage) = getOperatedImageByType(image, random.nextInt(4))
+    private suspend fun getOperatedImage(image: BufferedImage) = getOperatedImageByType(image, random.nextInt(4))
 
     private fun operate(event: MessageEvent, messageList: MutableList<MessageChain>) {
         messageList.add(event.message)

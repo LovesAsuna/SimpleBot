@@ -142,10 +142,7 @@ object RainbowSix : RawCommand(
         val level = root["Basicstat"][0]["level"].asText()
         for (i in strings.indices) {
             builder.setLength(0)
-            val operator = statOperator[operators.indexOf(strings[i])]
-            if (operator == null) {
-                continue
-            }
+            val operator = statOperator[operators.indexOf(strings[i])] ?: continue
             val operatorKills = operator["kills"].asText()
             val operatorDeaths = operator["deaths"].asText()
             val operatorWon = operator["won"].asText()

@@ -3,8 +3,6 @@ package com.hyosakura.bot.controller.misc
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
@@ -24,13 +22,14 @@ object GithubInfo : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle(url: String) {
         try {
-            sendMessage(Request.getIs(withContext(Dispatchers.IO) {
-                @Suppress("BlockingMethodInNonBlockingContext")
-                Jsoup.parse(URL("https://hub.fastgit.xyz/$url"), 10000)
-                    .head()
-                    .getElementsByAttributeValue("property", "og:image")
-                    .attr("content")
-            }).uploadAsImage(this.subject!!))
+            sendMessage(
+                Request.getIs(
+                    Jsoup.parse(URL("https://ghproxy.com/https://github.com/$url"), 10000)
+                        .head()
+                        .getElementsByAttributeValue("property", "og:image")
+                        .attr("content")
+                ).uploadAsImage(this.subject!!)
+            )
         } catch (e: IOException) {
             sendMessage("仓库不存在或连接超时！")
         }

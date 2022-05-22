@@ -45,7 +45,7 @@ object Dynamic : CompositeCommand(
             Main.scheduler.asyncTask {
                 linkService.getUps().forEach {
                     with(it) {
-                        Main.scheduler.withTimeOut({
+                        BasicUtil.withTimeOut({
                             read(it, 0)
                             time = "${Calendar.getInstance().time}"
                         }, 10000) {
@@ -147,10 +147,11 @@ object Dynamic : CompositeCommand(
         val reader =
             Request.getIs("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?&host_uid=$uid")
                 .bufferedReader()
-        val root = withContext(Dispatchers.IO) {
-            @Suppress("BlockingMethodInNonBlockingContext")
-            BotData.objectMapper.readTree(reader.readLine())
-        }
+        val root = BotData.objectMapper.readTree(
+            withContext(Dispatchers.IO) {
+                reader.readLine()
+            }
+        )
         if (root.toString().contains(Regex("拦截|错误"))) {
             if (!intercept) {
                 Main.logger.error("B站动态api请求被拦截")
@@ -176,7 +177,7 @@ object Dynamic : CompositeCommand(
                     val group = Bot.instances[0].getGroup(it)
                     if (group != null) {
                         group.sendMessage(PlainText("${card["user"]["name"]?.asText() ?: card["user"]["uname"]?.asText()}发布了以下动态!"))
-                        Main.scheduler.withTimeOut({
+                        BasicUtil.withTimeOut({
                             // todo 动态解析不完整
                             parse(group, card)
                         }, Duration.ofSeconds(60).toMillis()) {

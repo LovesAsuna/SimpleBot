@@ -1,10 +1,9 @@
 package com.hyosakura.bot.controller.picture
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.getGroupOrNull
@@ -23,10 +22,7 @@ object PixivGetter : CompositeCommand(
 ), ReCallable {
     @SubCommand
     suspend fun CommandSender.work(ID: Int) {
-        val root = withContext(Dispatchers.IO) {
-            @Suppress("BlockingMethodInNonBlockingContext")
-            Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
-        }
+        val root = Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
         if (root["error"] != null) {
             var text = root["error"]["message"].asText()
             if (text.isEmpty()) {
@@ -68,7 +64,7 @@ object PixivGetter : CompositeCommand(
             原图: 
             """.trimIndent()
             if (count == 1) {
-                Main.scheduler.withTimeOut({
+                BasicUtil.withTimeOut({
                     `is` =
                         Request.getIs("https://pixiv.re/$ID.jpg")
                     +`is`!!.uploadAsImage(getGroupOrNull()!!)
@@ -78,7 +74,7 @@ object PixivGetter : CompositeCommand(
             } else {
                 +"该作品共有${count}张图片${if (count > 5) ",预览前5张" else ""}"
                 repeat(if (count > 5) 5 else count) {
-                    Main.scheduler.withTimeOut({
+                    BasicUtil.withTimeOut({
                         `is` = Request.getIs("https://pixiv.re/$ID-${it + 1}.jpg")
                         +`is`!!.uploadAsImage(getGroupOrNull()!!)
                     }, 60000) {

@@ -1,6 +1,7 @@
 package com.hyosakura.bot.controller.picture.hpicture
 
 import com.hyosakura.bot.Main
+import com.hyosakura.bot.util.BasicUtil
 import com.hyosakura.bot.util.MessageUtil
 import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.registerDefaultPermission
@@ -39,7 +40,7 @@ object HPicture : CompositeCommand(
         source.fetchData(num).catch { e ->
             Main.logger.error(e)
         }.collect { s ->
-            Main.scheduler.withTimeOut({
+            BasicUtil.withTimeOut({
                 messageList.add(
                     Request.getIs(s).use {
                         it.uploadAsImage(getGroupOrNull()!!)

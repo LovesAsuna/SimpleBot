@@ -3,8 +3,6 @@ package com.hyosakura.bot.controller.misc.animated
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.image.ImageUtil
 import com.hyosakura.bot.util.image.gif.AnimatedGifEncoder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.message.data.Message
 import java.awt.Color
@@ -28,11 +26,9 @@ abstract class AnimatedAction {
      */
     abstract suspend fun action(target: Member): Message
 
-    suspend fun getHead(target: Member, size: Int): BufferedImage? {
+    fun getHead(target: Member, size: Int): BufferedImage? {
         kotlin.runCatching {
-            return withContext(Dispatchers.IO) {
-                ImageUtil.getMemberAvatar(target, size)
-            }
+            return ImageUtil.getMemberAvatar(target, size)
         }.onFailure {
             Main.logger.error(it)
         }
