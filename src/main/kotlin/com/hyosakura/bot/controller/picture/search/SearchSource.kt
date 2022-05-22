@@ -18,8 +18,8 @@ suspend fun <T> CommandSender.getResult(source: SearchSource<T>, image: Image): 
     Main.logger.debug("图片URL: $imgUrl")
     val results = BasicUtil.withTimeOut({
         source.search(imgUrl)
-    }, 10000) {
-        sendMessage("搜索超时或发生异常!")
+    }, 20000) {
+        sendMessage("搜索超时或发生异常: ${it.javaClass}")
     }
     if (results == null) {
         return null
