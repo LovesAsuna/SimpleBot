@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class PluginScheduler(override val coroutineContext: CoroutineContext = SupervisorJob() + Dispatchers.Default) :
     CoroutineScope {
@@ -85,7 +86,13 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
                     it.cancel()
                 }
                 launch {
-                    it.resume(consumer.invoke())
+                    kotlin.runCatching {
+                        consumer.invoke()
+                    }.onSuccess { s ->
+                        it.resume(s)
+                    }.onFailure { t ->
+                        it.resumeWithException(t)
+                    }
                 }
             }
         }.onFailure {
