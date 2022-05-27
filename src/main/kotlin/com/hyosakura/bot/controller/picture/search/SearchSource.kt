@@ -10,6 +10,7 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
  * @author LovesAsuna
  **/
 interface SearchSource<T> {
+    val name: String
     suspend fun search(url: String): List<T>
 }
 
@@ -18,8 +19,8 @@ suspend fun <T> CommandSender.getResult(source: SearchSource<T>, image: Image): 
     Main.logger.debug("图片URL: $imgUrl")
     val results = BasicUtil.withTimeOut({
         source.search(imgUrl)
-    }, 20000) {
-        sendMessage("搜索超时或发生异常: ${it.javaClass}")
+    }, 35 * 1000) {
+        sendMessage("搜索超时或发生异常: ${BasicUtil.debug(it.message ?: "未知错误！")}")
     }
     if (results == null) {
         return null
