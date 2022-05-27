@@ -77,7 +77,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
     suspend fun <R> withTimeOut(
         consumer: suspend () -> R,
         delayMs: Long,
-        notCompletedAction: suspend (Throwable) -> Unit
+        notCompletedAction: (suspend (Throwable) -> Unit)?
     ): R? {
         return runCatching {
             suspendCancellableCoroutine<R> {
@@ -96,7 +96,7 @@ class PluginScheduler(override val coroutineContext: CoroutineContext = Supervis
                 }
             }
         }.onFailure {
-            notCompletedAction.invoke(it)
+            notCompletedAction?.invoke(it)
         }.getOrNull()
     }
 }

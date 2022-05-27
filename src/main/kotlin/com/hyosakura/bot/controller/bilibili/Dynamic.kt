@@ -139,7 +139,7 @@ object Dynamic : CompositeCommand(
             linkService.getUps().forEach {
                 builder.append("UP=$it: DynamicID=${dynamicService.getDynamicID(it)}\n")
             }
-            sendMessage("Debug信息: ${BasicUtil.debug(builder.toString())}")
+            sendMessage("Debug信息: ${Main.logger.debug(builder.toString())}")
         }
     }
 

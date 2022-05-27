@@ -22,7 +22,13 @@ object PixivGetter : CompositeCommand(
 ), ReCallable {
     @SubCommand
     suspend fun CommandSender.work(ID: Int) {
-        val root = Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
+        val root = BasicUtil.withTimeOut({
+            Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
+        }, 5000)
+        if (root == null) {
+            sendMessage("Error: 获取图像信息超时")
+            return
+        }
         if (root["error"] != null) {
             var text = root["error"]["message"].asText()
             if (text.isEmpty()) {
@@ -65,15 +71,15 @@ object PixivGetter : CompositeCommand(
             """.trimIndent()
             if (count == 1) {
                 BasicUtil.withTimeOut({
-                    `is` =
-                        Request.getIs("https://pixiv.re/$ID.jpg")
-                    +`is`!!.uploadAsImage(getGroupOrNull()!!)
+                    Request.getIs("https://pixiv.re/$ID.jpg").uploadAsImage(getGroupOrNull()!!)
                 }, 60000) {
                     +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
+                }?.let {
+                    + it
                 }
             } else {
-                +"该作品共有${count}张图片${if (count > 5) ",预览前5张" else ""}"
-                repeat(if (count > 5) 5 else count) {
+                +"该作品共有${count}张图片${if (count > 3) ",预览前3张" else ""}"
+                repeat(if (count > 3) 3 else count) {
                     BasicUtil.withTimeOut({
                         `is` = Request.getIs("https://pixiv.re/$ID-${it + 1}.jpg")
                         +`is`!!.uploadAsImage(getGroupOrNull()!!)
@@ -108,5 +114,6 @@ object PixivGetter : CompositeCommand(
                 it?.recallIn(5000)
             }
         }
+        sendMessage("获取完成")
     }
 }

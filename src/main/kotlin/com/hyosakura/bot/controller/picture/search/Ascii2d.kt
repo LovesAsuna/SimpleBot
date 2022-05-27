@@ -5,6 +5,7 @@ import io.ktor.client.statement.*
 import org.jsoup.Jsoup
 
 object Ascii2d : SearchSource<PictureResult> {
+    override val name: String = "Ascii2d"
     private const val base_url = "https://ascii2d.net/search/url/"
     override suspend fun search(url: String): List<PictureResult> {
         val html = Jsoup.parse(Request.get("$base_url$url").readText())

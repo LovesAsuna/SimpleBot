@@ -151,7 +151,7 @@ class RepeatDetect : FunctionListener {
                         Main.logger.error(it)
                         +"发生未知错误: $it"
                         +it.message!!.run {
-                            "堆栈信息: ${BasicUtil.debug(this)}"
+                            "堆栈信息: ${Main.logger.debug(this)}"
                         }
                         return@buildMessageChain
                     }

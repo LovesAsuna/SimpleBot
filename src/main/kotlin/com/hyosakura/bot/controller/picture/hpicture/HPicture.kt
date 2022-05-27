@@ -48,12 +48,13 @@ object HPicture : CompositeCommand(
                 )
                 if (queue.isNotEmpty()) queue.poll()
                 Main.logger.debug("获取成功，队列大小-1")
-            }, 15000) {
+            }, 35 * 1000) {
                 messageList.add(PlainText("获取超时或发生IO错误"))
                 if (queue.isNotEmpty()) queue.poll()
                 Main.logger.error("获取超时或发生IO错误，队列大小-1", it)
             }
         }
+        sendMessage("数据源拉取完成，发送合并消息")
         sendMessage(MessageUtil.buildForwardsMessage(user!!, messageList))
     }
 

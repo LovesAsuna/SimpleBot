@@ -18,10 +18,11 @@ import java.io.InputStream
 
 
 object Request {
-    private const val timeout = 60000L
+    private const val TIMEOUT = 60 * 1000L
     private val client = HttpClient(OkHttp) {
         BrowserUserAgent()
         install(HttpTimeout)
+        followRedirects = false
         expectSuccess = false
     }
 
@@ -34,7 +35,7 @@ object Request {
         }
     }
 
-    suspend fun get(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): HttpResponse =
+    suspend fun get(url: String, timeout: Long = this.TIMEOUT, headers: Map<String, String>? = null): HttpResponse =
         withContext(Dispatchers.IO) {
             client.get(url) {
                 setTimeout(timeout)
@@ -44,22 +45,22 @@ object Request {
             }
         }
 
-    suspend fun getStr(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): String {
+    suspend fun getStr(url: String, timeout: Long = this.TIMEOUT, headers: Map<String, String>? = null): String {
         return get(url, timeout, headers).receive()
     }
 
-    suspend fun getIs(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): InputStream {
+    suspend fun getIs(url: String, timeout: Long = this.TIMEOUT, headers: Map<String, String>? = null): InputStream {
         return get(url, timeout, headers).getInputStream()
     }
 
-    suspend fun getJson(url: String, timeout: Long = this.timeout, headers: Map<String, String>? = null): JsonNode {
+    suspend fun getJson(url: String, timeout: Long = this.TIMEOUT, headers: Map<String, String>? = null): JsonNode {
         return get(url, timeout, headers).toJson()
     }
 
     suspend fun postText(
         url: String,
         text: String,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
@@ -74,7 +75,7 @@ object Request {
     suspend fun postJson(
         url: String,
         jsonNode: JsonNode,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
@@ -90,7 +91,7 @@ object Request {
     suspend fun postJson(
         url: String,
         jsonText: String,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.post(url) {
@@ -106,7 +107,8 @@ object Request {
     suspend fun submitForm(
         url: String,
         form: Map<String, String>,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
+        encodeInQuery: Boolean = false,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.submitForm(
@@ -116,7 +118,7 @@ object Request {
                     append(key, value)
                 }
             },
-            encodeInQuery = true
+            encodeInQuery = encodeInQuery
         ) {
             setTimeout(timeout)
             headers?.forEach { (key, value) ->
@@ -130,7 +132,7 @@ object Request {
         form: Map<String, String>,
         file: File,
         fileKey: String = file.name,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return submitFormWithBinaryData(
@@ -152,7 +154,7 @@ object Request {
         byteArray: ByteArray,
         binaryKey: String,
         binaryHeaderBuilder: HeadersBuilder.() -> Unit,
-        timeout: Long = this.timeout,
+        timeout: Long = this.TIMEOUT,
         headers: Map<String, String>? = null
     ): HttpResponse {
         return client.submitFormWithBinaryData(
@@ -171,6 +173,22 @@ object Request {
                 header(key, value)
             }
         }
+    }
+
+    fun HttpResponse.getCookie(): String {
+        val builder = StringBuilder()
+        for (header in headers.getAll("Set-Cookie")!!) {
+            if (header.contains("deleted")) {
+                continue
+            }
+            val cookie = header.substringBefore(';')
+            val arr = cookie.split("=")
+            if (arr.size < 2 || arr[1] == ";") {
+                continue
+            }
+            builder.append(cookie).append("; ")
+        }
+        return builder.toString()
     }
 
     fun InputStream.clone(): ByteArrayOutputStream {

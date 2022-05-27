@@ -20,19 +20,15 @@ object PictureSearch : SimpleCommand(
     description = "以图搜图",
     parentPermission = registerDefaultPermission()
 ) {
+    private val sourceMap = mapOf(
+        1 to SauceNAO,
+        2 to Ascii2d
+    )
+
     @Handler
     suspend fun CommandSender.handle(type: Int, image: Image) {
-        val source = when (type) {
-            1 -> {
-                sendMessage(At(user!!) + "Saucenao查找中!")
-                Saucenao
-            }
-            2 -> {
-                sendMessage(At(user!!) + "Ascii2d查找中!")
-                Ascii2d
-            }
-            else -> Saucenao
-        }
+        val source = sourceMap[type] ?: sourceMap[0]!!
+        sendMessage(At(user!!) + "${source.name}查找中!")
         val results = getResult(source, image) ?: return
         fun MessageChainBuilder.add(result: PictureResult) {
             +"相似度: ${result.similarity}\n"

@@ -2,7 +2,6 @@ package com.hyosakura.bot.controller.misc.bangumi
 
 import com.hyosakura.bot.Main
 import com.hyosakura.bot.util.registerDefaultPermission
-import kotlinx.coroutines.flow.collect
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 

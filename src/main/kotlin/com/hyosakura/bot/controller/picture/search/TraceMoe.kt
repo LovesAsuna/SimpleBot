@@ -6,12 +6,11 @@ import com.hyosakura.bot.util.network.Request
 import com.hyosakura.bot.util.network.Request.toJson
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import okhttp3.OkHttpClient
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 object TraceMoe : SearchSource<AnimeResult> {
-    private val client = OkHttpClient()
+    override val name: String = "trace.moe"
     private val mapper = BotData.objectMapper
     private val queryString =
         "query (${"$"}ids: [Int]) {Page(page: 1, perPage: 50) {media(id_in: ${"$"}ids, type: ANIME) {id title{native}startDate{year month day}endDate{year month day}season episodes duration coverImage{large medium}bannerImage externalLinks{id url site}}}}"
