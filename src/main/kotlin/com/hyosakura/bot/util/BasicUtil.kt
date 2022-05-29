@@ -52,8 +52,8 @@ object BasicUtil {
         notCompletedAction: (suspend (Throwable) -> Unit)? = null
     ): R? = Main.scheduler.withTimeOut(consumer, delayMs, notCompletedAction)
 
-    suspend fun debug(message: String): String {
-        Main.logger.debug(message)
+    suspend fun debug(message: String, cookie: String=""): String {
+        // Main.logger.debug(message)
         val response = Request.submitForm(
             "https://paste.ubuntu.com/",
             mapOf(
@@ -65,6 +65,7 @@ object BasicUtil {
             10000,
             headers = mapOf(
                 "Referer" to "paste.ubuntu.com",
+                "Cookie" to cookie,
             )
         )
         val location = response.headers["location"]
@@ -85,8 +86,15 @@ object BasicUtil {
 
     suspend fun ubuntuLogin(email : String, password : String): String {
         val form = mutableMapOf<String, String>()
+        val pasteCookie : String
+        Request.get("https://paste.ubuntu.com/openid/login/").run {
+            pasteCookie = getCookie()
+            Jsoup.parse(readText()).select("form input[name]").forEach {
+                form[it.attr("name")] = it.attr("value")
+            }
+        }
         Request.getStr("https://paste.ubuntu.com/openid/login/").run {
-            Jsoup.parse(this).select("form input").forEach {
+            Jsoup.parse(this).select("form input[name]").forEach {
                 form[it.attr("name")] = it.attr("value")
             }
         }
@@ -95,22 +103,22 @@ object BasicUtil {
         var response = Request.submitForm(
             url, form, headers = mapOf("Referer" to "https://paste.ubuntu.com/")
         )
-        var cookie = response.getCookie()
+        var loginCookie = response.getCookie()
         var location = response.headers["location"]
         // 第二次请求+decide
         url = "https://login.ubuntu.com$location"
-        response = Request.get(url, headers = mapOf("Cookie" to cookie, "Referer" to "https://paste.ubuntu.com/"))
+        response = Request.get(url, headers = mapOf("Cookie" to loginCookie, "Referer" to "https://paste.ubuntu.com/"))
         location = response.headers["location"]
         // 第三次请求cookie?next
         url = "https://login.ubuntu.com$location"
-        cookie += "C=1; "
-        response = Request.get(url, headers = mapOf("Cookie" to cookie, "Referer" to "https://paste.ubuntu.com/"))
+        loginCookie += "C=1; "
+        response = Request.get(url, headers = mapOf("Cookie" to loginCookie, "Referer" to "https://paste.ubuntu.com/"))
         // 第四次请求+decide
         location = response.headers["location"]
         url = "https://login.ubuntu.com$location"
         val csrfToken: String
-        response = Request.get(url, headers = mapOf("Cookie" to cookie, "Referer" to "https://paste.ubuntu.com/"))
-        cookie += response.getCookie().also {
+        response = Request.get(url, headers = mapOf("Cookie" to loginCookie, "Referer" to "https://paste.ubuntu.com/"))
+        loginCookie += response.getCookie().also {
             csrfToken = it.substringBefore(";").substringAfter("=")
         }
         // 第五次请求+login
@@ -122,28 +130,28 @@ object BasicUtil {
                 "password" to password,
                 "continue" to "",
                 "openid.usernamesecret" to ""
-            ), headers = mapOf("Cookie" to cookie, "Referer" to url)
+            ), headers = mapOf("Cookie" to loginCookie, "Referer" to url)
         )
-        cookie = response.getCookie() + "C=1"
+        loginCookie = response.getCookie() + "C=1"
         location = response.headers["location"]
         // 第六次请求
         response =
-            Request.get("https://login.ubuntu.com$location", headers = mapOf("Cookie" to cookie, "Referer" to url))
+            Request.get("https://login.ubuntu.com$location", headers = mapOf("Cookie" to loginCookie, "Referer" to url))
         // 第七次请求
         location = response.headers["location"]
         response =
-            Request.get("https://login.ubuntu.com$location", headers = mapOf("Cookie" to cookie, "Referer" to url))
+            Request.get("https://login.ubuntu.com$location", headers = mapOf("Cookie" to loginCookie, "Referer" to url))
         // 第八次请求
         val doc = Jsoup.parse(response.readText())
         val action = doc.select("form").attr("action")
         form.clear()
-        doc.select("form input").forEach {
+        doc.select("form input[name]").forEach {
             form[it.attr("name")] = it.attr("value")
         }
         response = Request.submitForm(
             action,
             form,
-            headers = mapOf("Cookie" to cookie, "Referer" to "https://login.ubuntu.com/")
+            headers = mapOf("Cookie" to pasteCookie, "Referer" to "https://login.ubuntu.com/")
         )
         return response.getCookie()
     }
