@@ -53,7 +53,7 @@ object BasicUtil {
     ): R? = Main.scheduler.withTimeOut(consumer, delayMs, notCompletedAction)
 
     suspend fun debug(message: String, cookie: String=""): String {
-        // Main.logger.debug(message)
+        Main.logger.debug(message)
         val response = Request.submitForm(
             "https://paste.ubuntu.com/",
             mapOf(

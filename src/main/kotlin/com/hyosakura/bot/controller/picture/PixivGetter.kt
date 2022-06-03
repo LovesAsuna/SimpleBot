@@ -24,7 +24,7 @@ object PixivGetter : CompositeCommand(
     suspend fun CommandSender.work(ID: Int) {
         val root = BasicUtil.withTimeOut({
             Request.getJson("https://api.obfs.dev/api/pixiv/illust?id=$ID")
-        }, 5000)
+        }, 15 * 1000)
         if (root == null) {
             sendMessage("Error: 获取图像信息超时")
             return
@@ -75,7 +75,7 @@ object PixivGetter : CompositeCommand(
                 }, 60000) {
                     +"\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n"
                 }?.let {
-                    + it
+                    +it
                 }
             } else {
                 +"该作品共有${count}张图片${if (count > 3) ",预览前3张" else ""}"
