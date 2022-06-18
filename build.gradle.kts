@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.7.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.6.10"
 }
@@ -14,7 +14,7 @@ repositories {
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
 val kotlinVersion = "1.6.10"
-val miraiVersion = "2.11.0"
+val miraiVersion = "2.11.1"
 
 // mirai
 dependencies {
@@ -26,7 +26,7 @@ dependencies {
 
 // kotlin
 dependencies {
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
@@ -44,7 +44,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.38.2")
     implementation("org.jetbrains.exposed:exposed-java-time:0.38.2")
     implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("com.charleskorn.kaml:kaml:0.44.0")
+    implementation("com.charleskorn.kaml:kaml:0.45.0")
     implementation("com.github.oshi:oshi-core:6.1.6")
     implementation("net.java.dev.jna:jna:5.11.0")
     implementation("net.java.dev.jna:jna-platform:5.11.0")

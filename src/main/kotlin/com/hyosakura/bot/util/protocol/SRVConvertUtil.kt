@@ -4,7 +4,7 @@ object SRVConvertUtil {
     private val runtime = Runtime.getRuntime()
 
     fun convert(host: String): String? {
-        val process = runtime.exec("nslookup -qt=SRV _minecraft._tcp.$host")
+        val process = runtime.exec(arrayOf("nslookup", "-qt=SRV", "_minecraft._tcp.$host"))
         val reader = process.inputStream.bufferedReader()
         repeat(6) {
             reader.readLine()
