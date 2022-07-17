@@ -58,7 +58,7 @@ tasks.compileJava {
 
 tasks.compileKotlin {
     kotlinOptions.jvmTarget = "11"
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }
 
 tasks.test {
