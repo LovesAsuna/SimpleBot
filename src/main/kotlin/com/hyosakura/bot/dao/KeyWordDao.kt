@@ -23,7 +23,7 @@ class KeyWordDao(override val database: Database) : DefaultDao {
         val maxId = KeyWords.slice(KeyWords.id).selectAll().maxOf {
             it[KeyWords.id]
         }.value
-        return KeyWord.new(maxId) {
+        return KeyWord.new(maxId + 1) {
             this.groupId = groupID
             this.wordRegex = wordRegex
             this.reply = reply
