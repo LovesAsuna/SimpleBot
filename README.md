@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai-Bot?include_prereleases)](https://github.com/LovesAsuna/Mirai-Bot/releases)
 
 ```
-交流群: 69612912
+交流群: 514526362
 ```
 
 ## 🎉 它能干什么?
