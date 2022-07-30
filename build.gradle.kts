@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.6.10"
 }
@@ -13,7 +13,7 @@ repositories {
 }
 
 val workDir = "E:\\work\\Mirai-Console\\plugins"
-val kotlinVersion = "1.7.0"
+val kotlinVersion = "1.7.10"
 val miraiVersion = "2.12.0"
 
 // mirai
