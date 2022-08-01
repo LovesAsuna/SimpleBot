@@ -1,2 +1,2 @@
-rootProject.name = "Mirai-Bot"
+rootProject.name = "SimpleBot"
 
