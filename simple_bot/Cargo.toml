@@ -1,0 +1,21 @@
+[package]
+name = "simple_bot"
+version = "0.1.0"
+edition = "2021"
+authors = ["LovesAsuna"]
+description = "一个自用QQ机器人"
+repository = "https://github.com/LovesAsuna/SimpleBot"
+keywords = ["QQ", "Bot", "Rust"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+proc_qq = "0.1.15"
+tracing-subscriber = "0.3.15"
+serde = "1.0.144"
+serde_yaml = "0.9.11"
+serde_json = "1.0.85"
+anyhow = "1.0.63"
+regex = "1.6.0"
+lazy_static = "1.4.0"
+reqwest = "0.11.11"
