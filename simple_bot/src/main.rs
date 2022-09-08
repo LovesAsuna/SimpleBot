@@ -1,11 +1,14 @@
-mod handler;
-mod config;
-
 pub use proc_qq::*;
 use proc_qq::re_exports::*;
 use tracing::*;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
+
+use handler::message_handler;
+
+mod handler;
+mod config;
+mod plugin;
 
 #[tokio::main]
 async fn main() {
@@ -23,7 +26,7 @@ async fn main() {
         .authentication(Authentication::UinPassword(config.account, config.password))
         .version(parse_protocol(config.protocol))
         .show_slider_pop_menu_if_possible()
-        .modules(register_module())
+        .modules(vec![module!("simple_bot", "handler", message_handler)])
         .show_rq(Some(ShowQR::OpenBySystem))
         .build()
         .await
@@ -55,9 +58,4 @@ fn init_logger() {
                 .with_target("simple_bot", Level::DEBUG)
         )
         .init();
-}
-
-fn register_module() -> Vec<Module> {
-    let mut modules = Vec::new();
-    modules
 }
