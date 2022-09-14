@@ -1,4 +1,4 @@
-use crate::plugin::plugin::RawPlugin;
+use crate::plugin::plugin::{Plugin, RawPlugin};
 use proc_qq::*;
 use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
@@ -14,6 +14,16 @@ impl BilibiliVideo {
             av_pattern: regex::Regex::new("[aA][vV]\\d*").unwrap(),
             bv_pattern: regex::Regex::new("BV(\\d|[a-z]|[A-Z]){10}").unwrap(),
         }
+    }
+}
+
+impl Plugin for BilibiliVideo {
+    fn get_name(&self) -> &str {
+        "B站视频解析"
+    }
+
+    fn get_desc(&self) -> &str {
+        "对消息中的av号和bv号解析，返回视频的详细信息"
     }
 }
 
