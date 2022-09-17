@@ -9,6 +9,7 @@ use handler::message_handler;
 mod handler;
 mod config;
 mod plugin;
+mod future;
 
 #[tokio::main]
 async fn main() {
