@@ -1,9 +1,8 @@
 use std::ops::Deref;
 
+use lazy_static::lazy_static;
 use proc_qq::{MessageChainPointTrait, MessageContentTrait, MessageEvent};
 use proc_qq::re_exports::async_trait::async_trait;
-use proc_qq::re_exports::ricq_core::msg::elem::RQElem;
-use simple_bot_macros::Action;
 
 pub trait Plugin {
     fn get_name(&self) -> &str;
@@ -11,52 +10,66 @@ pub trait Plugin {
 }
 
 pub trait ActionSelector {
-    fn select(&self, event: &MessageEvent) -> bool;
+    fn select(&self, event: &MessageEvent) -> Option<Vec<String>>;
 }
 
-type ActionFunc = dyn FnOnce(&MessageEvent) -> anyhow::Result<bool>;
+pub struct ActionFunc(pub Box<dyn Fn(&MessageEvent, Vec<String>) -> anyhow::Result<bool>>);
+
+unsafe impl Sync for ActionFunc {}
+
+unsafe impl Send for ActionFunc {}
 
 pub struct Action {
-    pub act: Box<ActionFunc>,
+    pub act: ActionFunc,
     pub pattern: String,
 }
 
-const ARG_REGEX: regex::Regex = regex::Regex::new(r"{\w+}").unwrap();
+lazy_static! {
+    static ref ARG_REGEX: regex::Regex = regex::Regex::new(r"\{\w+\}").unwrap();
+}
 
 impl ActionSelector for Action {
-    fn select(&self, event: &MessageEvent) -> bool {
+    fn select(&self, event: &MessageEvent) -> Option<Vec<String>> {
         let message_chain = event.message_chain();
-        let elements = message_chain.clone().into_iter();
-        // the text contains only plain text
-        let mut plain_text = String::new();
-        for element in elements {
-            if let RQElem::Text(text) = element {
-                plain_text.push_str(&text.content);
+        let message_content = message_chain.message_content();
+        let pattern = ARG_REGEX.replace_all(&self.pattern, r"(.*)");
+        let regex = regex::Regex::new(pattern.deref()).ok()?;
+        let captures = regex.captures(&message_content);
+        captures.map(
+            |captures| {
+                captures
+                    .iter()
+                    .into_iter()
+                    .skip(1)
+                    .filter(
+                        |o| {
+                            o.is_some()
+                        }
+                    )
+                    .map(
+                        |cap| {
+                            cap.unwrap().as_str().to_string()
+                        }
+                    )
+                    .collect::<Vec<String>>()
             }
-        }
-        let pattern = ARG_REGEX.replace_all(&self.pattern, r"(\w*)");
-        let regex = regex::Regex::new(pattern.deref());
-        if let Ok(regex)  = regex {
-            regex.is_match(&plain_text)
-        } else {
-            false
-        }
+        )
     }
 }
 
 #[async_trait]
-pub trait CommandPlugin: RawPlugin {
+pub trait CommandPlugin: Plugin {
     async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
-        let content = event.message_content();
         for action in self.get_actions() {
-            if action.select(event) {
-                action.act(event);
+            let select_res = action.select(event);
+            if let Some(slot_content) = select_res {
+                let _ = (action.act.0)(event, slot_content);
             }
         }
         Ok(true)
-
     }
-    fn get_actions(&self) -> Vec<Action>;
+
+    fn get_actions(&self) -> &Vec<Action>;
 }
 
 #[async_trait]
