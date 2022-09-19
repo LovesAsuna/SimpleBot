@@ -1,2 +1,2 @@
 [workspace]
-members = ["simple_bot"]
+members = ["simple_bot", "simple_bot_macros"]
