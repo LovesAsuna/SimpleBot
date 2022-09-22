@@ -2,13 +2,13 @@ use std::sync::Arc;
 
 use lazy_static::lazy_static;
 
-pub use plugin::{CommandPlugin, RawPlugin};
+pub use plugin::{CommandPlugin, RawPlugin, Action, ActionFunc};
 
 mod plugin;
 mod internal;
 
 lazy_static! {
-    static ref COMMAND_PLUGINS: Arc<Vec<Box<dyn CommandPlugin + Send + Sync>>> = Arc::new(
+    pub static ref COMMAND_PLUGINS: Arc<Vec<Box<dyn CommandPlugin + Send + Sync>>> = Arc::new(
         internal::register_command_plugins()
     );
 }
