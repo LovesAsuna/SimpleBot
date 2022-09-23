@@ -1,6 +1,6 @@
 ## Bot
 
-一个基于 [RICQ](https://github.com/mamoe/mirai-console) 开发的机器人插件(目前在用Rust重写)
+一个基于 [RICQ](https://github.com/lz1998/ricq) 开发的机器人插件(目前在用Rust重写)
 
 [![Java CI with Gradle](https://github.com/LovesAsuna/SimpleBot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/SimpleBot/actions)
 [![LICENSE](https://img.shields.io/github/license/LovesAsuna/SimpleBot.svg?style=popout)](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
