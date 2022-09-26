@@ -21,20 +21,30 @@ pub trait WaitForMessage {
 #[async_trait]
 impl WaitForMessage for MessageEvent {
     async fn wait_for_message(&self, timeout: Duration) -> Option<MessageChain> {
-        tokio::time::timeout(timeout, async {
-            let uid = self.from_uin();
-            let (tx, rx) = channel::<MessageChain>();
-            {
-                let mut cache = SESSION_CACHE.lock().await;
-                if cache.contains_key(&uid) {
-                    let mut builder = MessageChainBuilder::new();
-                    builder.push(format!("{} are sill waiting.", uid).parse_text());
-                    self.send_message_to_source(builder.build()).await.unwrap();
-                    return None;
-                }
-                cache.insert(uid, tx);
+        let (tx, rx) = channel::<MessageChain>();
+        let uid = self.from_uin();
+        {
+            let mut cache = SESSION_CACHE.lock().await;
+            if cache.contains_key(&uid) {
+                let mut builder = MessageChainBuilder::new();
+                builder.push(format!("{} are sill waiting.", uid).parse_text());
+                self.send_message_to_source(builder.build()).await.unwrap();
+                return None;
             }
-            rx.await.ok()
-        }).await.unwrap_or(None)
+            cache.insert(uid, tx);
+        }
+        let res = tokio::time::timeout(timeout, rx).await;
+        {
+            let mut cache = SESSION_CACHE.lock().await;
+            cache.remove(&uid);
+        }
+        match res {
+            Err(_) => {
+                None
+            },
+            Ok(res) => {
+                res.ok()
+            }
+        }
     }
 }

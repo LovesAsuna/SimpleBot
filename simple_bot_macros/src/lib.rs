@@ -24,6 +24,7 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
                 let param_name = param_pat.to_token_stream().to_string();
                 let param_type = match param_ty {
                     syn::Type::Path(tp) => {
+                        // normal paran type
                         let last_segment = tp.path.segments.last().unwrap();
                         let mut param_type = last_segment.ident.to_string();
                         if param_type != "Option" {
@@ -38,6 +39,11 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
                             }
                         };
                         param_type
+                    },
+                    syn::Type::Reference(_) => {
+                        // there is only one reference, it is a reference of MessageEvent
+                        // use an empty string to mark special handling
+                        String::default()
                     }
                     _ => {
                         unimplemented!("not supported type")
@@ -57,28 +63,37 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
             }
             "String" => {
                 invoke_builder.push_str(&format!(r#"text_map.remove(&"{}".to_string()),"#, param_name));
-            }
+            },
+            "" => {
+                invoke_builder.push_str( &format!("{},", param_name));
+            },
             _ => {
                 invoke_builder.push_str(&format!(r#"text_map.remove(&"{}".to_string()).and_then(|v| v.parse().ok()),"#, param_name));
             }
         }
     }
 
-    let invoke: syn::Stmt = syn::parse_str(
-        &format!(r"Self::{}({});", function_name, invoke_builder)
+    let invoke: syn::Expr = syn::parse_str(
+        &format!("{}({}).await", function_name, invoke_builder)
     ).unwrap();
     let pattern = meta.pattern.to_token_stream();
     let args_json = serde_json::to_string(&meta.args).unwrap();
-    let param_name_and_type_json = serde_json::to_string(&param_infos).unwrap();
-    let closure = quote! {
-        // closure will be invoked when action is selected
-        Box::new(
-            |event: &proc_qq::MessageEvent, slot_content: Vec<String>| -> anyhow::Result<bool> {
+    let param_infos_json = serde_json::to_string(&param_infos).unwrap();
+    let dispatcher_function_name = Ident::new(&(function_name.to_string() + "_dispatcher"), function_name.span());
+    let action_name = Ident::new(&(function_name.to_string() + "_action"), function_name.span());
+    let action_impl = quote! {
+        struct #action_name {
+            pattern: String
+        }
+
+        #[proc_qq::re_exports::async_trait::async_trait]
+        impl crate::plugin::Action for #action_name {
+            async fn do_action(&self, event: &proc_qq::MessageEvent, slot_content: Vec<String>) -> anyhow::Result<bool> {
                 let args_json = #args_json;
-                let param_name_and_type_json = #param_name_and_type_json;
+                let param_infos_json = #param_infos_json;
                 let args = serde_json::from_str::<std::collections::HashMap<usize, String>>(&args_json).expect("args deserialize error");
-                let param_name_and_type = serde_json::from_str::<Vec<(String, String)>>(&param_name_and_type_json).expect("param_name_and_type deserialize error");
-                if param_name_and_type.len() != slot_content.len() {
+                let param_infos = serde_json::from_str::<Vec<(String, String)>>(&param_infos_json).expect("param_name_and_type deserialize error");
+                if param_infos.len() - 1 != slot_content.len() {
                     return Ok(false);
                 }
                 let message_chain = <proc_qq::MessageEvent as proc_qq::MessageChainPointTrait>::message_chain(event);
@@ -96,20 +111,34 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
                 let mut i = 0;
                 // point to message_chain elements
                 let mut j = 0;
-                while i < slot_content.len() {
+                // offset due to MessageEvent
+                let mut offset = 0;
+                while i < param_infos.len() {
+                    // found a MessageEvent
+                    if param_infos[i].1 == "" {
+                        i += 1;
+                        offset += 1;
+                        continue;
+                    }
                     match elements[j] {
                         proc_qq::re_exports::ricq_core::msg::elem::RQElem::Text(_) => {
-                            while i < slot_content.len() && slot_content[i] != "" {
-                                let need_name = &param_name_and_type[i].0;
-                                let need_type = &param_name_and_type[i].1;
-                                text_map.insert(need_name.clone(), slot_content[i].clone());
+                            while i < param_infos.len() && slot_content[i - offset] != "" {
+                                // found a MessageEvent
+                                if param_infos[i].1 == "" {
+                                    i += 1;
+                                    offset += 1;
+                                    continue;
+                                }
+                                let need_name = &param_infos[i].0;
+                                let need_type = &param_infos[i].1;
+                                text_map.insert(need_name.clone(), slot_content[i - offset].clone());
                                 i += 1;
                             }
                             j += 1;
                         },
                         _ => {
-                            let need_name = &param_name_and_type[i].0;
-                            let need_type = &param_name_and_type[i].1;
+                            let need_name = &param_infos[i].0;
+                            let need_type = &param_infos[i].1;
                             element_map.insert(need_name.clone(), elements[i].clone());
                             i += 1;
                             j += 1;
@@ -117,22 +146,39 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
                     }
                 }
                 #invoke
-                return Ok(true);
             }
-        )
+
+            fn get_pattern(&self) -> String {
+                self.pattern.clone()
+            }
+        }
     };
-    let dispatcher_function_name = Ident::new(&(function_name.to_string() + "_dispatcher"), function_name.span());
     let dispatcher_function = quote! {
-        fn #dispatcher_function_name() -> crate::plugin::Action {
-            crate::plugin::Action {
-                act: crate::plugin::ActionFunc(#closure),
-                pattern: #pattern.to_string()
-            }
+        fn #dispatcher_function_name() -> Box<dyn crate::plugin::Action> {
+            Box::new(
+                #action_name {
+                    pattern: #pattern.to_string()
+                }
+            )
         }
     };
     let gen_code = quote! {
         #function
+        #action_impl
         #dispatcher_function
     };
+    // File::create("parse.txt").unwrap().write_all(gen_code.to_string().as_bytes()).unwrap();
     TokenStream::from(gen_code)
+}
+
+#[proc_macro]
+pub fn make_action(input: TokenStream) -> TokenStream {
+    let origin_function_name = parse_macro_input!(input as Ident);
+    let dispatcher_function_name = origin_function_name.to_string() + "_dispatcher";
+    let ident = Ident::new(&dispatcher_function_name, origin_function_name.span());
+    TokenStream::from(
+        quote!{
+            #ident()
+        }
+    )
 }

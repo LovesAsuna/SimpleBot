@@ -1,4 +1,4 @@
-use crate::plugin::plugin::{Plugin, RawPlugin};
+use crate::plugin::{Plugin, RawPlugin};
 use proc_qq::*;
 use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;

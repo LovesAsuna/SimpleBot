@@ -1,31 +1,29 @@
+use lazy_static::lazy_static;
 pub use proc_qq::*;
 use proc_qq::re_exports::*;
 use tracing::*;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use handler::message_handler;
+
+use crate::config::Config;
 
 mod handler;
 mod config;
 mod plugin;
 mod future;
 
+lazy_static! {
+    static ref CONFIG: Config = config::read_config().unwrap();
+}
+
 #[tokio::main]
 async fn main() {
     init_logger();
-    let res = config::read_config();
-    let config = match res {
-        Ok(config) => config,
-        Err(e) => {
-            warn!("{:?}", e);
-            return;
-        }
-    };
     let builder = ClientBuilder::new();
     let client = builder
-        .authentication(Authentication::UinPassword(config.account, config.password))
-        .version(parse_protocol(config.protocol))
+        .authentication(Authentication::UinPassword(CONFIG.account.account, CONFIG.account.password.clone()))
+        .version(parse_protocol(CONFIG.account.protocol.clone()))
         .show_slider_pop_menu_if_possible()
         .modules(vec![module!("simple_bot", "handler", message_handler)])
         .show_rq(Some(ShowQR::OpenBySystem))
