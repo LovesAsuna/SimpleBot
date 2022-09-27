@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
+use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::elem::RQElem;
 use proc_qq::re_exports::ricq::msg::{MessageChain};
@@ -69,10 +69,14 @@ async fn search(event: &MessageEvent, source_type: Option<usize>) -> anyhow::Res
         match element {
             RQElem::GroupImage(image) => {
                 let url = image.url();
-                event.send_message_to_source("搜索中，请稍后...".parse_message_chain()).await.unwrap();
+                event.send_message_to_source(format!("{}搜索中，请稍后...", search_source.get_name()).parse_message_chain()).await.unwrap();
                 let res = search_source.search(url).await;
                 match res {
                     Ok(res) => {
+                        if res.len() == 0 {
+                            event.send_message_to_source("未搜索到结果".parse_message_chain()).await.unwrap();
+                            return Ok(true);
+                        }
                         for result in res {
                             let thumbnail = result.get_thumbnail();
                             let u8 = reqwest::get(thumbnail).await.ok().unwrap().bytes().await.unwrap();
@@ -85,10 +89,12 @@ async fn search(event: &MessageEvent, source_type: Option<usize>) -> anyhow::Res
                             }
                             message_chain.push(proc_qq::re_exports::ricq_core::msg::elem::Text::new(builder));
                             event.send_message_to_source(message_chain).await.unwrap();
+                            return Ok(true);
                         }
                     },
                     Err(err) => {
                         event.send_message_to_source(err.to_string().parse_message_chain()).await.unwrap();
+                        return Ok(false);
                     }
                 }
             },
@@ -96,7 +102,7 @@ async fn search(event: &MessageEvent, source_type: Option<usize>) -> anyhow::Res
         }
     }
     event.send_message_to_source("未接收到图片消息，放弃搜索！".parse_message_chain()).await.unwrap();
-    Ok(true)
+    Ok(false)
 }
 
 fn select_source(source_type: usize) -> Option<Box<dyn SearchSource>> {

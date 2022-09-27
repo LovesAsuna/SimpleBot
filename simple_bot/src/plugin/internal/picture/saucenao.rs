@@ -14,8 +14,8 @@ impl SearchSource for SauceNao {
         "SauceNao"
     }
 
-    async fn search(&self, url: String) -> anyhow::Result<Vec<Box<dyn PictureResult + Send>>> {
-        let mut result: Vec<Box<dyn PictureResult + Send>> = Vec::new();
+    async fn search(&self, url: String) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>> {
+        let mut result: Vec<Box<dyn PictureResult + Send + Sync>> = Vec::new();
         let resp = reqwest::get(API.clone() + &url).await?;
         let d = &resp.text().await?;
         let value = serde_json::from_str::<serde_json::Value>(d)?;
