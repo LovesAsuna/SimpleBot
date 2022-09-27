@@ -80,7 +80,7 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
     let args_json = serde_json::to_string(&meta.args).unwrap();
     let param_infos_json = serde_json::to_string(&param_infos).unwrap();
     let dispatcher_function_name = Ident::new(&(function_name.to_string() + "_dispatcher"), function_name.span());
-    let action_name = Ident::new(&(function_name.to_string() + "_action"), function_name.span());
+    let action_name = Ident::new(&format!("{}Action", function_name.to_string()[0..1].to_uppercase() + &function_name.to_string()[1..1]), function_name.span());
     let action_impl = quote! {
         struct #action_name {
             pattern: String

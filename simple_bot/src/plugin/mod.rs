@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -90,7 +89,7 @@ lazy_static! {
 }
 
 #[async_trait]
-pub trait CommandPlugin: Plugin {
+pub trait CommandPlugin: Plugin + Send + Sync {
     async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         for action in self.get_actions() {
             let select_res = action.select(event);
