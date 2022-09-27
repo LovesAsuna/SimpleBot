@@ -1,11 +1,13 @@
 use crate::plugin::{CommandPlugin, RawPlugin};
 
-pub mod video;
-pub mod picture;
+mod video;
+mod picture;
+mod information;
 
 pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
     vec![
-        Box::new(picture::Search::new())
+        Box::new(picture::Search::new()),
+        Box::new(information::Baidu::new())
     ]
 }
 
