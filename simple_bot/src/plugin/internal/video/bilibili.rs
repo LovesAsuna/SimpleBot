@@ -1,3 +1,5 @@
+use std::future::Future;
+use std::pin::Pin;
 use crate::plugin::{Plugin, RawPlugin};
 use proc_qq::*;
 use proc_qq::re_exports::async_trait::async_trait;
@@ -6,13 +8,20 @@ use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
 pub struct BilibiliVideo {
     av_pattern: regex::Regex,
     bv_pattern: regex::Regex,
+    short_pattern: regex::Regex,
+    client: reqwest::Client,
 }
 
 impl BilibiliVideo {
     pub fn new() -> Self {
+        let mut builder = reqwest::ClientBuilder::new();
+        builder = builder.redirect(reqwest::redirect::Policy::none());
+        let client = builder.build().unwrap();
         BilibiliVideo {
             av_pattern: regex::Regex::new("[aA][vV]\\d*").unwrap(),
             bv_pattern: regex::Regex::new("BV(\\d|[a-z]|[A-Z]){10}").unwrap(),
+            short_pattern: regex::Regex::new("b23.tv/(\\w+)").unwrap(),
+            client,
         }
     }
 }
@@ -31,26 +40,12 @@ impl Plugin for BilibiliVideo {
 impl RawPlugin for BilibiliVideo {
     async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         let text = event.message_content();
-        let mut av = "";
-        let mut bv = "";
-        let url = if text.contains("av") {
-            av = if let Some(capture) = self.av_pattern.captures(&text) {
-                capture.get(0).unwrap().as_str()
-            } else {
-                return Ok(false);
-            };
-            format!("https://api.bilibili.com/x/web-interface/view?aid={}", av)
-        } else if text.contains("BV") {
-            bv = if let Some(capture) = self.bv_pattern.captures(&text) {
-                capture.get(0).unwrap().as_str()
-            } else {
-                return Ok(false);
-            };
-            format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv)
-        } else {
+        let tuple = self.parse_api(text).await;
+        if tuple.is_none() {
             return Ok(false);
-        };
-        let response = reqwest::get(url).await?;
+        }
+        let tuple = tuple.unwrap();
+        let response = reqwest::get(tuple.0).await?;
         let line = response.text().await.unwrap();
         if !line.starts_with("{\"code\":0") {
             return Ok(false);
@@ -98,7 +93,7 @@ impl RawPlugin for BilibiliVideo {
         builder.push_str("\n");
         builder.push_str(desc);
         let mut reply_message = MessageChainBuilder::new().build();
-        reply_message = reply_message.append(format!("链接: https://www.bilibili.com/video/{}", if av.is_empty() { bv } else { av }).parse_text());
+        reply_message = reply_message.append(format!("链接: https://www.bilibili.com/video/{}", tuple.1).parse_text());
         let bytes = reqwest::get(pic).await?.error_for_status()?.bytes().await?.to_vec();
         let upload_res = event.upload_image_to_source(bytes).await;
         reply_message = match upload_res {
@@ -115,5 +110,49 @@ impl RawPlugin for BilibiliVideo {
         } else {
             Ok(false)
         }
+    }
+}
+
+impl BilibiliVideo {
+    fn parse_api(&self, text: String) -> Pin<Box<dyn Future<Output=Option<(String, String)>> + Send + '_>> {
+        Box::pin(async move {
+            if text.contains("av") {
+                if let Some(capture) = self.av_pattern.captures(&text) {
+                    let av = capture.get(0).unwrap().as_str();
+                    return Some(
+                        (format!("https://api.bilibili.com/x/web-interface/view?aid={}", av), format!("av{}", av))
+                    );
+                }
+            }
+            if text.contains("BV") {
+                if let Some(capture) = self.bv_pattern.captures(&text) {
+                    let bv = capture.get(0).unwrap().as_str();
+                    return Some(
+                        (format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv), format!("BV{}", bv))
+                    );
+                }
+            }
+            if text.contains("b23.tv") {
+                if let Some(capture) = self.short_pattern.captures(&text) {
+                    let req_url = format!("https://b23.tv/{}", capture.get(1).unwrap().as_str());
+                    let result = self.client.get(req_url).send().await;
+                    if result.is_err() {
+                        return None;
+                    }
+                    let resp = result.unwrap();
+                    let content = resp
+                        .headers()
+                        .get("location")
+                        .map(
+                            |s| String::from_utf8_lossy(s.as_bytes()).to_string()
+                        );
+                    return match content {
+                        Some(content) => self.parse_api(content).await,
+                        None => None
+                    };
+                }
+            }
+            None
+        })
     }
 }
