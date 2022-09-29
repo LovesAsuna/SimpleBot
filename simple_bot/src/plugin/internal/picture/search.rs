@@ -10,6 +10,7 @@ use simple_bot_macros::make_action;
 
 use crate::future::WaitForMessage;
 use crate::plugin::{Action, CommandPlugin};
+use crate::plugin::internal::picture::ascii2d::Ascii2d;
 use crate::plugin::internal::picture::saucenao::SauceNao;
 use crate::plugin::internal::picture::search_source::SearchSource;
 use crate::plugin::Plugin;
@@ -109,7 +110,10 @@ fn select_source(source_type: usize) -> Option<Box<dyn SearchSource>> {
     match source_type {
         1 => {
             Some(Box::new(SauceNao))
-        }
+        },
+        2 => {
+            Some(Box::new(Ascii2d))
+        },
         _ => None
     }
 }
