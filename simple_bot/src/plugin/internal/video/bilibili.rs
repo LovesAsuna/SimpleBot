@@ -120,7 +120,7 @@ impl BilibiliVideo {
                 if let Some(capture) = self.av_pattern.captures(&text) {
                     let av = capture.get(0).unwrap().as_str();
                     return Some(
-                        (format!("https://api.bilibili.com/x/web-interface/view?aid={}", av), format!("av{}", av))
+                        (format!("https://api.bilibili.com/x/web-interface/view?aid={}", av), av.to_string())
                     );
                 }
             }
@@ -128,7 +128,7 @@ impl BilibiliVideo {
                 if let Some(capture) = self.bv_pattern.captures(&text) {
                     let bv = capture.get(0).unwrap().as_str();
                     return Some(
-                        (format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv), format!("BV{}", bv))
+                        (format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv), bv.to_string())
                     );
                 }
             }
