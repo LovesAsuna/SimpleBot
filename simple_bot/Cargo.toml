@@ -19,5 +19,5 @@ anyhow = "1.0.63"
 regex = "1.6.0"
 lazy_static = "1.4.0"
 reqwest = "0.11.11"
-tl = "0.7.7"
+visdom = "0.5.5"
 simple_bot_macros = { path = "../simple_bot_macros" }

@@ -55,21 +55,7 @@ async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result
 }
 
 fn parse_content(content: &String) -> Option<String> {
-    let dom = tl::parse(content, tl::ParserOptions::default()).unwrap();
-    dom.query_selector("meta[name=description]")
-        .expect("failed to parse query selector")
-        .next()
-        .expect("failed to find meta tag")
-        .get(dom.parser())
-        .expect("failed to resolve node")
-        .as_tag()
-        .expect("failed to cast Node to HTMLTag")
-        .attributes()
-        .get("content")
-        .flatten()
-        .map(
-            |s| {
-                String::from_utf8_lossy(s.as_bytes()).to_string()
-            }
-        )
+    visdom::Vis::load(content).ok().and_then(
+        |dom|  dom.find("meta[name=description]").attr("content").map(|attr| attr.to_string())
+    )
 }
