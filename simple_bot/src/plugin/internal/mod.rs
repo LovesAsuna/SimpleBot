@@ -7,6 +7,7 @@ mod information;
 pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
     vec![
         Box::new(picture::Search::new()),
+        Box::new(picture::PixivProxy::new()),
         Box::new(information::Baidu::new())
     ]
 }
