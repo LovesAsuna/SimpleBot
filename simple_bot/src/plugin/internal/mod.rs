@@ -3,6 +3,7 @@ use crate::plugin::{CommandPlugin, RawPlugin};
 mod video;
 mod picture;
 mod information;
+mod chat;
 
 pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
     vec![
@@ -14,6 +15,7 @@ pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
 
 pub fn register_raw_plugins() -> Vec<Box<dyn RawPlugin + Send + Sync>> {
     vec![
-        Box::new(video::BilibiliVideo::new())
+        Box::new(video::BilibiliVideo::new()),
+        Box::new(chat::KeyWord::new())
     ]
 }

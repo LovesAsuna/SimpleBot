@@ -1,5 +1,5 @@
 use lazy_static::lazy_static;
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 use crate::plugin::internal::picture::search_source::{PictureResult, SearchSource};
 
 pub struct Ascii2d;

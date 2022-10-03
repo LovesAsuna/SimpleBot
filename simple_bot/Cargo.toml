@@ -12,13 +12,19 @@ keywords = ["QQ", "Bot", "Rust"]
 [dependencies]
 proc_qq = "0.1.15"
 tracing-subscriber = "0.3.15"
-serde = "1.0.144"
+serde = { version = "*", features = ["derive"] }
+tokio = { version = "*", features = ["full"] }
 serde_yaml = "0.9.11"
 serde_json = "1.0.85"
-anyhow = "1.0.63"
+async-trait = "*"
+anyhow = "*"
 regex = "1.6.0"
-lazy_static = "1.4.0"
-reqwest = "0.11.11"
+lazy_static = "*"
+reqwest = "*"
 visdom = "0.5.5"
 chrono = "0.4.22"
+rbdc-sqlite = "0.1.14"
+rbatis = "4.0.39"
+rbs = "0.1.11"
+rand = "*"
 simple_bot_macros = { path = "../simple_bot_macros" }

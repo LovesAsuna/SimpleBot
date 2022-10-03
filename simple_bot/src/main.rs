@@ -1,20 +1,28 @@
 use lazy_static::lazy_static;
 pub use proc_qq::*;
-use proc_qq::re_exports::*;
+pub use proc_qq::re_exports::*;
+use rbatis::Rbatis;
 use tracing::*;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use handler::message_handler;
 
 use crate::config::Config;
+use crate::tokio::{self, sync::Mutex};
 
 mod handler;
 mod config;
 mod plugin;
 mod future;
+pub mod model;
 
 lazy_static! {
     static ref CONFIG: Config = config::read_config().unwrap();
+    static ref RB: std::sync::Arc<Mutex<Rbatis>> = {
+        let db = Rbatis::new();
+        db.init(rbdc_sqlite::driver::SqliteDriver {}, "sqlite://sqlite.db").unwrap();
+        std::sync::Arc::new(Mutex::new(db))
+    };
 }
 
 #[tokio::main]
@@ -30,7 +38,7 @@ async fn main() {
         .build()
         .await
         .unwrap();
-    client.start().await.unwrap().expect("启动时出现错误");
+    //client.start().await.unwrap().expect("启动时出现错误");
 }
 
 fn parse_protocol(protocol: String) -> &'static ricq::version::Version {
