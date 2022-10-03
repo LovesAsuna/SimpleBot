@@ -167,7 +167,6 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
         #action_impl
         #dispatcher_function
     };
-    // File::create("parse.txt").unwrap().write_all(gen_code.to_string().as_bytes()).unwrap();
     TokenStream::from(gen_code)
 }
 

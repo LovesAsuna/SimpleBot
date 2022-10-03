@@ -67,7 +67,7 @@ async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
         if text.is_empty() {
             text = err[&user_message].as_str().unwrap_or("");
         }
-        event.send_message_to_source(format!("Error: {text}").parse_message_chain()).await.unwrap();
+        event.send_message_to_source(format!("Error: {}", text).parse_message_chain()).await.unwrap();
         return Ok(false);
     }
     let illustration = &root["illust"];
