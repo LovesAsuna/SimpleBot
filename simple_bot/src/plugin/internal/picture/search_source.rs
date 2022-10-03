@@ -1,4 +1,4 @@
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 
 #[async_trait]
 pub trait SearchSource: Send + Sync {

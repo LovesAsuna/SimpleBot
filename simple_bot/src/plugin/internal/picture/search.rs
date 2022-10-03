@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::elem::RQElem;
 use proc_qq::re_exports::ricq::msg::{MessageChain};
 

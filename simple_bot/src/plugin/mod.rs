@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use lazy_static::lazy_static;
 use proc_qq::{MessageChainPointTrait, MessageEvent};
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 
 mod internal;
 

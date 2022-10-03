@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use async_trait::async_trait;
+use proc_qq::re_exports::async_trait::async_trait;
 use lazy_static::lazy_static;
 use proc_qq::{MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
-use proc_qq::re_exports::*;
 use proc_qq::re_exports::ricq::msg::{MessageChain, MessageChainBuilder};
 use tokio::sync::Mutex;
 use tokio::sync::oneshot::*;

@@ -5,10 +5,9 @@ use std::time::Duration;
 use chrono::prelude::*;
 use lazy_static::lazy_static;
 use proc_qq::{MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait, MessageSendToSourceTrait, TextEleParseTrait};
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::MessageChain;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
-use proc_qq::re_exports::tokio;
 
 use simple_bot_macros::{action, make_action};
 
@@ -60,10 +59,9 @@ async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
     let text = resp.unwrap()?.text().await?;
     let root: serde_json::Value = serde_json::from_str(&text)?;
     if let serde_json::value::Value::Object(err) = &root["error"] {
-        let mut text: &str = "";
         let message = String::from("message");
         let user_message = String::from("user_message");
-        text = err[&message].as_str().unwrap_or("");
+        let mut text = err[&message].as_str().unwrap_or("");
         if text.is_empty() {
             text = err[&user_message].as_str().unwrap_or("");
         }
