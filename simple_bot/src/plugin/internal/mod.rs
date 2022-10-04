@@ -9,7 +9,9 @@ pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
     vec![
         Box::new(picture::Search::new()),
         Box::new(picture::PixivProxy::new()),
-        Box::new(information::Baidu::new())
+        Box::new(information::Baidu::new()),
+        Box::new(information::GuessMeaning::new()),
+        Box::new(information::Jikipedia::new()),
     ]
 }
 
