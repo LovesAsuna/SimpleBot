@@ -1,11 +1,11 @@
 ## Bot
 
-一个基于 [Mirai-Console](https://github.com/mamoe/mirai-console) 开发的机器人插件(目前在用Rust重写)
+一个基于 [RICQ](https://github.com/lz1998/ricq) 开发的机器人插件(目前在用Rust重写)
 
-[![Java CI with Gradle](https://github.com/LovesAsuna/Mirai-Bot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/Mirai-Bot/actions)
-[![LICENSE](https://img.shields.io/github/license/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/LovesAsuna/Mirai-Bot/blob/master/LICENSE)
-[![Issues](https://img.shields.io/github/issues/LovesAsuna/Mirai-Bot.svg?style=popout)](https://github.com/SLovesAsuna/Mirai-Bot/issues)
-[![Release](https://img.shields.io/github/v/release/LovesAsuna/Mirai-Bot?include_prereleases)](https://github.com/LovesAsuna/Mirai-Bot/releases)
+[![Java CI with Gradle](https://github.com/LovesAsuna/SimpleBot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/SimpleBot/actions)
+[![LICENSE](https://img.shields.io/github/license/LovesAsuna/SimpleBot.svg?style=popout)](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/LovesAsuna/SimpleBot.svg?style=popout)](https://github.com/SLovesAsuna/SimpleBot/issues)
+[![Release](https://img.shields.io/github/v/release/LovesAsuna/SimpleBot?include_prereleases)](https://github.com/LovesAsuna/SimpleBot/releases)
 
 ```
 交流群: 514526362
@@ -35,34 +35,32 @@
 
 ## ☑ To-Do 列表
 
-详见 [项目页面](https://github.com/LovesAsuna/Mirai-Bot/projects/1)
+详见 [项目页面](https://github.com/LovesAsuna/SimpleBot/projects/1)
 
 ## 💽 如何使用
 
 ### 自编译
 
-- 注意: 请使用 JDK 11 或更高版本打包
+- 注意: 请使用 Cargo 打包
 
 1.1. Clone 或者下载这个项目.
 
 ```bash
-git clone https://github.com/LovesAsuna/Mirai-Bot.git
+git clone https://github.com/LovesAsuna/SimpleBot.git
 ```
 
 1.2. 编译
 
-本项目使用 Gradle, 因此你可以双击文件夹中的 `gradlew.bat` 以构建这个项目.
-(你可以在 `/build/libs` 下找到构建好的 jar 文件)
+cargo run
 
 ### 直接下载
 
-1. 到 [~~Jenkins~~](https://ci.hyosakura.com) 下载最新版本的 jar
-2. 将插件jar放至plugins目录
-3. 重新启动 Bot, 提示启动完成后就可以开始使用了!
+1. 到 [Release](https://github.com/LovesAsuna/SimpleBot/releases) 下载最新版本的 可执行文件
+2. 根据对应的平台启动
 
 ## 📜 协议
 
-[AGPLv3 with Mamoe Exceptions](https://github.com/mamoe/mirai/blob/master/LICENSE)
+[MIT](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
 
 ## 鸣谢
 
