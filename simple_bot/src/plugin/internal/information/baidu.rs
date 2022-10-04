@@ -1,7 +1,7 @@
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 use simple_bot_macros::{action, make_action};
 use crate::plugin::{Action, CommandPlugin, Plugin};
-use proc_qq::re_exports::async_trait::async_trait;
+use async_trait::async_trait;
 
 pub struct Baidu {
     actions: Vec<Box<dyn Action>>,
@@ -23,7 +23,7 @@ impl Plugin for Baidu {
     }
 
     fn get_desc(&self) -> &str {
-        ""
+        "百度百科"
     }
 }
 

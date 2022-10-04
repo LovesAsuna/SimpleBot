@@ -38,7 +38,7 @@ async fn main() {
         .build()
         .await
         .unwrap();
-    //client.start().await.unwrap().expect("启动时出现错误");
+    client.start().await.unwrap().expect("启动时出现错误");
 }
 
 fn parse_protocol(protocol: String) -> &'static ricq::version::Version {
