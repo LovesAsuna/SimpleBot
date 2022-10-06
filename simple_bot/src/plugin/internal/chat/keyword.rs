@@ -1,14 +1,18 @@
 use std::ops::DerefMut;
+
 use async_trait::async_trait;
 use proc_qq::{MessageChainParseTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait};
 use rand::Rng;
 use tokio::sync::OnceCell;
 
+use simple_bot_macros::{action, make_action};
+
 use crate::model::keyword::KeyWord as Model;
-use crate::plugin::{Plugin, RawPlugin};
+use crate::plugin::{Action, CommandPlugin, Plugin, RawPlugin};
 
 pub struct KeyWord {
-    keywords: OnceCell<Vec<Model>>
+    keywords: OnceCell<Vec<Model>>,
+    actions: Vec<Box<dyn Action>>,
 }
 
 impl Plugin for KeyWord {
@@ -48,10 +52,19 @@ impl RawPlugin for KeyWord {
     }
 }
 
+impl CommandPlugin for KeyWord {
+    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
+        &self.actions
+    }
+}
+
 impl KeyWord {
     pub fn new() -> Self {
         Self {
-            keywords: OnceCell::new()
+            keywords: OnceCell::new(),
+            actions: vec![
+                make_action!(add_keyword)
+            ],
         }
     }
 
@@ -61,4 +74,30 @@ impl KeyWord {
             Model::select_all(db.deref_mut()).await.expect("从数据库读取关键词失败")
         }).await
     }
+}
+
+#[action("/keyword add {chance} {keyword} {reply}")]
+async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<String>, reply: Option<String>) {
+    if chance.is_none() || keyword.is_none() || reply.is_none() {
+        event.send_message_to_source("参数不足".parse_message_chain()).await.unwrap();
+        return;
+    }
+    let event = event.as_group_message().unwrap();
+    let chance = chance.unwrap();
+    let keyword = keyword.unwrap();
+    let reply = reply.unwrap();
+    let mut db = crate::RB.lock().await;
+    let keyword = Model {
+        id: None,
+        group_id: event.inner.group_code,
+        regex: Some(keyword),
+        reply: Some(reply),
+        chance
+    };
+    let result = keyword.insert(db.deref_mut()).await;
+    if result.is_err() {
+        event.send_message_to_source("添加失败".parse_message_chain()).await.unwrap();
+        return;
+    }
+    event.send_message_to_source("添加成功".parse_message_chain()).await.unwrap();
 }
