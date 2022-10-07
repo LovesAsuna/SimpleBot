@@ -4,6 +4,7 @@ mod video;
 mod picture;
 mod information;
 mod chat;
+mod help;
 
 pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
     vec![
