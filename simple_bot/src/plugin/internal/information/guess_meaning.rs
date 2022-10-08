@@ -60,7 +60,16 @@ async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result
 fn parse_content(content: &String) -> Option<String> {
     serde_json::from_str::<serde_json::Value>(content).ok().and_then(
         |v| {
-            v.as_str().map(|s| s.to_owned())
+            v.as_array().and_then(
+                |v| {
+                    let trans = &v[0]["trans"];
+                    if trans.is_null() {
+                        None
+                    } else {
+                        Some(trans.to_string())
+                    }
+                }
+            )
         }
     )
 }
