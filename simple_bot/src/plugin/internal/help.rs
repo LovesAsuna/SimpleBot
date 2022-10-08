@@ -1,6 +1,6 @@
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 use simple_bot_macros::{action, make_action};
-use crate::plugin::{Action, CommandPlugin, Plugin, RAW_PLUGINS};
+use crate::plugin::{Action, CommandPlugin, Plugin};
 
 pub struct Help {
     actions: Vec<Box<dyn Action>>
@@ -10,7 +10,7 @@ impl Help {
     pub fn new() -> Self {
         Help {
             actions: vec![
-                make_action()
+                make_action!(help)
             ]
         }
     }
@@ -18,11 +18,11 @@ impl Help {
 
 impl Plugin for Help {
     fn get_name(&self) -> &str {
-        ""
+        "帮助"
     }
 
     fn get_desc(&self) -> &str {
-        ""
+        "查看所有命令帮助"
     }
 }
 
@@ -33,22 +33,27 @@ impl CommandPlugin for Help {
 }
 
 #[action("/help")]
-async fn help(event: &MessageEvent) {
-    let mut raw_help = String::new();
+async fn help(event: &MessageEvent) -> anyhow::Result<bool> {
+    let mut raw_help = String::from(format!("{:=^30}\n", "RAW"));
+    let mut id = 1;
     for plugin in crate::plugin::RAW_PLUGINS.as_ref() {
         let name = plugin.get_name();
         let desc = plugin.get_desc();
-        raw_help.push_str(&format!("{}: {}\n", name, desc));
+        raw_help.push_str(&format!("{}. {}: {}\n", id, name, desc));
+        id += 1;
     }
     event.send_message_to_source(raw_help.parse_message_chain()).await.unwrap();
-    let mut command_help = String::new();
+    let mut command_help = String::from(format!("{:=^30}\n", "COMMAND"));
+    let mut id = 1;
     for plugin in crate::plugin::COMMAND_PLUGINS.as_ref() {
         let name = plugin.get_name();
         let desc = plugin.get_desc();
+        command_help.push_str(&format!("{}. {}: {}\n", id, name, desc));
+        id += 1;
         for action in plugin.get_actions() {
             command_help.push_str(&format!("{}\n", action.get_pattern()));
         }
-        command_help.push_str(&format!("{}: {}\n", name, desc));
     }
     event.send_message_to_source(command_help.parse_message_chain()).await.unwrap();
+    Ok(true)
 }

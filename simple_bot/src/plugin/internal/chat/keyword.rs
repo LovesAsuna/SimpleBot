@@ -77,10 +77,10 @@ impl KeyWord {
 }
 
 #[action("/keyword add {chance} {keyword} {reply}")]
-async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<String>, reply: Option<String>) {
+async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<String>, reply: Option<String>) -> anyhow::Result<bool> {
     if chance.is_none() || keyword.is_none() || reply.is_none() {
         event.send_message_to_source("参数不足".parse_message_chain()).await.unwrap();
-        return;
+        return Ok(false);
     }
     let event = event.as_group_message().unwrap();
     let chance = chance.unwrap();
@@ -94,10 +94,11 @@ async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<
         reply: Some(reply),
         chance
     };
-    let result = keyword.insert(db.deref_mut()).await;
+    let result = Model::insert(db.deref_mut(), &keyword).await;
     if result.is_err() {
         event.send_message_to_source("添加失败".parse_message_chain()).await.unwrap();
-        return;
+        return Ok(false);
     }
     event.send_message_to_source("添加成功".parse_message_chain()).await.unwrap();
+    Ok(true)
 }
