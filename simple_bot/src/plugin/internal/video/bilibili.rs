@@ -62,7 +62,7 @@ impl RawPlugin for BilibiliVideo {
         let zone = data["tname"].as_str().unwrap_or("");
         let stat = &data["stat"];
         let view = &stat["view"].as_u64().unwrap_or(0).to_string();
-        let barrage = stat["danmaku"].as_str().unwrap_or("");
+        let barrage = &stat["danmaku"].as_u64().unwrap_or(0).to_string();
         let reply = &stat["reply"].as_u64().unwrap_or(0).to_string();
         let fav = &stat["favorite"].as_u64().unwrap_or(0).to_string();
         let coin = &stat["coin"].as_u64().unwrap_or(0).to_string();
