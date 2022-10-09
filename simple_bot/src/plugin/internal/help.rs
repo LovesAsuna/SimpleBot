@@ -1,17 +1,15 @@
+use crate::plugin::{Action, CommandPlugin, Plugin};
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 use simple_bot_macros::{action, make_action};
-use crate::plugin::{Action, CommandPlugin, Plugin};
 
 pub struct Help {
-    actions: Vec<Box<dyn Action>>
+    actions: Vec<Box<dyn Action>>,
 }
 
 impl Help {
     pub fn new() -> Self {
         Help {
-            actions: vec![
-                make_action!(help)
-            ]
+            actions: vec![make_action!(help)],
         }
     }
 }
@@ -42,7 +40,10 @@ async fn help(event: &MessageEvent) -> anyhow::Result<bool> {
         raw_help.push_str(&format!("{}. {}: {}\n", id, name, desc));
         id += 1;
     }
-    event.send_message_to_source(raw_help.parse_message_chain()).await.unwrap();
+    event
+        .send_message_to_source(raw_help.parse_message_chain())
+        .await
+        .unwrap();
     let mut command_help = String::from(format!("{:=^30}\n", "COMMAND"));
     let mut id = 1;
     for plugin in crate::plugin::COMMAND_PLUGINS.as_ref() {
@@ -54,6 +55,9 @@ async fn help(event: &MessageEvent) -> anyhow::Result<bool> {
             command_help.push_str(&format!("{}\n", action.get_pattern()));
         }
     }
-    event.send_message_to_source(command_help.parse_message_chain()).await.unwrap();
+    event
+        .send_message_to_source(command_help.parse_message_chain())
+        .await
+        .unwrap();
     Ok(true)
 }

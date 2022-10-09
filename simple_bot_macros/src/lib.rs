@@ -1,12 +1,12 @@
 use proc_macro::TokenStream;
 
 use quote::{quote, ToTokens};
-use syn::{Ident, ItemFn, parse_macro_input};
+use syn::{parse_macro_input, Ident, ItemFn};
 
 use meta::Meta;
 
-mod meta;
 mod arg;
+mod meta;
 
 #[proc_macro_attribute]
 pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
@@ -39,7 +39,7 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
                             }
                         };
                         param_type
-                    },
+                    }
                     syn::Type::Reference(_) => {
                         // there is only one reference, it is a reference of MessageEvent
                         // use an empty string to mark special handling
@@ -59,28 +59,45 @@ pub fn action(meta: TokenStream, input: TokenStream) -> TokenStream {
         let param_type: &String = &param_infos[i].1;
         match param_type.as_str() {
             "RQElem" => {
-                invoke_builder.push_str(&format!(r#"element_map.remove(&"{}".to_string()),"#, param_name));
+                invoke_builder.push_str(&format!(
+                    r#"element_map.remove(&"{}".to_string()),"#,
+                    param_name
+                ));
             }
             "String" => {
-                invoke_builder.push_str(&format!(r#"text_map.remove(&"{}".to_string()),"#, param_name));
-            },
+                invoke_builder.push_str(&format!(
+                    r#"text_map.remove(&"{}".to_string()),"#,
+                    param_name
+                ));
+            }
             "" => {
-                invoke_builder.push_str( &format!("{},", param_name));
-            },
+                invoke_builder.push_str(&format!("{},", param_name));
+            }
             _ => {
-                invoke_builder.push_str(&format!(r#"text_map.remove(&"{}".to_string()).and_then(|v| v.parse().ok()),"#, param_name));
+                invoke_builder.push_str(&format!(
+                    r#"text_map.remove(&"{}".to_string()).and_then(|v| v.parse().ok()),"#,
+                    param_name
+                ));
             }
         }
     }
 
-    let invoke: syn::Expr = syn::parse_str(
-        &format!("{}({}).await", function_name, invoke_builder)
-    ).unwrap();
+    let invoke: syn::Expr =
+        syn::parse_str(&format!("{}({}).await", function_name, invoke_builder)).unwrap();
     let pattern = meta.pattern.to_token_stream();
     let args_json = serde_json::to_string(&meta.args).unwrap();
     let param_infos_json = serde_json::to_string(&param_infos).unwrap();
-    let dispatcher_function_name = Ident::new(&(function_name.to_string() + "_dispatcher"), function_name.span());
-    let action_name = Ident::new(&format!("{}Action", function_name.to_string()[0..1].to_uppercase() + &function_name.to_string()[1..1]), function_name.span());
+    let dispatcher_function_name = Ident::new(
+        &(function_name.to_string() + "_dispatcher"),
+        function_name.span(),
+    );
+    let action_name = Ident::new(
+        &format!(
+            "{}Action",
+            function_name.to_string()[0..1].to_uppercase() + &function_name.to_string()[1..1]
+        ),
+        function_name.span(),
+    );
     let action_impl = quote! {
         struct #action_name {
             pattern: String
@@ -175,9 +192,7 @@ pub fn make_action(input: TokenStream) -> TokenStream {
     let origin_function_name = parse_macro_input!(input as Ident);
     let dispatcher_function_name = origin_function_name.to_string() + "_dispatcher";
     let ident = Ident::new(&dispatcher_function_name, origin_function_name.span());
-    TokenStream::from(
-        quote!{
-            #ident()
-        }
-    )
+    TokenStream::from(quote! {
+        #ident()
+    })
 }

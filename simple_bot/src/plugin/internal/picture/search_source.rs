@@ -4,7 +4,10 @@ use async_trait::async_trait;
 pub trait SearchSource: Send + Sync {
     fn get_name(&self) -> &str;
 
-    async fn search(&self, url: String) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>>;
+    async fn search(
+        &self,
+        url: String,
+    ) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>>;
 }
 
 pub trait PictureResult {

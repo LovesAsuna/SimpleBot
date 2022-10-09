@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use simple_bot_macros::{action, make_action};
 use crate::plugin::{Action, CommandPlugin, Plugin};
 use async_trait::async_trait;
+use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use simple_bot_macros::{action, make_action};
+use std::collections::HashMap;
 
 pub struct GuessMeaning {
     actions: Vec<Box<dyn Action>>,
@@ -11,9 +11,7 @@ pub struct GuessMeaning {
 impl GuessMeaning {
     pub fn new() -> Self {
         Self {
-            actions: vec![
-                make_action!(search)
-            ]
+            actions: vec![make_action!(search)],
         }
     }
 }
@@ -47,29 +45,28 @@ async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result
     let text = resp.text().await?;
     let content = parse_content(&text);
     match content {
-        None => {
-            Ok(false)
-        },
+        None => Ok(false),
         Some(content) => {
-            event.send_message_to_source(content.parse_message_chain()).await.unwrap();
+            event
+                .send_message_to_source(content.parse_message_chain())
+                .await
+                .unwrap();
             Ok(true)
         }
     }
 }
 
 fn parse_content(content: &String) -> Option<String> {
-    serde_json::from_str::<serde_json::Value>(content).ok().and_then(
-        |v| {
-            v.as_array().and_then(
-                |v| {
-                    let trans = &v[0]["trans"];
-                    if trans.is_null() {
-                        None
-                    } else {
-                        Some(trans.to_string())
-                    }
+    serde_json::from_str::<serde_json::Value>(content)
+        .ok()
+        .and_then(|v| {
+            v.as_array().and_then(|v| {
+                let trans = &v[0]["trans"];
+                if trans.is_null() {
+                    None
+                } else {
+                    Some(trans.to_string())
                 }
-            )
-        }
-    )
+            })
+        })
 }

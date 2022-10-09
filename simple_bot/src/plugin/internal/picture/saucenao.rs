@@ -1,11 +1,14 @@
+use crate::plugin::internal::picture::search_source::{PictureResult, SearchSource};
 use lazy_static::lazy_static;
 use proc_qq::re_exports::async_trait::async_trait;
-use crate::plugin::internal::picture::search_source::{PictureResult, SearchSource};
 
 pub struct SauceNao;
 
 lazy_static! {
-    static ref API: String = format!("https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key={}&numres=16&url=", crate::CONFIG.saucenao.api_key);
+    static ref API: String = format!(
+        "https://saucenao.com/search.php?db=999&output_type=2&testmode=1&api_key={}&numres=16&url=",
+        crate::CONFIG.saucenao.api_key
+    );
 }
 
 #[async_trait]
@@ -14,7 +17,10 @@ impl SearchSource for SauceNao {
         "SauceNao"
     }
 
-    async fn search(&self, url: String) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>> {
+    async fn search(
+        &self,
+        url: String,
+    ) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>> {
         let mut result: Vec<Box<dyn PictureResult + Send + Sync>> = Vec::new();
         let resp = reqwest::get(API.clone() + &url).await?;
         let d = &resp.text().await?;
@@ -38,7 +44,8 @@ impl SearchSource for SauceNao {
             match res["data"]["ext_urls"].as_array() {
                 Some(ext_urls) => {
                     for url in ext_urls {
-                        ext_urls_list.push(url.as_str().map_or(String::default(), |s| s.to_string()));
+                        ext_urls_list
+                            .push(url.as_str().map_or(String::default(), |s| s.to_string()));
                     }
                 }
                 None => {}
@@ -48,16 +55,12 @@ impl SearchSource for SauceNao {
             }
             let thumbnail = res["header"]["thumbnail"].as_str().unwrap_or_default();
             let member_name = res["data"]["member_name"].as_str().unwrap_or_default();
-            result.push(
-                Box::new(
-                    SauceNaoResult {
-                        similarity,
-                        thumbnail: thumbnail.to_string(),
-                        ext_urls: ext_urls_list,
-                        member_name: member_name.to_string(),
-                    }
-                )
-            );
+            result.push(Box::new(SauceNaoResult {
+                similarity,
+                thumbnail: thumbnail.to_string(),
+                ext_urls: ext_urls_list,
+                member_name: member_name.to_string(),
+            }));
         }
         Ok(result)
     }

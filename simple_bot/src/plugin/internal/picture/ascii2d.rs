@@ -1,6 +1,6 @@
-use lazy_static::lazy_static;
-use async_trait::async_trait;
 use crate::plugin::internal::picture::search_source::{PictureResult, SearchSource};
+use async_trait::async_trait;
+use lazy_static::lazy_static;
 
 pub struct Ascii2d;
 
@@ -14,7 +14,10 @@ impl SearchSource for Ascii2d {
         "Ascii2d"
     }
 
-    async fn search(&self, url: String) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>> {
+    async fn search(
+        &self,
+        url: String,
+    ) -> anyhow::Result<Vec<Box<dyn PictureResult + Send + Sync>>> {
         let mut result: Vec<Box<dyn PictureResult + Send + Sync>> = Vec::new();
         let client = reqwest::ClientBuilder::new().build().unwrap();
         let resp = client
@@ -28,21 +31,25 @@ impl SearchSource for Ascii2d {
         for i in 1..=2 {
             let item = container.find("div.row.item-box");
             let sources = item.get(i).unwrap();
-            let thumbnail = format!("https://ascii2d.net{}", sources.children().find("img[loading=lazy]").attr("src").unwrap().to_string());
+            let thumbnail = format!(
+                "https://ascii2d.net{}",
+                sources
+                    .children()
+                    .find("img[loading=lazy]")
+                    .attr("src")
+                    .unwrap()
+                    .to_string()
+            );
             let mut ext_urls_list = Vec::new();
             for url in sources.children().find("a[target]") {
                 ext_urls_list.push(url.get_attribute("href").unwrap().to_string());
             }
-            result.push(
-                Box::new(
-                    Ascii2dResult {
-                        similarity: -1.0,
-                        thumbnail,
-                        ext_urls: ext_urls_list,
-                        member_name: String::from("Ascii2d不显示"),
-                    }
-                )
-            )
+            result.push(Box::new(Ascii2dResult {
+                similarity: -1.0,
+                thumbnail,
+                ext_urls: ext_urls_list,
+                member_name: String::from("Ascii2d不显示"),
+            }))
         }
         Ok(result)
     }

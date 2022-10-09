@@ -1,5 +1,5 @@
 use rbatis::crud;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct KeyWord {
@@ -7,7 +7,7 @@ pub struct KeyWord {
     pub group_id: i64,
     pub regex: Option<String>,
     pub reply: Option<String>,
-    pub chance: i32
+    pub chance: i32,
 }
 
-crud!(KeyWord{});
+crud!(KeyWord {});

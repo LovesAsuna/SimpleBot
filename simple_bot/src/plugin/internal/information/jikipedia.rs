@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use simple_bot_macros::{action, make_action};
 use crate::plugin::{Action, CommandPlugin, Plugin};
 use async_trait::async_trait;
+use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use simple_bot_macros::{action, make_action};
+use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 
 pub struct Jikipedia {
     actions: Vec<Box<dyn Action>>,
@@ -12,9 +12,7 @@ pub struct Jikipedia {
 impl Jikipedia {
     pub fn new() -> Self {
         Self {
-            actions: vec![
-                make_action!(search)
-            ]
+            actions: vec![make_action!(search)],
         }
     }
 }
@@ -49,11 +47,12 @@ async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result
     let text = resp.text().await?;
     let content = parse_content(&text);
     match content {
-        None => {
-            Ok(false)
-        },
+        None => Ok(false),
         Some(content) => {
-            event.send_message_to_source(content.parse_message_chain()).await.unwrap();
+            event
+                .send_message_to_source(content.parse_message_chain())
+                .await
+                .unwrap();
             Ok(true)
         }
     }
@@ -68,7 +67,7 @@ fn parse_content(content: &String) -> Option<String> {
             if entities.len() == 0 {
                 continue;
             }
-            return Some(format!("{}", Entity::new(&entities[0])))
+            return Some(format!("{}", Entity::new(&entities[0])));
         }
     }
     None

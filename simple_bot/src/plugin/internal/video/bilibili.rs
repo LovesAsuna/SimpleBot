@@ -1,9 +1,9 @@
-use std::future::Future;
-use std::pin::Pin;
 use crate::plugin::{Plugin, RawPlugin};
-use proc_qq::*;
 use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
+use proc_qq::*;
+use std::future::Future;
+use std::pin::Pin;
 
 pub struct BilibiliVideo {
     av_pattern: regex::Regex,
@@ -93,16 +93,18 @@ impl RawPlugin for BilibiliVideo {
         builder.push_str("\n");
         builder.push_str(desc);
         let mut reply_message = MessageChainBuilder::new().build();
-        reply_message = reply_message.append(format!("链接: https://www.bilibili.com/video/{}", tuple.1).parse_text());
-        let bytes = reqwest::get(pic).await?.error_for_status()?.bytes().await?.to_vec();
+        reply_message = reply_message
+            .append(format!("链接: https://www.bilibili.com/video/{}", tuple.1).parse_text());
+        let bytes = reqwest::get(pic)
+            .await?
+            .error_for_status()?
+            .bytes()
+            .await?
+            .to_vec();
         let upload_res = event.upload_image_to_source(bytes).await;
         reply_message = match upload_res {
-            Ok(image) => {
-                reply_message.append(image)
-            }
-            Err(_) => {
-                reply_message.append("上传图片出错".parse_text())
-            }
+            Ok(image) => reply_message.append(image),
+            Err(_) => reply_message.append("上传图片出错".parse_text()),
         };
         reply_message = reply_message.append(builder.parse_text());
         if event.send_message_to_source(reply_message).await.is_ok() {
@@ -114,22 +116,27 @@ impl RawPlugin for BilibiliVideo {
 }
 
 impl BilibiliVideo {
-    fn parse_api(&self, text: String) -> Pin<Box<dyn Future<Output=Option<(String, String)>> + Send + '_>> {
+    fn parse_api(
+        &self,
+        text: String,
+    ) -> Pin<Box<dyn Future<Output = Option<(String, String)>> + Send + '_>> {
         Box::pin(async move {
             if text.contains("av") {
                 if let Some(capture) = self.av_pattern.captures(&text) {
                     let av = capture.get(0).unwrap().as_str();
-                    return Some(
-                        (format!("https://api.bilibili.com/x/web-interface/view?aid={}", av), av.to_string())
-                    );
+                    return Some((
+                        format!("https://api.bilibili.com/x/web-interface/view?aid={}", av),
+                        av.to_string(),
+                    ));
                 }
             }
             if text.contains("BV") {
                 if let Some(capture) = self.bv_pattern.captures(&text) {
                     let bv = capture.get(0).unwrap().as_str();
-                    return Some(
-                        (format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv), bv.to_string())
-                    );
+                    return Some((
+                        format!("https://api.bilibili.com/x/web-interface/view?bvid={}", bv),
+                        bv.to_string(),
+                    ));
                 }
             }
             if text.contains("b23.tv") {
@@ -143,12 +150,10 @@ impl BilibiliVideo {
                     let content = resp
                         .headers()
                         .get("location")
-                        .map(
-                            |s| String::from_utf8_lossy(s.as_bytes()).to_string()
-                        );
+                        .map(|s| String::from_utf8_lossy(s.as_bytes()).to_string());
                     return match content {
                         Some(content) => self.parse_api(content).await,
-                        None => None
+                        None => None,
                     };
                 }
             }

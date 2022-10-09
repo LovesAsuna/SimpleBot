@@ -2,12 +2,15 @@ use std::collections::HashSet;
 use std::ops::SubAssign;
 use std::time::Duration;
 
+use async_trait::async_trait;
 use chrono::prelude::*;
 use lazy_static::lazy_static;
-use proc_qq::{MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait, MessageSendToSourceTrait, TextEleParseTrait};
-use async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::MessageChain;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
+use proc_qq::{
+    MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait,
+    MessageSendToSourceTrait, TextEleParseTrait,
+};
 
 use simple_bot_macros::{action, make_action};
 
@@ -20,9 +23,7 @@ pub struct PixivProxy {
 impl PixivProxy {
     pub fn new() -> Self {
         PixivProxy {
-            actions: vec![
-                make_action!(get)
-            ]
+            actions: vec![make_action!(get)],
         }
     }
 }
@@ -53,7 +54,10 @@ async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
     let api = format!("https://api.obfs.dev/api/pixiv/illust?id={id}");
     let resp = tokio::time::timeout(Duration::from_secs(15), reqwest::get(api)).await;
     if resp.is_err() {
-        event.send_message_to_source("Error: 获取图像信息超时".parse_message_chain()).await.unwrap();
+        event
+            .send_message_to_source("Error: 获取图像信息超时".parse_message_chain())
+            .await
+            .unwrap();
         return Ok(false);
     }
     let text = resp.unwrap()?.text().await?;
@@ -65,7 +69,10 @@ async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
         if text.is_empty() {
             text = err[&user_message].as_str().unwrap_or("");
         }
-        event.send_message_to_source(format!("Error: {}", text).parse_message_chain()).await.unwrap();
+        event
+            .send_message_to_source(format!("Error: {}", text).parse_message_chain())
+            .await
+            .unwrap();
         return Ok(false);
     }
     let illustration = &root["illust"];
@@ -98,14 +105,23 @@ async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
             r"[pid{id}]
 https://www.pixiv.net/artworks/{id}
 原图:",
-        ).parse_text()
+        )
+        .parse_text(),
     );
     if count == 1 {
         builder = upload_image(event, builder, &id).await.unwrap();
     } else {
-        builder = builder.append(format!("该作品共有{count}张图片{}", if count > 3 { "，预览前3张" } else { "" }).parse_text());
+        builder = builder.append(
+            format!(
+                "该作品共有{count}张图片{}",
+                if count > 3 { "，预览前3张" } else { "" }
+            )
+            .parse_text(),
+        );
         for i in 1..=count {
-            builder = upload_image(event, builder, &format!("{id}-{i}")).await.unwrap();
+            builder = upload_image(event, builder, &format!("{id}-{i}"))
+                .await
+                .unwrap();
         }
     }
     builder = builder.append(
@@ -117,10 +133,15 @@ https://www.pixiv.net/artworks/{id}
 查看数: {view}
 R18: {r18}
 直连链接: https://pixiv.re/{id}.jpg",
-            id = if count == 1 { id } else { format!("{}{{1-{}}}", id, count) }
-        ).parse_text()
+            id = if count == 1 {
+                id
+            } else {
+                format!("{}{{1-{}}}", id, count)
+            }
+        )
+        .parse_text(),
     );
-    let receipt= event.send_message_to_source(builder).await.unwrap();
+    let receipt = event.send_message_to_source(builder).await.unwrap();
     if r18 {
         tokio::time::sleep(Duration::from_secs(5)).await;
         event.recall(receipt).await.unwrap();
@@ -152,21 +173,30 @@ fn validate(tags: &HashSet<&str>) -> bool {
     tags.iter().any(|tag| R18_PATTERN.is_match(tag))
 }
 
-async fn upload_image(event: &MessageEvent, mut builder: MessageChain, image_id: &String) -> anyhow::Result<MessageChain> {
-    let bytes = &reqwest::get(format!("https://pixiv.re/{image_id}.jpg")).await?.bytes().await?;
-    let image = tokio::time::timeout(Duration::from_secs(60), event.upload_image_to_source(bytes.to_vec())).await;
+async fn upload_image(
+    event: &MessageEvent,
+    mut builder: MessageChain,
+    image_id: &String,
+) -> anyhow::Result<MessageChain> {
+    let bytes = &reqwest::get(format!("https://pixiv.re/{image_id}.jpg"))
+        .await?
+        .bytes()
+        .await?;
+    let image = tokio::time::timeout(
+        Duration::from_secs(60),
+        event.upload_image_to_source(bytes.to_vec()),
+    )
+    .await;
     if image.is_err() {
-        builder = builder.append("\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n".parse_text());
+        builder = builder.append(
+            "\n图片获取失败,大概率是服务器宽带问题或图片过大，请捐赠支持作者\n".parse_text(),
+        );
         return Ok(builder);
     }
     let image = image.unwrap();
     builder = match image {
-        Err(_) => {
-            builder
-        },
-        Ok(image) => {
-            builder.append(image)
-        }
+        Err(_) => builder,
+        Ok(image) => builder.append(image),
     };
     Ok(builder)
 }

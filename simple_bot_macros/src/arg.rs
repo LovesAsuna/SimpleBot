@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 use std::ops::Deref;
 
-use syn::{braced, Ident};
 use syn::parse::{Parse, ParseStream};
+use syn::{braced, Ident};
 
 #[derive(Debug)]
 pub struct Arg(Vec<String>);

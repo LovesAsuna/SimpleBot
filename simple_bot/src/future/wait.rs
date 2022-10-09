@@ -1,15 +1,16 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use proc_qq::re_exports::async_trait::async_trait;
 use lazy_static::lazy_static;
-use proc_qq::{MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
+use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::{MessageChain, MessageChainBuilder};
-use tokio::sync::Mutex;
+use proc_qq::{MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
 use tokio::sync::oneshot::*;
+use tokio::sync::Mutex;
 
 lazy_static! {
-    pub static ref SESSION_CACHE: Mutex<HashMap<i64, Sender<MessageChain>>> = Mutex::new(HashMap::new());
+    pub static ref SESSION_CACHE: Mutex<HashMap<i64, Sender<MessageChain>>> =
+        Mutex::new(HashMap::new());
 }
 
 #[async_trait]
@@ -38,12 +39,8 @@ impl WaitForMessage for MessageEvent {
             cache.remove(&uid);
         }
         match res {
-            Err(_) => {
-                None
-            },
-            Ok(res) => {
-                res.ok()
-            }
+            Err(_) => None,
+            Ok(res) => res.ok(),
         }
     }
 }

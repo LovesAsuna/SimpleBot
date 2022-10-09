@@ -1,7 +1,9 @@
 use std::ops::DerefMut;
 
 use async_trait::async_trait;
-use proc_qq::{MessageChainParseTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{
+    MessageChainParseTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait,
+};
 use rand::Rng;
 use tokio::sync::OnceCell;
 
@@ -44,7 +46,10 @@ impl RawPlugin for KeyWord {
                 continue;
             }
             if let Some(reply) = &keyword.reply {
-                event.send_message_to_source(reply.clone().parse_message_chain()).await.unwrap();
+                event
+                    .send_message_to_source(reply.clone().parse_message_chain())
+                    .await
+                    .unwrap();
                 done = true;
             }
         }
@@ -62,24 +67,34 @@ impl KeyWord {
     pub fn new() -> Self {
         Self {
             keywords: OnceCell::new(),
-            actions: vec![
-                make_action!(add_keyword)
-            ],
+            actions: vec![make_action!(add_keyword)],
         }
     }
 
     async fn load_keyword(&self) -> &Vec<Model> {
-        self.keywords.get_or_init(|| async {
-            let mut db = crate::RB.lock().await;
-            Model::select_all(db.deref_mut()).await.expect("从数据库读取关键词失败")
-        }).await
+        self.keywords
+            .get_or_init(|| async {
+                let mut db = crate::RB.lock().await;
+                Model::select_all(db.deref_mut())
+                    .await
+                    .expect("从数据库读取关键词失败")
+            })
+            .await
     }
 }
 
 #[action("/keyword add {chance} {keyword} {reply}")]
-async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<String>, reply: Option<String>) -> anyhow::Result<bool> {
+async fn add_keyword(
+    event: &MessageEvent,
+    chance: Option<i32>,
+    keyword: Option<String>,
+    reply: Option<String>,
+) -> anyhow::Result<bool> {
     if chance.is_none() || keyword.is_none() || reply.is_none() {
-        event.send_message_to_source("参数不足".parse_message_chain()).await.unwrap();
+        event
+            .send_message_to_source("参数不足".parse_message_chain())
+            .await
+            .unwrap();
         return Ok(false);
     }
     let event = event.as_group_message().unwrap();
@@ -92,13 +107,19 @@ async fn add_keyword(event: &MessageEvent, chance: Option<i32>, keyword: Option<
         group_id: event.inner.group_code,
         regex: Some(keyword),
         reply: Some(reply),
-        chance
+        chance,
     };
     let result = Model::insert(db.deref_mut(), &keyword).await;
     if result.is_err() {
-        event.send_message_to_source("添加失败".parse_message_chain()).await.unwrap();
+        event
+            .send_message_to_source("添加失败".parse_message_chain())
+            .await
+            .unwrap();
         return Ok(false);
     }
-    event.send_message_to_source("添加成功".parse_message_chain()).await.unwrap();
+    event
+        .send_message_to_source("添加成功".parse_message_chain())
+        .await
+        .unwrap();
     Ok(true)
 }
