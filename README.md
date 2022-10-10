@@ -1,8 +1,8 @@
 ## Bot
 
-一个基于 [RICQ](https://github.com/lz1998/ricq) 开发的机器人插件(目前在用Rust重写)
+一个基于 [RICQ](https://github.com/lz1998/ricq) 开发的机器人
 
-[![Java CI with Gradle](https://github.com/LovesAsuna/SimpleBot/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/LovesAsuna/SimpleBot/actions)
+[![Rust](https://github.com/LovesAsuna/SimpleBot/workflows/Rust/badge.svg)](https://github.com/LovesAsuna/SimpleBot/actions)
 [![LICENSE](https://img.shields.io/github/license/LovesAsuna/SimpleBot.svg?style=popout)](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
 [![Issues](https://img.shields.io/github/issues/LovesAsuna/SimpleBot.svg?style=popout)](https://github.com/SLovesAsuna/SimpleBot/issues)
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/SimpleBot?include_prereleases)](https://github.com/LovesAsuna/SimpleBot/releases)
@@ -60,7 +60,7 @@ cargo run
 
 ## 📜 协议
 
-[MIT](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
+[AGPL](https://github.com/LovesAsuna/SimpleBot/blob/master/LICENSE)
 
 ## 鸣谢
 
