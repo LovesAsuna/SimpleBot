@@ -21,5 +21,6 @@ pub fn register_raw_plugins() -> Vec<Box<dyn RawPlugin + Send + Sync>> {
     vec![
         Box::new(video::BilibiliVideo::new()),
         Box::new(chat::KeyWord::new()),
+        Box::new(chat::Repeater::new(3)),
     ]
 }
