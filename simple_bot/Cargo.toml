@@ -3,6 +3,7 @@ name = "simple_bot"
 version = "0.1.0"
 edition = "2021"
 authors = ["LovesAsuna"]
+license = "AGPL"
 description = "一个自用QQ机器人"
 repository = "https://github.com/LovesAsuna/SimpleBot"
 keywords = ["QQ", "Bot", "Rust"]
