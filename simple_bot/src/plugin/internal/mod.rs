@@ -14,6 +14,7 @@ pub fn register_command_plugins() -> Vec<Box<dyn CommandPlugin + Send + Sync>> {
         Box::new(information::GuessMeaning::new()),
         Box::new(information::Jikipedia::new()),
         Box::new(help::Help::new()),
+        Box::new(chat::Remind::new()),
     ]
 }
 
