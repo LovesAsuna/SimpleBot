@@ -7,6 +7,7 @@ use rand::prelude::SliceRandom;
 
 pub struct Repeater {
     stack: RefCell<VecDeque<String>>,
+    capacity: usize
 }
 
 unsafe impl Sync for Repeater {}
@@ -15,6 +16,7 @@ impl Repeater {
     pub fn new(capacity: usize) -> Self {
         Repeater {
             stack: RefCell::new(VecDeque::with_capacity(capacity)),
+            capacity
         }
     }
 }
@@ -34,11 +36,15 @@ impl RawPlugin for Repeater {
     async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         let message = event.message_chain();
         let content = message.message_content();
+        {
+            let stack = self.stack.borrow_mut();
+            if stack.len() <= self.capacity {
+                return Ok(false);
+            }
+        }
         let run = {
             let mut stack = self.stack.borrow_mut();
-            if stack.len() >= stack.capacity() {
-                stack.pop_front();
-            }
+            stack.pop_front();
             stack.push_back(content);
             let iter = stack.iter();
             all_equal(iter)
