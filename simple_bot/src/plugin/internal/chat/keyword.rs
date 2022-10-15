@@ -30,9 +30,14 @@ impl Plugin for KeyWord {
 #[async_trait]
 impl RawPlugin for KeyWord {
     async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
+        let event = event.as_group_message()?;
         let content = event.message_content();
         let mut done = false;
         for keyword in self.load_keyword().await {
+            let group = event.inner.group_code;
+            if keyword.group_id != group && keyword.group_id != 0 {
+                continue;
+            }
             let regex = regex::Regex::new(keyword.regex.as_ref().unwrap_or(&String::new()));
             if regex.is_err() {
                 continue;
