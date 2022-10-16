@@ -1,14 +1,17 @@
 use std::time::Duration;
 
 use async_trait::async_trait;
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{GroupMessageEvent, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
+use proc_qq::re_exports::ricq::msg::MessageChain;
+use proc_qq::re_exports::ricq_core::msg::elem::At;
+use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
 
 use simple_bot_macros::{action, make_action};
 
 use crate::plugin::{Action, CommandPlugin, Plugin};
 
 pub struct Remind {
-    actions: Vec<Box<dyn Action>>
+    actions: Vec<Box<dyn Action>>,
 }
 
 impl Remind {
@@ -40,12 +43,23 @@ impl CommandPlugin for Remind {
 
 #[action("{time}分钟后提醒我{content}")]
 async fn remind(event: &MessageEvent, time: Option<u64>, content: Option<String>) -> anyhow::Result<bool> {
+    let event = event.as_group_message()?;
     if time.is_none() || content.is_none() {
         return Ok(false);
     }
     let time = time.unwrap();
     let content = content.unwrap();
+    let message = build_content(event, format!("我将在{}分钟后提醒你{} ", time, content));
+    event.send_message_to_source(message).await.unwrap();
     tokio::time::sleep(Duration::from_secs(60 * time)).await;
-    event.send_message_to_source(content.parse_message_chain()).await.unwrap();
+    let message = build_content(event, content);
+    event.send_message_to_source(message).await.unwrap();
     Ok(true)
+}
+
+fn build_content(event: &GroupMessageEvent, content: String) -> MessageChain {
+    let message = MessageChainBuilder::new().build();
+    message
+        .append(At::new(event.inner.from_uin))
+        .append(format!(" {}", content).parse_text())
 }
