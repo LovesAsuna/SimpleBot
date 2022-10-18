@@ -8,10 +8,64 @@
 [![Release](https://img.shields.io/github/v/release/LovesAsuna/SimpleBot?include_prereleases)](https://github.com/LovesAsuna/SimpleBot/releases)
 
 ```
-交流群: 514526362
+交流群: 787049553
 ```
 
-## 🎉 它能干什么?
+## 🎉 功能
+
+### 易于开发的插件系统
+
+#### RawPlugin(原始插件)
+
+> 提供原始的MessageEvent供用户自行使用
+
+```rust
+#[async_trait]
+impl RawPlugin for Repeater {
+    async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
+        event.send_message_to_source("Hello World!".parse_message_chain()).await.unwrap();
+        Ok(true)
+    }
+}
+```
+
+#### CommandPlugin(命令式插件)
+
+> 用户提供注解编写预设的命令，插件系统往方法中注入参数，供用户使用
+
+```rust
+pub struct Hello {
+    actions: Vec<Box<dyn Action>>,
+}
+
+impl Hello {
+    pub fn new() -> Self {
+        Remind {
+            actions: vec![
+                make_action!(hello)
+            ]
+        }
+    }
+}
+
+#[async_trait]
+impl CommandPlugin for Hello {
+    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
+        &self.actions
+    }
+}
+
+#[action("hello {name}")]
+async fn hello(event: &MessageEvent, name: Option<String>) -> anyhow::Result<bool> {
+    if name.is_none() {
+        return Ok(false);
+    }
+    event.send_message_to_source(format!("hello {}", name.unwrap()).parse_message_chain()).await.unwrap();
+    Ok(true)
+}
+```
+
+## 🕹️ 内置的插件
 
 * 以图搜图
 * 以图搜番
@@ -31,7 +85,6 @@
 * P站图片获取
 * 复读机
 * 杂项
-* 还在开发中...(准备更新大量功能)
 
 ## ☑ To-Do 列表
 
