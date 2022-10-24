@@ -1,10 +1,10 @@
-use crate::plugin::{Action, CommandPlugin, Plugin};
 use async_trait::async_trait;
-use proc_qq::{MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use simple_bot_macros::{action, make_action};
-use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
+use proc_qq::{MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
+
+use simple_bot_macros::{action, make_action};
+
+use crate::plugin::{Action, CommandPlugin, Plugin};
 
 pub struct News {
     actions: Vec<Box<dyn Action>>,
