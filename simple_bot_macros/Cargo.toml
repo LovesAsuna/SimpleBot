@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-syn = "1.0.99"
-quote = "1.0.21"
+syn = "*"
+quote = "*"
 proc_qq = "0.1.17"
-anyhow = "1.0.63"
-serde = "1.0.144"
-serde_json = "1.0.85"
+anyhow = "*"
+serde = "*"
+serde_json = "*"
 
 [lib]
 proc-macro = true
