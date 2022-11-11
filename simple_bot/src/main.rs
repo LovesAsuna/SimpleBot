@@ -20,8 +20,13 @@ lazy_static! {
     static ref CONFIG: Config = config::read_config().unwrap();
     static ref RB: std::sync::Arc<Mutex<Rbatis>> = {
         let db = Rbatis::new();
-        db.init(rbdc_sqlite::driver::SqliteDriver {}, "sqlite://sqlite.db")
-            .unwrap();
+        let db_config = &CONFIG.database;
+        if db_config.contains_key("sqlite") {
+            db.init(rbdc_sqlite::driver::SqliteDriver {}, &db_config["sqlite"])
+        } else {
+            panic!("no selected database")
+        }
+        .expect("database init error");
         std::sync::Arc::new(Mutex::new(db))
     };
 }

@@ -1,9 +1,11 @@
+use std::collections::HashMap;
 use std::fs::File;
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct Config {
     pub account: AccountConfig,
     pub saucenao: SauceNaoConfig,
+    pub database: HashMap<String, String>,
 }
 
 impl Default for Config {
@@ -11,6 +13,9 @@ impl Default for Config {
         Config {
             account: AccountConfig::default(),
             saucenao: SauceNaoConfig::default(),
+            database: [("sqlite".to_owned(), "sqlite://sqlite.db".to_owned())]
+                .into_iter()
+                .collect(),
         }
     }
 }
