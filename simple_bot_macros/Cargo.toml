@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-syn = "*"
+syn = "1.0"
 quote = "*"
+proc-macro2 = "1.0"
 proc_qq = "0.1.17"
 anyhow = "*"
 serde = "*"
