@@ -1,6 +1,6 @@
 use async_trait::async_trait;
-use proc_qq::{MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
+use proc_qq::{MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
 
 use simple_bot_macros::{action, make_action};
 
@@ -41,9 +41,7 @@ async fn new(event: &MessageEvent) -> anyhow::Result<bool> {
     let resp = reqwest::get(url).await?;
     let bytes = resp.bytes().await?;
     let image = event.upload_image_to_source(bytes.to_vec()).await?;
-    let message = MessageChainBuilder::new()
-        .build()
-        .append(image);
+    let message = MessageChainBuilder::new().build().append(image);
     event.send_message_to_source(message).await.unwrap();
     Ok(true)
 }

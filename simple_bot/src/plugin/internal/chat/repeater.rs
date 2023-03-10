@@ -1,13 +1,15 @@
 use crate::plugin::{Plugin, RawPlugin};
 use async_trait::async_trait;
-use proc_qq::{MessageChainPointTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{
+    MessageChainPointTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait,
+};
+use rand::prelude::SliceRandom;
 use std::cell::RefCell;
 use std::collections::VecDeque;
-use rand::prelude::SliceRandom;
 
 pub struct Repeater {
     stack: RefCell<VecDeque<String>>,
-    capacity: usize
+    capacity: usize,
 }
 
 unsafe impl Sync for Repeater {}
@@ -16,7 +18,7 @@ impl Repeater {
     pub fn new(capacity: usize) -> Self {
         Repeater {
             stack: RefCell::new(VecDeque::with_capacity(capacity)),
-            capacity
+            capacity,
         }
     }
 }

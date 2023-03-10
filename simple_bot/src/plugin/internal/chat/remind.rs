@@ -1,10 +1,13 @@
 use std::time::Duration;
 
 use async_trait::async_trait;
-use proc_qq::{GroupMessageEvent, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait, TextEleParseTrait};
 use proc_qq::re_exports::ricq::msg::MessageChain;
 use proc_qq::re_exports::ricq_core::msg::elem::At;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
+use proc_qq::{
+    GroupMessageEvent, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait,
+    TextEleParseTrait,
+};
 
 use simple_bot_macros::{action, make_action};
 
@@ -17,9 +20,7 @@ pub struct Remind {
 impl Remind {
     pub fn new() -> Self {
         Remind {
-            actions: vec![
-                make_action!(remind)
-            ]
+            actions: vec![make_action!(remind)],
         }
     }
 }
@@ -42,7 +43,11 @@ impl CommandPlugin for Remind {
 }
 
 #[action("{time}分钟后提醒我{content}")]
-async fn remind(event: &MessageEvent, time: Option<u64>, content: Option<String>) -> anyhow::Result<bool> {
+async fn remind(
+    event: &MessageEvent,
+    time: Option<u64>,
+    content: Option<String>,
+) -> anyhow::Result<bool> {
     let event = event.as_group_message()?;
     if time.is_none() || content.is_none() {
         return Ok(false);
