@@ -1,5 +1,5 @@
 use crate::plugin::{Action, CommandPlugin, Plugin};
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{module, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait, Module};
 use simple_bot_macros::{action, make_action};
 
 pub struct Help {
@@ -60,4 +60,8 @@ async fn help(event: &MessageEvent) -> anyhow::Result<bool> {
         .await
         .unwrap();
     Ok(true)
+}
+
+pub(super) fn module() -> Module {
+    module!("help", "帮助")
 }

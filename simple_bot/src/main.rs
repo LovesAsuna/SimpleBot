@@ -5,14 +5,12 @@ use rbatis::Rbatis;
 use tracing::*;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use handler::message_handler;
-
 use crate::config::Config;
+use crate::plugin::plugin_entry;
 use crate::tokio::{self, sync::Mutex};
 
 mod config;
 mod future;
-mod handler;
 pub mod model;
 mod plugin;
 
@@ -42,7 +40,7 @@ async fn main() {
         ))
         .version(parse_protocol(CONFIG.account.protocol.clone()))
         .show_slider_pop_menu_if_possible()
-        .modules(vec![module!("simple_bot", "handler", message_handler)])
+        .modules(plugin_entry())
         .show_rq(Some(ShowQR::OpenBySystem))
         .build()
         .await
