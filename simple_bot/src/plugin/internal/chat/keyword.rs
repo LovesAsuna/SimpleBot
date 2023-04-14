@@ -1,20 +1,18 @@
+use async_trait::async_trait;
 use std::ops::DerefMut;
 
-use async_trait::async_trait;
 use proc_qq::{
-    MessageChainParseTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait,
+    event, MessageChainParseTrait, MessageChainPointTrait, MessageContentTrait, MessageEvent,
+    MessageEventProcess, MessageSendToSourceTrait, ModuleEventHandler, ModuleEventProcess,
 };
 use rand::Rng;
 use tokio::sync::OnceCell;
 
-use simple_bot_macros::{action, make_action};
-
 use crate::model::keyword::KeyWord as Model;
-use crate::plugin::{Action, CommandPlugin, Plugin, RawPlugin};
+use crate::plugin::Plugin;
 
 pub struct KeyWord {
     keywords: OnceCell<Vec<Model>>,
-    actions: Vec<Box<dyn Action>>,
 }
 
 impl Plugin for KeyWord {
@@ -28,8 +26,8 @@ impl Plugin for KeyWord {
 }
 
 #[async_trait]
-impl RawPlugin for KeyWord {
-    async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
+impl MessageEventProcess for KeyWord {
+    async fn handle(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         let event = event.as_group_message()?;
         let content = event.message_content();
         let mut done = false;
@@ -62,17 +60,10 @@ impl RawPlugin for KeyWord {
     }
 }
 
-impl CommandPlugin for KeyWord {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
 impl KeyWord {
     pub fn new() -> Self {
         Self {
             keywords: OnceCell::new(),
-            actions: vec![make_action!(add_keyword)],
         }
     }
 
@@ -88,24 +79,24 @@ impl KeyWord {
     }
 }
 
-#[action("/keyword add {chance} {keyword} {reply}")]
-async fn add_keyword(
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![
+        ModuleEventHandler {
+            name: "KeyWord".to_owned(),
+            process: ModuleEventProcess::Message(Box::new(KeyWord::new())),
+        },
+        add_keyword {},
+    ]
+}
+
+#[event(bot_command = "/keyword add {chance} {keyword} {reply}")]
+pub(super) async fn add_keyword(
     event: &MessageEvent,
-    chance: Option<i32>,
-    keyword: Option<String>,
-    reply: Option<String>,
+    chance: i32,
+    keyword: String,
+    reply: String,
 ) -> anyhow::Result<bool> {
-    if chance.is_none() || keyword.is_none() || reply.is_none() {
-        event
-            .send_message_to_source("参数不足".parse_message_chain())
-            .await
-            .unwrap();
-        return Ok(false);
-    }
     let event = event.as_group_message().unwrap();
-    let chance = chance.unwrap();
-    let keyword = keyword.unwrap();
-    let reply = reply.unwrap();
     let mut db = crate::RB.lock().await;
     let keyword = Model {
         id: None,
