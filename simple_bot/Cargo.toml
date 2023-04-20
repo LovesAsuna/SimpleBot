@@ -11,7 +11,7 @@ keywords = ["QQ", "Bot", "Rust"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proc_qq = "0.1.34"
+proc_qq = "0.1.36"
 tracing-subscriber = "0.3.15"
 serde = { version = "*", features = ["derive"] }
 tokio = { version = "*", features = ["full"] }
@@ -28,4 +28,3 @@ rbdc-sqlite = "0.1.14"
 rbatis = "4.0.39"
 rbs = "0.1.11"
 rand = "*"
-simple_bot_macros = { path = "../simple_bot_macros" }
