@@ -1,7 +1,8 @@
-use crate::plugin::{Plugin, RawPlugin};
+use crate::plugin::Plugin;
 use async_trait::async_trait;
 use proc_qq::{
-    MessageChainPointTrait, MessageContentTrait, MessageEvent, MessageSendToSourceTrait,
+    MessageChainPointTrait, MessageContentTrait, MessageEvent, MessageEventProcess,
+    MessageSendToSourceTrait, ModuleEventHandler, ModuleEventProcess,
 };
 use rand::prelude::SliceRandom;
 use std::cell::RefCell;
@@ -33,9 +34,19 @@ impl Plugin for Repeater {
     }
 }
 
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![
+        ModuleEventHandler {
+            name: "Repeater".to_owned(),
+            process: ModuleEventProcess::Message(Box::new(Repeater::new(3))),
+        },
+        add_keyword {},
+    ]
+}
+
 #[async_trait]
-impl RawPlugin for Repeater {
-    async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
+impl MessageEventProcess for Repeater {
+    async fn handle(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         let message = event.message_chain();
         let content = message.message_content();
         {
