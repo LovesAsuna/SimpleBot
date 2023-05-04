@@ -35,13 +35,10 @@ impl Plugin for Repeater {
 }
 
 pub(super) fn handlers() -> Vec<ModuleEventHandler> {
-    vec![
-        ModuleEventHandler {
-            name: "Repeater".to_owned(),
-            process: ModuleEventProcess::Message(Box::new(Repeater::new(3))),
-        },
-        add_keyword {},
-    ]
+    vec![ModuleEventHandler {
+        name: "Repeater".to_owned(),
+        process: ModuleEventProcess::Message(Box::new(Repeater::new(3))),
+    }]
 }
 
 #[async_trait]
