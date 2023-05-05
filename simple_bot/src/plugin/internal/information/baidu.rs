@@ -1,19 +1,9 @@
-use crate::plugin::{Action, CommandPlugin, Plugin};
-use async_trait::async_trait;
+use proc_qq::event;
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use simple_bot_macros::{action, make_action};
 
-pub struct Baidu {
-    actions: Vec<Box<dyn Action>>,
-}
+use crate::plugin::Plugin;
 
-impl Baidu {
-    pub fn new() -> Self {
-        Self {
-            actions: vec![make_action!(search)],
-        }
-    }
-}
+pub struct Baidu;
 
 impl Plugin for Baidu {
     fn get_name(&self) -> &str {
@@ -25,18 +15,8 @@ impl Plugin for Baidu {
     }
 }
 
-#[async_trait]
-impl CommandPlugin for Baidu {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
-#[action("/baike {content}")]
-async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result<bool> {
-    if content.is_none() {
-        return Ok(false);
-    }
+#[event(bot_command = "/baike {content}")]
+async fn search(event: &MessageEvent, content: String) -> anyhow::Result<bool> {
     let url = format!("https://baike.baidu.com/item/{}", content.unwrap());
     let resp = reqwest::get(url).await?;
     let text = resp.text().await?;
