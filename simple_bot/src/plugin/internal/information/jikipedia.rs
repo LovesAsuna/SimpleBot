@@ -1,21 +1,9 @@
-use crate::plugin::{Action, CommandPlugin, Plugin};
-use async_trait::async_trait;
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-use simple_bot_macros::{action, make_action};
+use crate::plugin::Plugin;
+use proc_qq::{event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
-pub struct Jikipedia {
-    actions: Vec<Box<dyn Action>>,
-}
-
-impl Jikipedia {
-    pub fn new() -> Self {
-        Self {
-            actions: vec![make_action!(search)],
-        }
-    }
-}
+pub struct Jikipedia;
 
 impl Plugin for Jikipedia {
     fn get_name(&self) -> &str {
@@ -27,18 +15,8 @@ impl Plugin for Jikipedia {
     }
 }
 
-#[async_trait]
-impl CommandPlugin for Jikipedia {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
-#[action("/查梗 {content}")]
-async fn search(event: &MessageEvent, content: Option<String>) -> anyhow::Result<bool> {
-    if content.is_none() {
-        return Ok(false);
-    }
+#[event(bot_command = "/查梗 {content}")]
+async fn search(event: &MessageEvent, content: String) -> anyhow::Result<bool> {
     let url = "https://api.jikipedia.com/go/auto_complete";
     let mut request = reqwest::ClientBuilder::new().build().unwrap().post(url);
     request = request.header("Client", "Web");
