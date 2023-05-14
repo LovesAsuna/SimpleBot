@@ -1,22 +1,8 @@
-use async_trait::async_trait;
+use crate::plugin::Plugin;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
-use proc_qq::{MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{event, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
 
-use simple_bot_macros::{action, make_action};
-
-use crate::plugin::{Action, CommandPlugin, Plugin};
-
-pub struct News {
-    actions: Vec<Box<dyn Action>>,
-}
-
-impl News {
-    pub fn new() -> Self {
-        Self {
-            actions: vec![make_action!(new)],
-        }
-    }
-}
+pub struct News;
 
 impl Plugin for News {
     fn get_name(&self) -> &str {
@@ -28,14 +14,7 @@ impl Plugin for News {
     }
 }
 
-#[async_trait]
-impl CommandPlugin for News {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
-#[action("/60s")]
+#[event(bot_command = "/60s")]
 async fn new(event: &MessageEvent) -> anyhow::Result<bool> {
     let url = "https://api.03c3.cn/zb/";
     let resp = reqwest::get(url).await?;
