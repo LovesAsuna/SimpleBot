@@ -2,31 +2,17 @@ use std::collections::HashSet;
 use std::ops::SubAssign;
 use std::time::Duration;
 
-use async_trait::async_trait;
+use crate::plugin::Plugin;
 use chrono::prelude::*;
 use lazy_static::lazy_static;
 use proc_qq::re_exports::ricq::msg::MessageChain;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
 use proc_qq::{
-    MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait,
+    event, MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait,
     MessageSendToSourceTrait, TextEleParseTrait,
 };
 
-use simple_bot_macros::{action, make_action};
-
-use crate::plugin::{Action, CommandPlugin, Plugin};
-
-pub struct PixivProxy {
-    actions: Vec<Box<dyn Action>>,
-}
-
-impl PixivProxy {
-    pub fn new() -> Self {
-        PixivProxy {
-            actions: vec![make_action!(get)],
-        }
-    }
-}
+pub struct PixivProxy;
 
 impl Plugin for PixivProxy {
     fn get_name(&self) -> &str {
@@ -38,19 +24,8 @@ impl Plugin for PixivProxy {
     }
 }
 
-#[async_trait]
-impl CommandPlugin for PixivProxy {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
-#[action("/pixiv work {id}")]
-async fn get(event: &MessageEvent, id: Option<String>) -> anyhow::Result<bool> {
-    if id.is_none() {
-        return Ok(false);
-    }
-    let id = id.unwrap();
+#[event(bot_command = "/pixiv work {id}")]
+async fn get(event: &MessageEvent, id: String) -> anyhow::Result<bool> {
     let api = format!("https://api.obfs.dev/api/pixiv/illust?id={id}");
     let resp = tokio::time::timeout(Duration::from_secs(15), reqwest::get(api)).await;
     if resp.is_err() {
@@ -165,6 +140,7 @@ fn flatten_tags(tags: &serde_json::Value) -> HashSet<&str> {
     }
     set
 }
+
 lazy_static! {
     static ref R18_PATTERN: regex::Regex = regex::Regex::new("R-[1-9]+").unwrap();
 }
