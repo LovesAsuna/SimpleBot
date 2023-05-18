@@ -1,12 +1,9 @@
 use crate::plugin::internal::picture::search_source::{PictureResult, SearchSource};
 use async_trait::async_trait;
-use lazy_static::lazy_static;
 
 pub struct Ascii2d;
 
-lazy_static! {
-    static ref API: String = String::from("https://ascii2d.net/search/url/");
-}
+const API: &str = "https://ascii2d.net/search/url/";
 
 #[async_trait]
 impl SearchSource for Ascii2d {

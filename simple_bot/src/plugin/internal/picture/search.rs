@@ -1,23 +1,16 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use proc_qq::re_exports::ricq::msg::elem::RQElem;
 use proc_qq::re_exports::ricq::msg::MessageChain;
-use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
-
-use simple_bot_macros::action;
-use simple_bot_macros::make_action;
+use proc_qq::{event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 
 use crate::future::WaitForMessage;
 use crate::plugin::internal::picture::ascii2d::Ascii2d;
 use crate::plugin::internal::picture::saucenao::SauceNao;
 use crate::plugin::internal::picture::search_source::SearchSource;
 use crate::plugin::Plugin;
-use crate::plugin::{Action, CommandPlugin};
 
-pub struct Search {
-    actions: Vec<Box<dyn Action>>,
-}
+pub struct Search;
 
 unsafe impl Send for Search {}
 unsafe impl Sync for Search {}
@@ -32,26 +25,8 @@ impl Plugin for Search {
     }
 }
 
-#[async_trait]
-impl CommandPlugin for Search {
-    fn get_actions(&self) -> &Vec<Box<dyn Action>> {
-        &self.actions
-    }
-}
-
-impl Search {
-    pub fn new() -> Self {
-        Self {
-            actions: vec![make_action!(search)],
-        }
-    }
-}
-
-#[action("/搜图 {source_type}")]
-async fn search(event: &MessageEvent, source_type: Option<usize>) -> anyhow::Result<bool> {
-    if source_type.is_none() {
-        return Ok(false);
-    }
+#[event(bot_command = "/搜图 {source_type}")]
+async fn search(event: &MessageEvent, source_type: usize) -> anyhow::Result<bool> {
     let source_type = source_type.unwrap();
     let search_source = select_source(source_type);
     if search_source.is_none() {
