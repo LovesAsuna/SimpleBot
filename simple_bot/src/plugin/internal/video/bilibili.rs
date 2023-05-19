@@ -1,4 +1,4 @@
-use crate::plugin::{Plugin, RawPlugin};
+use crate::plugin::Plugin;
 use proc_qq::re_exports::async_trait::async_trait;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
 use proc_qq::*;
@@ -36,9 +36,16 @@ impl Plugin for BilibiliVideo {
     }
 }
 
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![ModuleEventHandler {
+        name: "BilibiliVideo".to_owned(),
+        process: ModuleEventProcess::Message(Box::new(BilibiliVideo::new())),
+    }]
+}
+
 #[async_trait]
-impl RawPlugin for BilibiliVideo {
-    async fn on_event(&self, event: &MessageEvent) -> anyhow::Result<bool> {
+impl MessageEventProcess for BilibiliVideo {
+    async fn handle(&self, event: &MessageEvent) -> anyhow::Result<bool> {
         let text = event.message_content();
         let tuple = self.parse_api(text).await;
         if tuple.is_none() {
