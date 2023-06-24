@@ -2,8 +2,8 @@ use async_trait::async_trait;
 use std::ops::DerefMut;
 
 use proc_qq::{
-    event, MessageChainParseTrait, MessageChainPointTrait, MessageContentTrait, MessageEvent,
-    MessageEventProcess, MessageSendToSourceTrait, ModuleEventHandler, ModuleEventProcess,
+    event, MessageChainParseTrait, MessageContentTrait, MessageEvent, MessageEventProcess,
+    MessageSendToSourceTrait, ModuleEventHandler, ModuleEventProcess,
 };
 use rand::Rng;
 use tokio::sync::OnceCell;
@@ -85,7 +85,7 @@ pub(super) fn handlers() -> Vec<ModuleEventHandler> {
             name: "KeyWord".to_owned(),
             process: ModuleEventProcess::Message(Box::new(KeyWord::new())),
         },
-        add_keyword {},
+        add_keyword {}.into(),
     ]
 }
 

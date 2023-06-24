@@ -26,7 +26,7 @@ impl Plugin for Remind {
 pub(super) fn handlers() -> Vec<ModuleEventHandler> {
     vec![ModuleEventHandler {
         name: "Remind".to_owned(),
-        process: ModuleEventProcess::Message(Box::new(Remind)),
+        process: ModuleEventProcess::Message(Box::new(remind {})),
     }]
 }
 
