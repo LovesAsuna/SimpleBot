@@ -1,4 +1,4 @@
-use proc_qq::event;
+use proc_qq::{event, ModuleEventHandler};
 use proc_qq::{MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
 
 use crate::plugin::Plugin;
@@ -15,9 +15,13 @@ impl Plugin for Baidu {
     }
 }
 
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![search {}.into()]
+}
+
 #[event(bot_command = "/baike {content}")]
 async fn search(event: &MessageEvent, content: String) -> anyhow::Result<bool> {
-    let url = format!("https://baike.baidu.com/item/{}", content.unwrap());
+    let url = format!("https://baike.baidu.com/item/{}", content);
     let resp = reqwest::get(url).await?;
     let text = resp.text().await?;
     let content = parse_content(&text);

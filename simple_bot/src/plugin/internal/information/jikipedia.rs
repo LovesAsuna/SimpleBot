@@ -1,5 +1,7 @@
 use crate::plugin::Plugin;
-use proc_qq::{event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{
+    event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait, ModuleEventHandler,
+};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
@@ -15,12 +17,16 @@ impl Plugin for Jikipedia {
     }
 }
 
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![search {}.into()]
+}
+
 #[event(bot_command = "/查梗 {content}")]
 async fn search(event: &MessageEvent, content: String) -> anyhow::Result<bool> {
     let url = "https://api.jikipedia.com/go/auto_complete";
     let mut request = reqwest::ClientBuilder::new().build().unwrap().post(url);
     request = request.header("Client", "Web");
-    request = request.json(&Into::<HashMap<_, _>>::into([("phrase", content.unwrap())]));
+    request = request.json(&Into::<HashMap<_, _>>::into([("phrase", content)]));
     let resp = request.send().await?;
     let text = resp.text().await?;
     let content = parse_content(&text);

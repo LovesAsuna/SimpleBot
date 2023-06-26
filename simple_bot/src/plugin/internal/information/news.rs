@@ -1,6 +1,8 @@
 use crate::plugin::Plugin;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
-use proc_qq::{event, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{
+    event, MessageChainAppendTrait, MessageEvent, MessageSendToSourceTrait, ModuleEventHandler,
+};
 
 pub struct News;
 
@@ -12,6 +14,10 @@ impl Plugin for News {
     fn get_desc(&self) -> &str {
         "每天60秒读懂世界"
     }
+}
+
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![new {}.into()]
 }
 
 #[event(bot_command = "/60s")]
