@@ -2,7 +2,9 @@ use std::time::Duration;
 
 use proc_qq::re_exports::ricq::msg::elem::RQElem;
 use proc_qq::re_exports::ricq::msg::MessageChain;
-use proc_qq::{event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait};
+use proc_qq::{
+    event, MessageChainParseTrait, MessageEvent, MessageSendToSourceTrait, ModuleEventHandler,
+};
 
 use crate::future::WaitForMessage;
 use crate::plugin::internal::picture::ascii2d::Ascii2d;
@@ -25,9 +27,13 @@ impl Plugin for Search {
     }
 }
 
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![search {}.into()]
+}
+
 #[event(bot_command = "/搜图 {source_type}")]
 async fn search(event: &MessageEvent, source_type: usize) -> anyhow::Result<bool> {
-    let source_type = source_type.unwrap();
+    let source_type = source_type;
     let search_source = select_source(source_type);
     if search_source.is_none() {
         return Ok(false);

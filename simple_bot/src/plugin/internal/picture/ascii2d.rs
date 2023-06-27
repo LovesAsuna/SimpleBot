@@ -18,7 +18,7 @@ impl SearchSource for Ascii2d {
         let mut result: Vec<Box<dyn PictureResult + Send + Sync>> = Vec::new();
         let client = reqwest::ClientBuilder::new().build().unwrap();
         let resp = client
-            .get(API.clone() + &url)
+            .get(API.clone().to_owned() + &url)
             .header("User-Agent", "PostmanRuntime/7.29.2")
             .send()
             .await?;

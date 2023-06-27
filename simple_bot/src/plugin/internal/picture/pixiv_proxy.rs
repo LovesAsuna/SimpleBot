@@ -9,7 +9,7 @@ use proc_qq::re_exports::ricq::msg::MessageChain;
 use proc_qq::re_exports::ricq_core::msg::MessageChainBuilder;
 use proc_qq::{
     event, MessageChainAppendTrait, MessageChainParseTrait, MessageEvent, MessageRecallTrait,
-    MessageSendToSourceTrait, TextEleParseTrait,
+    MessageSendToSourceTrait, ModuleEventHandler, TextEleParseTrait,
 };
 
 pub struct PixivProxy;
@@ -22,6 +22,10 @@ impl Plugin for PixivProxy {
     fn get_desc(&self) -> &str {
         "通过反代理Pixiv获取到作品的信息"
     }
+}
+
+pub(super) fn handlers() -> Vec<ModuleEventHandler> {
+    vec![get {}.into()]
 }
 
 #[event(bot_command = "/pixiv work {id}")]
