@@ -1,13 +1,13 @@
 use lazy_static::lazy_static;
 pub use proc_qq::re_exports::*;
-pub use proc_qq::*;
-use rbatis::Rbatis;
+use proc_qq::{run_client, Authentication, ClientBuilder, ShowQR};
+use rbatis::RBatis;
 use tracing::*;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::config::Config;
 use crate::plugin::plugin_entry;
-use crate::tokio::{self, sync::Mutex};
+use crate::tokio::sync::Mutex;
 
 mod config;
 mod future;
@@ -16,8 +16,8 @@ mod plugin;
 
 lazy_static! {
     static ref CONFIG: Config = config::read_config().unwrap();
-    static ref RB: std::sync::Arc<Mutex<Rbatis>> = {
-        let db = Rbatis::new();
+    static ref RB: std::sync::Arc<Mutex<RBatis>> = {
+        let db = RBatis::new();
         let db_config = &CONFIG.database;
         if db_config.contains_key("sqlite") {
             db.init(rbdc_sqlite::driver::SqliteDriver {}, &db_config["sqlite"])
@@ -29,7 +29,7 @@ lazy_static! {
     };
 }
 
-#[tokio::main]
+#[::tokio::main]
 async fn main() {
     init_logger();
     let builder = ClientBuilder::new();
@@ -45,10 +45,7 @@ async fn main() {
         .build()
         .await
         .unwrap();
-    run_client(client.into())
-        .await
-        .unwrap()
-        .expect("启动时出现错误");
+    run_client(client.into()).await.expect("启动时出现错误");
 }
 
 fn parse_protocol(protocol: String) -> &'static ricq::version::Version {

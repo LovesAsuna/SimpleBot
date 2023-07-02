@@ -12,19 +12,19 @@ keywords = ["QQ", "Bot", "Rust"]
 
 [dependencies]
 proc_qq = { git = "https://github.com/niuhuan/rust_proc_qq", branch = "master"}
-tracing-subscriber = "0.3.15"
+tracing-subscriber = "0"
 serde = { version = "*", features = ["derive"] }
 tokio = { version = "*", features = ["full"] }
-serde_yaml = "0.9.13"
+serde_yaml = "0"
 serde_json = "*"
 async-trait = "*"
 anyhow = "*"
 regex = "*"
 lazy_static = "*"
 reqwest = { version = "*", features = ["json"] }
-visdom = "0.5.5"
-chrono = "0.4.22"
-rbdc-sqlite = "0.1.14"
-rbatis = "4.0.39"
-rbs = "0.1.11"
+visdom = "0"
+chrono = "0"
+rbdc-sqlite = "4"
+rbatis = "4"
+rbs = "4"
 rand = "*"
