@@ -1,2 +1,3 @@
 [workspace]
 members = ["simple_bot"]
+resolver = "2"
